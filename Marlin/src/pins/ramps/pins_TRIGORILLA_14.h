@@ -43,9 +43,9 @@
 #define BUZZER 			   31
 #define SDPOWER_PIN        -1
 #define SDSS               53
-#define LED_PIN            13
+#define LED_PIN            45
 #define Z_MIN_PROBE_PIN     2
-#define FIL_RUNOUT_PIN	   19
+#define FIL_RUNOUT_PIN	   33
 
 #ifdef OutageTest
 	#define OUTAGETEST_PIN  79
@@ -79,7 +79,7 @@
 
 // EndStops
 #define X_MIN_PIN           3
-#define Y_MIN_PIN          42
+#define Y_MIN_PIN          19
 #define Z_MIN_PIN          18
 
 #define X_MAX_PIN          43
@@ -102,6 +102,9 @@
 #define TEMP_1_PIN         15
 #define TEMP_2_PIN         12
 #define TEMP_BED_PIN       14
+
+// POWER
+#define POWER_OFF_PIN      21
 
 // Servos
 #if TRIGORILLA_VERSION == 0 // Default Trigorilla

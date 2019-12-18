@@ -649,6 +649,7 @@ void AnycubicTFTClass::StateHandler()
               SERIAL_ECHOPAIR(" DEBUG: AI3M Pause State: ", ai3m_pause_state);
               SERIAL_EOL();
             #endif
+            anycbc_print_finished = true;
           }
         }
       #endif
@@ -1013,6 +1014,7 @@ void AnycubicTFTClass::GetCommandFromTFT()
             #ifdef SDSUPPORT
               if((!planner.movesplanned()) && (TFTstate!=ANYCUBIC_TFT_STATE_SDPAUSE) && (TFTstate!=ANYCUBIC_TFT_STATE_SDOUTAGE) && (card.isFileOpen()))
               {
+                anycbc_print_finished = 0;
                 ai3m_pause_state = 0;
                 #ifdef ANYCUBIC_TFT_DEBUG
                   SERIAL_ECHOPAIR(" DEBUG: AI3M Pause State: ", ai3m_pause_state);
@@ -1339,6 +1341,36 @@ void AnycubicTFTClass::GetCommandFromTFT()
               ANYCUBIC_SERIAL_ENTER();
             }
             break;
+          case 40: //a40 reset mainboard
+            {
+              softwareReset();
+            }
+            break;
+          case 41: // auto power off
+            {
+              if(CodeSeen('O')) {
+                anycbc_power_off_after_print = true;
+                break;
+              } else if (CodeSeen('C')) {
+                anycbc_power_off_after_print = false;
+              }
+              if(CodeSeen('S')) {
+                if(anycbc_power_off_after_print)
+                {
+                  ANYCUBIC_SERIAL_PROTOCOLPGM("J35 ");
+                  ANYCUBIC_SERIAL_ENTER();
+                } else { //didn't open print done and auto power off
+                  ANYCUBIC_SERIAL_PROTOCOLPGM("J34 ");
+                  ANYCUBIC_SERIAL_ENTER();
+                }
+              }
+            }
+            break;
+          case 42: // 4max pro led strip
+            {
+              anycbc_light_enabled = !anycbc_light_enabled;
+            }
+            break;  
           default: break;
         }
       }

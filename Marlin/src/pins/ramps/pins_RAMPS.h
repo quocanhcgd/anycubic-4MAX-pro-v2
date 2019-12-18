@@ -243,7 +243,7 @@
 // Misc. Functions
 //
 #define SDSS               53
-#define LED_PIN            13
+#define LED_PIN            45
 
 #ifndef FILWIDTH_PIN
   #define FILWIDTH_PIN      5   // Analog Input on AUX2

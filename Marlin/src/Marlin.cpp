@@ -221,11 +221,47 @@ millis_t max_inactive_time, // = 0
   I2CPositionEncodersMgr I2CPEM;
 #endif
 
+bool anycbc_light_enabled = true;
+bool anycbc_print_finished = false;
+bool anycbc_power_off_after_print = true;
+
 /**
  * ***************************************************************************
  * ******************************** FUNCTIONS ********************************
  * ***************************************************************************
  */
+
+void (*softwareReset) (void)=0;
+
+void anycbc_setupLED()
+{
+    pinMode(LED_PIN,OUTPUT);
+    WRITE(LED_PIN,LOW);
+}
+void anycbc_Light_CON()
+{
+    if(anycbc_light_enabled){
+        WRITE(LED_PIN,HIGH);
+    } else {
+        WRITE(LED_PIN,LOW);
+    }
+}
+
+void setup_PowerConPin()
+{
+    SET_OUTPUT(POWER_OFF_PIN);
+    WRITE(POWER_OFF_PIN,HIGH);
+}
+void PowerDown()
+{
+  for(unsigned char i=0;i<3;i++)
+  {
+    WRITE(POWER_OFF_PIN,LOW);
+    delay(10);
+    WRITE(POWER_OFF_PIN,HIGH);
+    delay(10);
+  }
+}
 
 void setup_killpin() {
   #if HAS_KILL
@@ -526,6 +562,8 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
   #if ENABLED(ANYCUBIC_TFT_MODEL) && ENABLED(ANYCUBIC_FILAMENT_RUNOUT_SENSOR)
     AnycubicTFT.FilamentRunout();
   #endif
+  anycbc_Light_CON();
+
   if (queue.length < BUFSIZE) queue.get_available_commands();
 
   const millis_t ms = millis();
@@ -704,6 +742,11 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
   if (ELAPSED(ms, next_check_axes_ms)) {
     planner.check_axes_activity();
     next_check_axes_ms = ms + 100UL;
+
+    if(anycbc_power_off_after_print && anycbc_print_finished && (thermalManager.degHotend(0)<100)) {
+      anycbc_print_finished=0;
+      PowerDown();
+    }
   }
 
   #if PIN_EXISTS(FET_SAFETY)
@@ -959,6 +1002,7 @@ void setup() {
     recovery.setup();
   #endif
 
+  setup_PowerConPin();
   setup_killpin();
 
   #if HAS_TMC220x
@@ -1004,6 +1048,8 @@ void setup() {
   #ifdef BOARD_INIT
     BOARD_INIT();
   #endif
+
+  anycbc_setupLED();
 
   // Check startup - does nothing if bootloader sets MCUSR to 0
   byte mcu = HAL_get_reset_source();
