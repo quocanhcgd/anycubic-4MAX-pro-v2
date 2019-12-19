@@ -30,16 +30,17 @@ Also if your hotbed is concave or not straight you can use the [mesh bed levelin
 
 #### Info: The original Anycubic firmware is set to a baud rate of `115200 bps`.
 
-## Known bugs
-#### Marlin-A4MaxPro-2.0.x
-- LED control: It would be better to enable `case lights` menu option with PWM conrol
-- light flickers when printing
+## Known Issues
+#### [Marlin-A4MaxPro-2.0.x/v1.4.5](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/tag/v1.4.5)
+- LED control: It would be better to enable `case lights` menu option with PWM control
+- Light flickers when printing
 - PID from the hotend no longer fits => Can be fixed by [PID tuning](https://github.com/davidramiro/Marlin-Ai3M-2.0.x/wiki/Calibration#pid-tuning)
 
-#### Marlin-Ai3M-2.0.x
-- Power outage support is not included
-- Estimated print times from your slicer might be slightly off.
-- Special characters on any file or folders name on the SD card will cause the file menu to freeze. Simply replace or remove every special character (Chinese, Arabic, Russian, accents, German & Scandinavian umlauts, ...) from the name. Symbols like dashes or underscores are no problem. Important note: On the SD card that comes with the printer there is a folder with Chinese characters in it by default. Please rename or remove it.
+#### [Marlin-Ai3M-2.0.x/v1.4.5](https://github.com/davidramiro/Marlin-Ai3M-2.0.x/releases/tag/v1.4.5)
+
+#### [Marlin/2.0.0](https://github.com/MarlinFirmware/Marlin/releases/tag/2.0.0)
+- Mixing Extruder with G10/G11 may have quirks
+- Sensor-less probing is still pretty experimental
 
 ## Credits
 Marlin-Ai3M-2.0.x administrator:
@@ -50,10 +51,12 @@ Marlin-A4MaxPro-2.0.x contributors:
 - [[@mpk](https://drucktipps3d.de/forum/profile/mpk/)]
 - Jonas Plamann [[@Poket-Jony](https://github.com/Poket-Jony)]
 
-Marlin's administrators:
+Marlin-2.0.x dev team:
  - Scott Lahteine [[@thinkyhead](https://github.com/thinkyhead)]
  - Roxanne Neufeld [[@Roxy-3D](https://github.com/Roxy-3D)]
+ - Chris Pepper [[@p3p](https://github.com/p3p)]
  - Bob Kuhn [[@Bob-the-Kuhn](https://github.com/Bob-the-Kuhn)]
+ - João Brazio [[@jbrazio](https://github.com/jbrazio)]
  - Erik van der Zalm [[@ErikZalm](https://github.com/ErikZalm)]
 
 Notable contributors include:
@@ -69,13 +72,11 @@ Notable contributors include:
  - Ernesto Martinez [[@emartinez167](https://github.com/emartinez167)]
  - Edward Patel [[@epatel](https://github.com/epatel)]
  - F. Malpartida [[@fmalpartida](https://github.com/fmalpartida)]
- - João Brazio [[@jbrazio](https://github.com/jbrazio)]
  - Kai [[@Kaibob2](https://github.com/Kaibob2)]
  - Luc Van Daele [[@LVD-AC](https://github.com/LVD-AC)]
  - Alberto Cotronei [[@MagoKimbra](https://github.com/MagoKimbra)]
  - Marcio Teixeira [[@marcio-ao](https://github.com/marcio-ao)]
  - Chris Palmer [[@nophead](https://github.com/nophead)]
- - Chris Pepper [[@p3p](https://github.com/p3p)]
  - Steeve Spaggi [[@studiodyne](https://github.com/studiodyne)]
  - Thomas Moore [[@tcm0116](https://github.com/tcm0116)]
  - Teemu Mäntykallio [[@teemuatlut](https://github.com/teemuatlut)]
