@@ -763,6 +763,11 @@ void AnycubicTFTClass::FilamentRunout()
             #endif
             PausePrint();
           } else if(!card.isPrinting()) {
+            buzzer.tone(200, 1567);
+            buzzer.tone(200, 1174);
+            buzzer.tone(200, 1567);
+            buzzer.tone(200, 1174);
+            buzzer.tone(2000, 1567);
             ANYCUBIC_SERIAL_PROTOCOLPGM("J15"); //J15 FILAMENT LACK
             ANYCUBIC_SERIAL_ENTER();
             #ifdef ANYCUBIC_TFT_DEBUG
