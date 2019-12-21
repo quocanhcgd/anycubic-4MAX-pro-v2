@@ -32,10 +32,10 @@
    * Verbose version identifier which should contain a reference to the location
    * from where the binary was downloaded or the source code was compiled.
    */
-  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " (davidramiro, Github)"
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " (Poket-Jony, Github)"
 
   /**
- * Defines the version of the Marlin-AI3M build. Not to be confused with
+ * Defines the version of the Marlin-A4MaxPro build. Not to be confused with
  * Marlin's own build number, e.g. 2.0.x.
  */
  #define CUSTOM_BUILD_VERSION "v2.0.0"
@@ -74,7 +74,7 @@
   /**
    * Defines a generic printer name to be output to the LCD after booting Marlin.
    */
-  #define MACHINE_NAME "Anycubic i3 Mega"
+  #define MACHINE_NAME "Anycubic 4Max Pro"
 
   /**
    * The SOURCE_CODE_URL is the location where users will find the Marlin Source
@@ -82,13 +82,14 @@
    * has a distinct Github fork— the Source Code URL should just be the main
    * Marlin repository.
    */
-  #define SOURCE_CODE_URL "https://github.com/davidramiro/Marlin-Ai3M-2.0.x"
+  #define SOURCE_CODE_URL "https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x"
 
 /**
  * Default generic printer UUID.
+ * f04e5c1a-94e3-49f2-b656-8afacbaba04f => A4MaxPro
  */
 #ifndef DEFAULT_MACHINE_UUID
-  #define DEFAULT_MACHINE_UUID "cede2a2f-41a2-4748-9b12-c55c62f367ff"
+  #define DEFAULT_MACHINE_UUID "f04e5c1a-94e3-49f2-b656-8afacbaba04f"
 #endif
 
   /**
