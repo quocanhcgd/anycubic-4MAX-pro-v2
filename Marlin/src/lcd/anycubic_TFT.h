@@ -67,7 +67,7 @@ public:
   * 4 - nozzle timeout on M600
   * 5 - nozzle timeout on filament runout
   */
-  uint8_t ai3m_pause_state = 0;
+  uint8_t a4maxpro_pause_state = 0;
 
 private:
   char TFTcmdbuffer[TFTBUFSIZE][TFT_MAX_CMD_SIZE];

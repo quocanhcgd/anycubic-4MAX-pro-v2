@@ -69,10 +69,10 @@ void GcodeSuite::M600() {
   #ifdef ANYCUBIC_TFT_MODEL
     #ifdef SDSUPPORT
       if (card.isPrinting()) { // are we printing from sd?
-        if (AnycubicTFT.ai3m_pause_state < 2) {
-          AnycubicTFT.ai3m_pause_state = 2;
+        if (AnycubicTFT.a4maxpro_pause_state < 2) {
+          AnycubicTFT.a4maxpro_pause_state = 2;
           #ifdef ANYCUBIC_TFT_DEBUG
-            SERIAL_ECHOPAIR(" DEBUG: M600 - AI3M Pause State set to: ", AnycubicTFT.ai3m_pause_state);
+            SERIAL_ECHOPAIR(" DEBUG: M600 - A4MAXPRO Pause State set to: ", AnycubicTFT.a4maxpro_pause_state);
             SERIAL_EOL();
           #endif
         }

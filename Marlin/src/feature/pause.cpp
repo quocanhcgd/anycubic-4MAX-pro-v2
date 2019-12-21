@@ -546,10 +546,10 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
     if (nozzle_timed_out) {
 
       #ifdef ANYCUBIC_TFT_MODEL
-        if (AnycubicTFT.ai3m_pause_state < 3) {
-          AnycubicTFT.ai3m_pause_state += 2;
+        if (AnycubicTFT.a4maxpro_pause_state < 3) {
+          AnycubicTFT.a4maxpro_pause_state += 2;
           #ifdef ANYCUBIC_TFT_DEBUG
-            SERIAL_ECHOPAIR(" DEBUG: NTO - AI3M Pause State set to: ", AnycubicTFT.ai3m_pause_state);
+            SERIAL_ECHOPAIR(" DEBUG: NTO - A4MAXPRO Pause State set to: ", AnycubicTFT.a4maxpro_pause_state);
             SERIAL_EOL();
           #endif
           }
@@ -600,10 +600,10 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
       wait_for_user = true;
       nozzle_timed_out = false;
       #ifdef ANYCUBIC_TFT_MODEL
-        if (AnycubicTFT.ai3m_pause_state > 3) {
-          AnycubicTFT.ai3m_pause_state -= 2;
+        if (AnycubicTFT.a4maxpro_pause_state > 3) {
+          AnycubicTFT.a4maxpro_pause_state -= 2;
           #ifdef ANYCUBIC_TFT_DEBUG
-            SERIAL_ECHOPAIR(" DEBUG: NTO - AI3M Pause State set to: ", AnycubicTFT.ai3m_pause_state);
+            SERIAL_ECHOPAIR(" DEBUG: NTO - A4MAXPRO Pause State set to: ", AnycubicTFT.a4maxpro_pause_state);
             SERIAL_EOL();
           #endif
         }
@@ -656,10 +656,10 @@ void resume_print(const float &slow_load_length/*=0*/, const float &fast_load_le
   // Re-enable the heaters if they timed out
   bool nozzle_timed_out = false;
   #ifdef ANYCUBIC_TFT_MODEL
-    if (AnycubicTFT.ai3m_pause_state > 3) {
-      AnycubicTFT.ai3m_pause_state -= 2;
+    if (AnycubicTFT.a4maxpro_pause_state > 3) {
+      AnycubicTFT.a4maxpro_pause_state -= 2;
       #ifdef ANYCUBIC_TFT_DEBUG
-        SERIAL_ECHOPAIR(" DEBUG: NTO - AI3M Pause State set to: ", AnycubicTFT.ai3m_pause_state);
+        SERIAL_ECHOPAIR(" DEBUG: NTO - A4MAXPRO Pause State set to: ", AnycubicTFT.a4maxpro_pause_state);
         SERIAL_EOL();
       #endif
       }
