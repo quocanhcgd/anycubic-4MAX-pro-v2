@@ -1,8 +1,8 @@
 # Marlin 2.0.x (Ai3M-2.0.x based) for Anycubic 4Max Pro
 
-[![Downloads](https://img.shields.io/github/downloads/Poket-Jony/Marlin-A4MaxPro-2.0.x/total.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases) [![Open Issues](https://img.shields.io/github/issues-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aopen+is%3Aissue) [![License](https://img.shields.io/github/license/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/blob/master/LICENSE) [![Latest Release](https://img.shields.io/github/release/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/latest/) [![Last commit](https://img.shields.io/github/last-commit/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/commits/)  [![Travis CI](https://api.travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?branch=master)](https://travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x)  
+[![Downloads](https://img.shields.io/github/downloads/Poket-Jony/Marlin-A4MaxPro-2.0.x/total.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases) [![Open Issues](https://img.shields.io/github/issues-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aopen+is%3Aissue) [![License](https://img.shields.io/github/license/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/blob/bugfix-2.0.x/LICENSE) [![Latest Release](https://img.shields.io/github/release/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/latest/) [![Last commit](https://img.shields.io/github/last-commit/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/commits/)  [![Travis CI](https://api.travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?branch=bugfix-2.0.x)](https://travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x)  
 
-## Beta build - use with caution!
+**Beta build - use with caution!**
 
 This is the newest version of the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin), customized and optimized for the 4Max Pro based on [davidramiro's Ai3M-2.0.x repo](https://github.com/davidramiro/Marlin-Ai3M-2.0.x) and [alfrank's changes](https://drucktipps3d.de/forum/topic/anycubic-4max-pro-marlin-1-1-9-firmware-ai3m-basierend/) for the Anycubic 4Max Pro. The DWIN TFT screen is based on [derhopp's repo](https://github.com/derhopp/Marlin-with-Anycubic-i3-Mega-TFT) with his remarkable efforts to get this working with the latest versions of Marlin.
 
@@ -26,7 +26,7 @@ Also if your hotbed is concave or not straight you can use the [mesh bed levelin
     - connect and wait for the EEPROM values to be output
     - then enter the following: `M502` and `M500`
 - Now you can disconnect again, for safety's turn the printer off and on again.
-- The new firmware is shown in the printer display (see above) as `V116`.
+- The new firmware is shown in the printer display (see above) as `v2.0.0`.
 
 #### Info: The original Anycubic firmware is set to a baud rate of `115200 bps`.
 
