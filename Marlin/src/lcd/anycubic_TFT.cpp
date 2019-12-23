@@ -37,6 +37,7 @@
 #include "../module/stepper.h"
 #include "../module/temperature.h"
 #include "../sd/cardreader.h"
+#include "../feature/power_loss_recovery.h"
 
 #ifdef ANYCUBIC_TFT_MODEL
 #include "anycubic_TFT.h"
@@ -239,6 +240,12 @@ void AnycubicTFTClass::StartPrint() {
 void AnycubicTFTClass::PausePrint() {
   #ifdef SDSUPPORT
     if(a4maxpro_pause_state < 2) { // is this a regular pause?
+      #if ENABLED(POWER_LOSS_RECOVERY)
+        recovery.save(true);
+        #ifdef ANYCUBIC_TFT_DEBUG
+          SERIAL_ECHOLNPGM("DEBUG: Saved Print Status");
+        #endif
+      #endif
       card.pauseSDPrint(); // pause print regularly
       #ifdef ANYCUBIC_TFT_DEBUG
         SERIAL_ECHOPAIR(" DEBUG: A4MAXPRO Pause State: ", a4maxpro_pause_state);
@@ -246,6 +253,12 @@ void AnycubicTFTClass::PausePrint() {
         SERIAL_ECHOLNPGM("DEBUG: Regular Pause");
       #endif
     } else { // pause caused by filament runout
+      #if ENABLED(POWER_LOSS_RECOVERY)
+        recovery.save(true);
+        #ifdef ANYCUBIC_TFT_DEBUG
+          SERIAL_ECHOLNPGM("DEBUG: Saved Print Status");
+        #endif
+      #endif
       #ifdef ANYCUBIC_TFT_DEBUG
         SERIAL_ECHOLNPGM("DEBUG: Filament Runout Pause");
       #endif
@@ -452,6 +465,19 @@ void AnycubicTFTClass::HandleSpecialMenu()
   } else if (strcmp(SelectedDirectory, "<filamentchange resume>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: FilamentChange Resume");
     FilamentChangeResume();
+  } else if (strcmp(SelectedDirectory, "<enable power loss recovery>")==0) {
+    SERIAL_ECHOLNPGM("Special Menu: Enabled Power Loss Recovery");
+    queue.enqueue_now_P(PSTR("M413 S1"));
+    buzzer.tone(105, 1108);
+    buzzer.tone(210, 1661);
+  } else if (strcmp(SelectedDirectory, "<disable power loss recovery>")==0) {
+    SERIAL_ECHOLNPGM("Special Menu: Disabled Power Loss Recovery");
+    queue.enqueue_now_P(PSTR("M413 S0"));
+    buzzer.tone(105, 1661);
+    buzzer.tone(210, 1108);
+  } else if (strcmp(SelectedDirectory, "<save print and stop>")==0) {
+    SERIAL_ECHOLNPGM("Special Menu: Saved Print And Stopped");
+    SavePrintAndStop();
   } else if (strcmp(SelectedDirectory, "<exit>")==0) {
     SpecialMenu=false;
   }
@@ -499,6 +525,15 @@ void AnycubicTFTClass::Ls()
       ANYCUBIC_SERIAL_PROTOCOLLNPGM("<FilamentChange Pause>");
       ANYCUBIC_SERIAL_PROTOCOLLNPGM("<FilamentChange Resume>");
       ANYCUBIC_SERIAL_PROTOCOLLNPGM("<FilamentChange Resume>");
+      ANYCUBIC_SERIAL_PROTOCOLLNPGM("<Enable Power Loss Recovery>");
+      ANYCUBIC_SERIAL_PROTOCOLLNPGM("<Enable Power Loss Recovery>");
+      ANYCUBIC_SERIAL_PROTOCOLLNPGM("<Disable Power Loss Recovery>");
+      ANYCUBIC_SERIAL_PROTOCOLLNPGM("<Disable Power Loss Recovery>");
+      break;
+
+      case 16: // Fifth Page
+      ANYCUBIC_SERIAL_PROTOCOLLNPGM("<Save Print and Stop>");
+      ANYCUBIC_SERIAL_PROTOCOLLNPGM("<Save Print and Stop>");
       break;
 
       default:
@@ -1447,6 +1482,33 @@ void AnycubicTFTClass::BedHeatingDone()
   ANYCUBIC_SERIAL_ENTER();
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOLNPGM("TFT Serial Debug: Bed heating is done... J09");
+  #endif
+}
+
+void AnycubicTFTClass::SavePrintAndStop()
+{
+  #ifdef SDSUPPORT
+    if((card.isPrinting()) || (card.isPaused()) || (TFTstate==ANYCUBIC_TFT_STATE_SDOUTAGE))
+    {
+      #if ENABLED(POWER_LOSS_RECOVERY)
+        recovery.save(true);
+        buzzer.tone(105, 1108);
+        buzzer.tone(210, 1661);
+        #ifdef ANYCUBIC_TFT_DEBUG
+          SERIAL_ECHOLNPGM("DEBUG: Saved Print Status");
+        #endif
+      #endif
+      StopPrint();
+    } else {
+      ANYCUBIC_SERIAL_PROTOCOLPGM("J16");
+      ANYCUBIC_SERIAL_ENTER();
+      TFTstate=ANYCUBIC_TFT_STATE_IDLE;
+      a4maxpro_pause_state = 0;
+      #ifdef ANYCUBIC_TFT_DEBUG
+        SERIAL_ECHOPAIR(" DEBUG: A4MAXPRO Pause State: ", a4maxpro_pause_state);
+        SERIAL_EOL();
+      #endif
+    }
   #endif
 }
 
