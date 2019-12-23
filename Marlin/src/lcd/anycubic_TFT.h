@@ -113,7 +113,7 @@ private:
   void FilamentChangeResume();
   void ReheatNozzle();
   void ParkAfterStop();
-  void SavePrintStatus();
+  void SavePrintAndStop();
 
   char     SelectedDirectory[30];
   uint8_t  SpecialMenu=false;
