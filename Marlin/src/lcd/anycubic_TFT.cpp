@@ -1,5 +1,5 @@
 /*
-   AnycubicTFT.cpp  --- Support for Anycubic i3 Mega TFT
+   AnycubicTFT.cpp  --- Support for Anycubic 4Max Pro TFT
    Created by Christian Hopp on 09.12.17.
 
    This library is free software; you can redistribute it and/or
@@ -44,6 +44,35 @@
 #include "anycubic_serial.h"
 
 char _conv[8];
+
+const char G90_STR[] PROGMEM = "G90",
+           G91_STR[] PROGMEM = "G91",
+           M25_STR[] PROGMEM = "M25",
+           M27_STR[] PROGMEM = "M27",
+           M84_STR[] PROGMEM = "M84",
+           M108_STR[] PROGMEM = "M108",
+           M500_STR[] PROGMEM = "M500",
+           M502_STR[] PROGMEM = "M502",
+           M600_STR[] PROGMEM = "M600",
+           MESH_START_STR[] PROGMEM = "G29 S1",
+           MESH_NEXT_STR[] PROGMEM = "G29 S2",
+           RETR_1_STR[] PROGMEM = "G91\nG1 E-1 F1800\nG90",
+           RETR_3_STR[] PROGMEM = "G1 E-3 F1800",
+           HOTEND_PID_STR[] PROGMEM = "M106 S204\nM303 E0 S210 C15 U1",
+           HOTBED_PID_STR[] PROGMEM = "M303 E-1 S60 C6 U1",
+           PREHEAT_STR[] PROGMEM = "M140 S60",
+           UP_COARSE_STR[] PROGMEM = "G91\nG1 Z+0.1\nG90",
+           DOWN_COARSE_STR[] PROGMEM = "G91\nG1 Z-0.1\nG90",
+           UP_FINE_STR[] PROGMEM = "G91\nG1 Z+0.02\nG90",
+           DOWN_FINE_STR[] PROGMEM = "G91\nG1 Z-0.02\nG90",
+           PARK_RETR_STR[] PROGMEM = "M125 L2",
+           RAIZE_Z_10_STR[] PROGMEM = "G1 Z10",
+           HOME_ALL_STR[] PROGMEM = "G28",
+           HOME_X_STR[] PROGMEM = "G28 X",
+           HOME_Y_STR[] PROGMEM = "G28 Y",
+           HOME_Z_STR[] PROGMEM = "G28 Z";
+
+extern const char M24_STR[];
 
 char *itostr2(const uint8_t &x)
 {
@@ -127,6 +156,7 @@ void AnycubicTFTClass::Setup() {
   #endif
 }
 
+/*
 void AnycubicTFTClass::WriteOutageEEPromData() {
   int pos=E2END-256;
 
@@ -136,6 +166,7 @@ void AnycubicTFTClass::ReadOutageEEPromData() {
   int pos=E2END-256;
 
 }
+*/
 
 void AnycubicTFTClass::KillTFT()
 {
@@ -163,7 +194,7 @@ void AnycubicTFTClass::StartPrint() {
       break;
     case 1:
       // regular sd pause
-      queue.enqueue_now_P(PSTR("M24")); // unpark nozzle
+      queue.enqueue_now_P(M24_STR); // unpark nozzle
       #ifdef ANYCUBIC_TFT_DEBUG
         SERIAL_ECHOPAIR(" DEBUG: A4MAXPRO Pause State: ", a4maxpro_pause_state);
         SERIAL_EOL();
@@ -194,7 +225,7 @@ void AnycubicTFTClass::StartPrint() {
       break;
     case 3:
       // paused by filament runout
-      queue.enqueue_now_P(PSTR("M24")); // unpark nozzle and resume
+      queue.enqueue_now_P(M24_STR); // unpark nozzle and resume
       #ifdef ANYCUBIC_TFT_DEBUG
         SERIAL_ECHOLNPGM("DEBUG: M24 Resume from Filament Runout");
       #endif
@@ -263,9 +294,9 @@ void AnycubicTFTClass::PausePrint() {
         SERIAL_ECHOLNPGM("DEBUG: Filament Runout Pause");
       #endif
       // filament runout, retract and beep
-      queue.enqueue_now_P(PSTR("G91")); // relative mode
-      queue.enqueue_now_P(PSTR("G1 E-3 F1800")); // retract 3mm
-      queue.enqueue_now_P(PSTR("G90")); // absolute mode
+      queue.enqueue_now_P(G91_STR); // relative mode
+      queue.enqueue_now_P(RETR_3_STR); // retract 3mm
+      queue.enqueue_now_P(G90_STR); // absolute mode
       buzzer.tone(200, 1567);
       buzzer.tone(200, 1174);
       buzzer.tone(200, 1567);
@@ -274,7 +305,7 @@ void AnycubicTFTClass::PausePrint() {
       #ifdef ANYCUBIC_TFT_DEBUG
         SERIAL_ECHOLNPGM("DEBUG: Filament runout - Retract, beep and park.");
       #endif
-      queue.enqueue_now_P(PSTR("M25")); // pause print and park nozzle
+      queue.enqueue_now_P(M25_STR); // pause print and park nozzle
       a4maxpro_pause_state = 3;
       #ifdef ANYCUBIC_TFT_DEBUG
         SERIAL_ECHOLNPGM("DEBUG: M25 sent, parking nozzle");
@@ -320,7 +351,7 @@ void AnycubicTFTClass::StopPrint(){
 
 void AnycubicTFTClass::FilamentChangeResume(){
   // call M108 to break out of M600 pause
-  queue.enqueue_now_P(PSTR("M108"));
+  queue.enqueue_now_P(M25_STR);
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOLNPGM("DEBUG: M108 Resume called");
   #endif
@@ -346,7 +377,7 @@ void AnycubicTFTClass::FilamentChangePause(){
   #endif
 
   // call M600 and set display state to paused
-  queue.enqueue_now_P(PSTR("M600"));
+  queue.enqueue_now_P(M600_STR);
   TFTstate=ANYCUBIC_TFT_STATE_SDPAUSE_REQ;
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOLNPGM("DEBUG: M600 Pause called");
@@ -357,7 +388,7 @@ void AnycubicTFTClass::ReheatNozzle(){
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOLNPGM("DEBUG: Send reheat M108");
   #endif
-  queue.enqueue_now_P(PSTR("M108"));
+  queue.enqueue_now_P(M108_STR);
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOLNPGM("DEBUG: Resume heating");
   #endif
@@ -398,9 +429,9 @@ void AnycubicTFTClass::ParkAfterStop(){
       SERIAL_ECHOLNPGM("DEBUG: SDSTOP: Park XY");
     #endif
   }
-  queue.enqueue_now_P(PSTR("M84")); // disable stepper motors
-  queue.enqueue_now_P(PSTR("M27")); // force report of SD status
-  a4maxpro_pause_state = 0;
+  queue.enqueue_now_P(M84_STR); // disable stepper motors
+  queue.enqueue_now_P(M27_STR); // force report of SD status
+  ai3m_pause_state = 0;
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOPAIR(" DEBUG: A4MAXPRO Pause State: ", a4maxpro_pause_state);
     SERIAL_EOL();
@@ -424,41 +455,41 @@ void AnycubicTFTClass::HandleSpecialMenu()
     SpecialMenu=true;
   } else if (strcmp(SelectedDirectory, "<auto tune hotend pid>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Auto Tune Hotend PID");
-    queue.enqueue_now_P(PSTR("M106 S204\nM303 E0 S210 C15 U1"));
+    queue.enqueue_now_P(HOTEND_PID_STR);
   } else if (strcmp(SelectedDirectory, "<auto tune hotbed pid>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Auto Tune Hotbed Pid");
-    queue.enqueue_now_P(PSTR("M303 E-1 S60 C6 U1"));
+    queue.enqueue_now_P(HOTBED_PID_STR);
   } else if (strcmp(SelectedDirectory, "<save eeprom>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Save EEPROM");
-    queue.enqueue_now_P(PSTR("M500"));
+    queue.enqueue_now_P(M500_STR);
     buzzer.tone(105, 1108);
     buzzer.tone(210, 1661);
   } else if (strcmp(SelectedDirectory, "<load fw defaults>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Load FW Defaults");
-    queue.enqueue_now_P(PSTR("M502"));
+    queue.enqueue_now_P(M502_STR);
     buzzer.tone(105, 1661);
     buzzer.tone(210, 1108);
   } else if (strcmp(SelectedDirectory, "<preheat bed>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Preheat Bed");
-    queue.enqueue_now_P(PSTR("M140 S60"));
+    queue.enqueue_now_P(PREHEAT_STR);
   } else if (strcmp(SelectedDirectory, "<start mesh leveling>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Start Mesh Leveling");
-    queue.enqueue_now_P(PSTR("G29 S1"));
+    queue.enqueue_now_P(MESH_START_STR);
   } else if (strcmp(SelectedDirectory, "<next mesh point>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Next Mesh Point");
-    queue.enqueue_now_P(PSTR("G29 S2"));
+    queue.enqueue_now_P(MESH_NEXT_STR);
   } else if (strcmp(SelectedDirectory, "<z up 0.1>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Z Up 0.1");
-    queue.enqueue_now_P(PSTR("G91\nG1 Z+0.1\nG90"));
+    queue.enqueue_now_P(UP_COARSE_STR);
   } else if (strcmp(SelectedDirectory, "<z up 0.02>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Z Up 0.02");
-    queue.enqueue_now_P(PSTR("G91\nG1 Z+0.02\nG90"));
+    queue.enqueue_now_P(UP_FINE_STR);
   } else if (strcmp(SelectedDirectory, "<z down 0.02>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Z Down 0.02");
-    queue.enqueue_now_P(PSTR("G91\nG1 Z-0.02\nG90"));
+    queue.enqueue_now_P(DOWN_COARSE_STR);
   } else if (strcmp(SelectedDirectory, "<z down 0.1>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: Z Down 0.1");
-    queue.enqueue_now_P(PSTR("G91\nG1 Z-0.1\nG90"));
+    queue.enqueue_now_P(DOWN_FINE_STR);
   } else if (strcmp(SelectedDirectory, "<filamentchange pause>")==0) {
     SERIAL_ECHOLNPGM("Special Menu: FilamentChange Pause");
     FilamentChangePause();
@@ -715,7 +746,7 @@ void AnycubicTFTClass::StateHandler()
             #endif
             if(!IsParked) {
               // park head and retract 2mm
-              queue.enqueue_now_P(PSTR("M125 L2"));
+              queue.enqueue_now_P(PARK_RETR_STR);
               IsParked = true;
             }
           }
@@ -751,7 +782,7 @@ void AnycubicTFTClass::StateHandler()
         }
         // did we park the hotend already?
         if((!IsParked) && (!card.isPrinting()) && (!planner.movesplanned())) {
-          queue.enqueue_now_P(PSTR("G91\nG1 E-1 F1800\nG90"));  //retract
+          queue.enqueue_now_P(RETR_1_STR);  //retract
           ParkAfterStop();
           IsParked = true;
         }
@@ -1031,7 +1062,7 @@ void AnycubicTFTClass::GetCommandFromTFT()
 
                   if(starpos!=NULL)
                   *(starpos-1)='\0';
-                  card.openFile(TFTstrchr_pointer + 4,true);
+                  card.openFileRead(TFTstrchr_pointer + 4);
                   if (card.isFileOpen()) {
                     ANYCUBIC_SERIAL_PROTOCOLPGM("J20"); // J20 Open successful
                     ANYCUBIC_SERIAL_ENTER();
@@ -1093,7 +1124,7 @@ void AnycubicTFTClass::GetCommandFromTFT()
               else if((CodeSeen('C'))&&(!planner.movesplanned()))
               {
                 if((current_position[Z_AXIS]<10))
-                queue.enqueue_now_P(PSTR("G1 Z10")); //RASE Z AXIS
+                queue.enqueue_now_P(RAIZE_Z_10_STR); //RASE Z AXIS
                 tempvalue=constrain(CodeValue(),0,275);
                 thermalManager.setTargetHotend(tempvalue,0);
               }
@@ -1151,11 +1182,11 @@ void AnycubicTFTClass::GetCommandFromTFT()
             {
               if(CodeSeen('X')||CodeSeen('Y')||CodeSeen('Z'))
               {
-                if(CodeSeen('X')) queue.enqueue_now_P(PSTR("G28 X"));
-                if(CodeSeen('Y')) queue.enqueue_now_P(PSTR("G28 Y"));
-                if(CodeSeen('Z')) queue.enqueue_now_P(PSTR("G28 Z"));
+                if(CodeSeen('X')) queue.enqueue_now_P(HOME_X_STR);
+                if(CodeSeen('Y')) queue.enqueue_now_P(HOME_Y_STR);
+                if(CodeSeen('Z')) queue.enqueue_now_P(HOME_Z_STR);
               }
-              else if(CodeSeen('C')) queue.enqueue_now_P(PSTR("G28"));
+              else if(CodeSeen('C')) queue.enqueue_now_P(HOME_ALL_STR);
             }
             break;
           case 22: // A22 move X/Y/Z or extrude
@@ -1167,7 +1198,7 @@ void AnycubicTFTClass::GetCommandFromTFT()
               if(CodeSeen('F')) // Set feedrate
               movespeed = CodeValue();
 
-              queue.enqueue_now_P(PSTR("G91")); // relative coordinates
+              queue.enqueue_now_P(G91_STR); // relative coordinates
 
               if(CodeSeen('X')) // Move in X direction
               {
@@ -1201,14 +1232,14 @@ void AnycubicTFTClass::GetCommandFromTFT()
                 else {sprintf_P(value,PSTR("G1 E%iF500"),int(coorvalue)); }
                 queue.enqueue_one_now(value);
               }
-              queue.enqueue_now_P(PSTR("G90")); // absolute coordinates
+              queue.enqueue_now_P(G90_STR); // absolute coordinates
             }
             ANYCUBIC_SERIAL_ENTER();
             break;
           case 23: // A23 preheat pla
             if((!planner.movesplanned())&& (TFTstate!=ANYCUBIC_TFT_STATE_SDPAUSE) && (TFTstate!=ANYCUBIC_TFT_STATE_SDOUTAGE))
             {
-              if((current_position[Z_AXIS]<10)) queue.enqueue_now_P(PSTR("G1 Z10")); // RAISE Z AXIS
+              if((current_position[Z_AXIS]<10)) queue.enqueue_now_P(RAIZE_Z_10_STR); // RAISE Z AXIS
               thermalManager.setTargetBed(50);
               thermalManager.setTargetHotend(200, 0);
               ANYCUBIC_SERIAL_SUCC_START;
@@ -1218,7 +1249,7 @@ void AnycubicTFTClass::GetCommandFromTFT()
           case 24:// A24 preheat abs
             if((!planner.movesplanned()) && (TFTstate!=ANYCUBIC_TFT_STATE_SDPAUSE) && (TFTstate!=ANYCUBIC_TFT_STATE_SDOUTAGE))
             {
-              if((current_position[Z_AXIS]<10)) queue.enqueue_now_P(PSTR("G1 Z10")); //RAISE Z AXIS
+              if((current_position[Z_AXIS]<10)) queue.enqueue_now_P(RAIZE_Z_10_STR); //RAISE Z AXIS
               thermalManager.setTargetBed(80);
               thermalManager.setTargetHotend(240, 0);
 
@@ -1280,7 +1311,8 @@ void AnycubicTFTClass::GetCommandFromTFT()
           #ifndef BLTOUCH
             case 29: // A29 Z PROBE OFFESET SET
               break;
-
+          #endif
+            /*
             case 30: // A30 assist leveling, the original function was canceled
               if(CodeSeen('S')) {
                 #ifdef ANYCUBIC_TFT_DEBUG
@@ -1374,6 +1406,7 @@ void AnycubicTFTClass::GetCommandFromTFT()
               }
               break;
             #endif
+            */
           case 33: // A33 get version info
             {
               ANYCUBIC_SERIAL_PROTOCOLPGM("J33 ");
