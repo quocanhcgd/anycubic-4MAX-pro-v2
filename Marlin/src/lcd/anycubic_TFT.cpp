@@ -37,7 +37,10 @@
 #include "../module/stepper.h"
 #include "../module/temperature.h"
 #include "../sd/cardreader.h"
-#include "../feature/power_loss_recovery.h"
+
+#if ENABLED(POWER_LOSS_RECOVERY)
+  #include "../feature/power_loss_recovery.h"
+#endif
 
 #ifdef ANYCUBIC_TFT_MODEL
 #include "anycubic_TFT.h"
@@ -431,7 +434,7 @@ void AnycubicTFTClass::ParkAfterStop(){
   }
   queue.enqueue_now_P(M84_STR); // disable stepper motors
   queue.enqueue_now_P(M27_STR); // force report of SD status
-  ai3m_pause_state = 0;
+  a4maxpro_pause_state = 0;
   #ifdef ANYCUBIC_TFT_DEBUG
     SERIAL_ECHOPAIR(" DEBUG: A4MAXPRO Pause State: ", a4maxpro_pause_state);
     SERIAL_EOL();
