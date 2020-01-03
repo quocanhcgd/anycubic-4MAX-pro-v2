@@ -138,14 +138,6 @@ void AnycubicTFTClass::Setup() {
   #if ENABLED(ANYCUBIC_FILAMENT_RUNOUT_SENSOR)
     pinMode(FIL_RUNOUT_PIN,INPUT);
     WRITE(FIL_RUNOUT_PIN,HIGH);
-    if(READ(FIL_RUNOUT_PIN)==true)
-    {
-      ANYCUBIC_SERIAL_PROTOCOLPGM("J15"); //J15 FILAMENT LACK
-      ANYCUBIC_SERIAL_ENTER();
-      #ifdef ANYCUBIC_TFT_DEBUG
-        SERIAL_ECHOLNPGM("TFT Serial Debug: Filament runout... J15");
-      #endif
-    }
   #endif
 
   SelectedDirectory[0]=0;
