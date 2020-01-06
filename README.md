@@ -47,7 +47,6 @@ Marlin-Ai3M-2.0.x administrator:
 - David Ramiro [[@davidramiro](https://github.com/davidramiro)]
 
 Marlin-A4MaxPro-2.0.x contributors:
-- [[@alfrank](https://drucktipps3d.de/forum/profile/alfrank/)]
 - [[@mpk](https://drucktipps3d.de/forum/profile/mpk/)]
 - Jonas Plamann [[@Poket-Jony](https://github.com/Poket-Jony)]
 
