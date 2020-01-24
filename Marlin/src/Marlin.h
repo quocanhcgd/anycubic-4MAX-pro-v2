@@ -337,10 +337,6 @@ void startOrResumeJob();
 
 extern bool wait_for_heatup;
 
-extern bool anycbc_light_enabled;
-extern bool anycbc_print_finished;
-extern bool anycbc_power_off_after_print;
-
 extern void (*softwareReset) (void);
 
 #if HAS_RESUME_CONTINUE

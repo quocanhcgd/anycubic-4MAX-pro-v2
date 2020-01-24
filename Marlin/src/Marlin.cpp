@@ -181,10 +181,6 @@
   #include "libs/L6470/L6470_Marlin.h"
 #endif
 
-#if ENABLED(ANYCUBIC_TFT_MODEL)
-  #include "lcd/anycubic_TFT.h"
-#endif
-
 const char NUL_STR[] PROGMEM = "",
            G28_STR[] PROGMEM = "G28",
            M21_STR[] PROGMEM = "M21",
@@ -221,10 +217,6 @@ millis_t max_inactive_time, // = 0
   I2CPositionEncodersMgr I2CPEM;
 #endif
 
-bool anycbc_light_enabled = true;
-bool anycbc_print_finished = false;
-bool anycbc_power_off_after_print = true;
-
 /**
  * ***************************************************************************
  * ******************************** FUNCTIONS ********************************
@@ -232,20 +224,6 @@ bool anycbc_power_off_after_print = true;
  */
 
 void (*softwareReset) (void)=0;
-
-void anycbc_setupLED()
-{
-    pinMode(LED_PIN,OUTPUT);
-    WRITE(LED_PIN,LOW);
-}
-void anycbc_Light_CON()
-{
-    if(anycbc_light_enabled){
-        WRITE(LED_PIN,HIGH);
-    } else {
-        WRITE(LED_PIN,LOW);
-    }
-}
 
 void setup_PowerConPin()
 {
@@ -559,11 +537,6 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
     runout.run();
   #endif
 
-  #if ENABLED(ANYCUBIC_TFT_MODEL) && ENABLED(ANYCUBIC_FILAMENT_RUNOUT_SENSOR)
-    AnycubicTFT.FilamentRunout();
-  #endif
-  anycbc_Light_CON();
-
   if (queue.length < BUFSIZE) queue.get_available_commands();
 
   const millis_t ms = millis();
@@ -742,11 +715,6 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
   if (ELAPSED(ms, next_check_axes_ms)) {
     planner.check_axes_activity();
     next_check_axes_ms = ms + 100UL;
-
-    if(anycbc_power_off_after_print && anycbc_print_finished && (thermalManager.degHotend(0)<100)) {
-      anycbc_print_finished=0;
-      PowerDown();
-    }
   }
 
   #if PIN_EXISTS(FET_SAFETY)
@@ -785,10 +753,6 @@ void idle(
 
   #if ENABLED(MAX7219_DEBUG)
     max7219.idle_tasks();
-  #endif
-
-  #ifdef ANYCUBIC_TFT_MODEL
-    AnycubicTFT.CommandScan();
   #endif
 
   #ifdef ENDSTOP_BEEP
@@ -870,10 +834,6 @@ void kill(PGM_P const lcd_error/*=nullptr*/, PGM_P const lcd_component/*=nullptr
   #else
     UNUSED(lcd_error);
     UNUSED(lcd_component);
-  #endif
-
-  #ifdef ANYCUBIC_TFT_MODEL
-    AnycubicTFT.KillTFT();
   #endif
 
   #ifdef ACTION_ON_KILL
@@ -1034,10 +994,6 @@ void setup() {
   SERIAL_ECHOLNPGM("start");
   SERIAL_ECHO_START();
 
-  #ifdef ANYCUBIC_TFT_MODEL
-    AnycubicTFT.Setup();
-  #endif
-
   #if TMC_HAS_SPI
     #if DISABLED(TMC_USE_SW_SPI)
       SPI.begin();
@@ -1048,8 +1004,6 @@ void setup() {
   #ifdef BOARD_INIT
     BOARD_INIT();
   #endif
-
-  anycbc_setupLED();
 
   // Check startup - does nothing if bootloader sets MCUSR to 0
   byte mcu = HAL_get_reset_source();
@@ -1299,9 +1253,6 @@ void loop() {
 
     endstops.event_handler();
     idle();
-    #ifdef ANYCUBIC_TFT_MODEL
-      AnycubicTFT.CommandScan();
-    #endif
 
   }
 }

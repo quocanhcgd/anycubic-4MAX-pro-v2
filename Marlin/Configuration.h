@@ -71,7 +71,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(davidramiro)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(Poket-Jony, Github)" // Who made the changes.
 
 /**
  * *** VENDORS PLEASE READ ***
@@ -2046,10 +2046,17 @@
 //#define TOUCH_UI_FTDI_EVE
 
 //
+// Anycubic DWIN TFT Display
+//
+#define ANYCUBIC_TFT_MODEL
+#define DWIN_TFT
+#define DWIN_TFT_DEBUG
+
+//
 // Third-party or vendor-customized controller interfaces.
 // Sources should be installed in 'src/lcd/extensible_ui'.
 //
-//#define EXTENSIBLE_UI
+#define EXTENSIBLE_UI
 
 //=============================================================================
 //=============================== Graphical TFTs ==============================
@@ -2220,8 +2227,3 @@
 
 // Allow servo angle to be edited and saved to EEPROM
 //#define EDITABLE_SERVO_ANGLES
-
-// Enable Anycubic TFT
-#define ANYCUBIC_TFT_MODEL
-#define ANYCUBIC_FILAMENT_RUNOUT_SENSOR
-#define ANYCUBIC_TFT_DEBUG

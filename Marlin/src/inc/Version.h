@@ -48,7 +48,7 @@
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2019-12-23"
+  #define STRING_DISTRIBUTION_DATE "2020-01-24"
 
 /**
  * Minimum Configuration.h and Configuration_adv.h file versions.
