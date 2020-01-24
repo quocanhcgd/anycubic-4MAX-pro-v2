@@ -141,13 +141,13 @@
   #endif
 #endif // #if TRIGORILLA_VERSION
 
-#if defined(ANYCUBIC_TFT_MODEL)
+#if defined(DWIN_TFT)
   #define BEEPER_PIN       31
   #define SD_DETECT_PIN    49
 #endif
 
 // LCD
-#if defined(REPRAP_DISCOUNT_SMART_CONTROLLER) || defined(G3D_PANEL) || defined(ANYCUBIC_TFT_MODEL)
+#if defined(REPRAP_DISCOUNT_SMART_CONTROLLER) || defined(G3D_PANEL) || defined(DWIN_TFT)
 	#define KILL_PIN        41
 #else
 	#define KILL_PIN        -1

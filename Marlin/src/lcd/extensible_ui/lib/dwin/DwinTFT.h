@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include "../../../../inc/MarlinConfig.h"
+#include "../../ui_api.h"
 
 char *itostr2(const uint8_t &x);
 
@@ -67,7 +68,7 @@ public:
   void init();
   void kill();
   void loop();
-  void filamentRunout(const extruder_t extruder);
+  void filamentRunout(const ExtUI::extruder_t extruder);
   void setCaseLight(bool state);
   bool getCaseLight();
 

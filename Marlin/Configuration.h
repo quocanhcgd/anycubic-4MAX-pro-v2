@@ -2048,7 +2048,6 @@
 //
 // Anycubic DWIN TFT Display
 //
-#define ANYCUBIC_TFT_MODEL
 #define DWIN_TFT
 #define DWIN_TFT_DEBUG
 

@@ -144,7 +144,7 @@ void DwinTFTClass::loop10Hz()
     checkPowerOff();
 }
 
-void DwinTFTClass::filamentRunout(const extruder_t extruder)
+void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
 {
     buzzer.tone(200, 1567);
     buzzer.tone(200, 1174);
@@ -152,9 +152,9 @@ void DwinTFTClass::filamentRunout(const extruder_t extruder)
     buzzer.tone(200, 1174);
     buzzer.tone(2000, 1567);
     
-    ANYCUBIC_SERIAL_PROTOCOLPGM("J15"); //J15 FILAMENT LACK
-    ANYCUBIC_SERIAL_ENTER();
-    #ifdef ANYCUBIC_TFT_DEBUG
+    DWIN_TFT_SERIAL_PROTOCOLPGM("J15"); //J15 FILAMENT LACK
+    DWIN_TFT_SERIAL_ENTER();
+    #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: Filament runout... J15");
     #endif
 }
