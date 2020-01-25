@@ -390,7 +390,7 @@ void DwinTFTCommandClass::sendSetHotendTemp()
       if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
         ExtUI::injectCommands_P(DWIN_TFT_GCODE_RAIZE_Z_10); //RASE Z AXIS
       }
-      temp = constrain(codeValue(), 0, 275);
+      temp = constrain(codeValue(), 0, HEATER_0_MAXTEMP);
       ExtUI::setTargetTemp_celsius(float(temp), ExtUI::extruder_t::E0);
     }
   }
@@ -400,7 +400,7 @@ void DwinTFTCommandClass::sendSetHotbedTemp()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(codeSeen('S')) {
-      uint16_t temp = constrain(codeValue(), 0, 150);
+      uint16_t temp = constrain(codeValue(), 0, BED_MAXTEMP);
       ExtUI::setTargetTemp_celsius(float(temp), ExtUI::heater_t::BED);
     }
   }
@@ -458,7 +458,7 @@ void DwinTFTCommandClass::sendMove()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     float coorvalue;
-    uint16_t movespeed = 0;
+    unsigned int movespeed = 0;
     char value[30];
     if(codeSeen('F')) { // Set feedrate
       movespeed = codeValue();
@@ -502,8 +502,8 @@ void DwinTFTCommandClass::sendPreheatPLA()
     if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
       ExtUI::injectCommands_P(DWIN_TFT_GCODE_RAIZE_Z_10); // RAISE Z AXIS
     }
-    ExtUI::setTargetTemp_celsius(200, ExtUI::extruder_t::E0);
-    ExtUI::setTargetTemp_celsius(50, ExtUI::heater_t::BED);
+    ExtUI::setTargetTemp_celsius(PREHEAT_1_TEMP_HOTEND, ExtUI::extruder_t::E0);
+    ExtUI::setTargetTemp_celsius(PREHEAT_1_TEMP_BED, ExtUI::heater_t::BED);
     DWIN_TFT_SERIAL_SUCC_START;
     DWIN_TFT_SERIAL_ENTER();
   }
@@ -515,8 +515,8 @@ void DwinTFTCommandClass::sendPreheatABS()
     if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
       ExtUI::injectCommands_P(DWIN_TFT_GCODE_RAIZE_Z_10); //RAISE Z AXIS
     }
-    ExtUI::setTargetTemp_celsius(240, ExtUI::extruder_t::E0);
-    ExtUI::setTargetTemp_celsius(80, ExtUI::heater_t::BED);
+    ExtUI::setTargetTemp_celsius(PREHEAT_2_TEMP_HOTEND, ExtUI::extruder_t::E0);
+    ExtUI::setTargetTemp_celsius(PREHEAT_2_TEMP_BED, ExtUI::heater_t::BED);
     DWIN_TFT_SERIAL_SUCC_START;
     DWIN_TFT_SERIAL_ENTER();
   }
