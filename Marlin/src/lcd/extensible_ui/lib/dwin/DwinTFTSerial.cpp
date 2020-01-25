@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../../../inc/MarlinConfig.h"
+#include "../../../../inc/MarlinConfigPre.h"
 
 #if ENABLED(DWIN_TFT)
 

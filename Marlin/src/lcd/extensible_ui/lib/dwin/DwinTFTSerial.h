@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "../../../../inc/MarlinConfig.h"
+#include "../../../../inc/MarlinConfigPre.h"
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>

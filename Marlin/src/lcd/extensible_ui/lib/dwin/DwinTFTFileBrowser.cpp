@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../../../inc/MarlinConfig.h"
+#include "../../../../inc/MarlinConfigPre.h"
 
 #if BOTH(DWIN_TFT, SDSUPPORT)
 
@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../../../Marlin.h"
+#include "../../../../MarlinCore.h"
 #include "../../../../core/language.h"
 #include "../../../../core/macros.h"
 #include "../../../../core/serial.h"
