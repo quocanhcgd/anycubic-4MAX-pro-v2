@@ -19,10 +19,15 @@
 
 #pragma once
 
-#include <stdio.h>
 #include "../../../../inc/MarlinConfig.h"
 
+#include <stdio.h>
+
 #include "DwinTFT.h"
+
+#define DWIN_TFT_BAUDRATE 115200
+#define DWIN_TFT_BUFSIZE 4
+#define DWIN_TFT_MAX_CMD_SIZE 96
 
 enum DwinTFTCommandsRx : uint8_t {
   DWIN_TFT_RX_GET_HOTEND_TEMP = 0,
@@ -64,14 +69,14 @@ enum DwinTFTCommandsRx : uint8_t {
   DWIN_TFT_RX_SET_CASE_LED = 42
 };
 
-const char DWIN_TFT_TX_MAINBOARD_RESET[] PROGMEM = "J17";
-const char DWIN_TFT_TX_READY[] PROGMEM = "J12";
-const char DWIN_TFT_TX_KILL[] PROGMEM = "J11";
-const char DWIN_TFT_TX_SD_CARD_NOT_INSERTED[] PROGMEM = "J02";
-const char DWIN_TFT_TX_SD_CARD_OPEN_SUCCESS[] PROGMEM = "J20";
-const char DWIN_TFT_TX_SD_CARD_OPEN_FAILED[] PROGMEM = "J21";
-const char DWIN_TFT_TX_SD_CARD_FILE_LIST_START[] PROGMEM = "FN ";
-const char DWIN_TFT_TX_SD_CARD_FILE_LIST_END[] PROGMEM = "END";
+#define DWIN_TFT_TX_MAINBOARD_RESET "J17"
+#define DWIN_TFT_TX_READY "J12"
+#define DWIN_TFT_TX_KILL "J11"
+#define DWIN_TFT_TX_SD_CARD_NOT_INSERTED "J02"
+#define DWIN_TFT_TX_SD_CARD_OPEN_SUCCESS "J20"
+#define DWIN_TFT_TX_SD_CARD_OPEN_FAILED "J21"
+#define DWIN_TFT_TX_SD_CARD_FILE_LIST_START "FN "
+#define DWIN_TFT_TX_SD_CARD_FILE_LIST_END "END"
 
 class DwinTFTCommandClass {
 public:
@@ -100,7 +105,9 @@ private:
   void sendGetPrintingTime();
   void sendGetSDCardList();
   void sendSDCardPause();
+  void sendSDCardResume();
   void sendSDCardStop();
+  void sendSDCardFileSelect();
   void sendSDCardStart();
   void sendSetHotendTemp();
   void sendSetHotbedTemp();

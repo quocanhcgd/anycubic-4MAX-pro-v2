@@ -91,6 +91,13 @@ char *ftostr32(const float &x)
 }
 #endif
 
+DwinTFTClass DwinTFT;
+
+DwinTFTClass::DwinTFTClass()
+{
+  
+}
+
 void DwinTFTClass::init()
 {
   DwinTFTSerial.begin(DWIN_TFT_BAUDRATE);
@@ -106,9 +113,9 @@ void DwinTFTClass::init()
     WRITE(SD_DETECT_PIN, HIGH);
   #endif
 
-  #if ENABLED(LED_PIN) && PIN_EXISTS(LED_PIN)
-    pinMode(LED_PIN,OUTPUT);
-    WRITE(LED_PIN,LOW);
+  #if PIN_EXISTS(LED)
+    pinMode(LED_PIN, OUTPUT);
+    WRITE(LED_PIN, LOW);
   #endif
 
   #ifdef STARTUP_CHIME
@@ -136,7 +143,7 @@ void DwinTFTClass::loop()
     loop10Hz();
     next10HzCheck = ms + 100UL;
   }
-  DwinTFTCommands.loop();
+  DwinTFTCommand.loop();
 }
 
 void DwinTFTClass::loop10Hz()
@@ -161,10 +168,10 @@ void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
 
 void DwinTFTClass::checkPowerOff()
 {
-    if(autoPowerOff && !ExtUI::isMoving() && !ExtUI::isPrinting && 
+    if(autoPowerOff && !ExtUI::isMoving() && !ExtUI::isPrinting() && 
       ExtUI::getActualTemp_celsius(ExtUI::extruder_t::E0) < 100
     ) {
-      PowerDown();
+      ExtUI::injectCommands_P(DWIN_TFT_GCODE_M81);
     }
 }
 

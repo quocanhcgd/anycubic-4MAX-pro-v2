@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "../../../../inc/MarlinConfig.h"
+
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
@@ -136,5 +138,3 @@ FORCE_INLINE void DwinTFTSerialPrintPGM(const char *str)
     ch=pgm_read_byte(++str);
   }
 }
-
-#endif

@@ -104,7 +104,7 @@
 #define TEMP_BED_PIN       14
 
 // POWER
-#define POWER_OFF_PIN      21
+#define PS_ON_PIN      21
 
 // Servos
 #if TRIGORILLA_VERSION == 0 // Default Trigorilla

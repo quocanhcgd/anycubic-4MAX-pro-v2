@@ -223,24 +223,6 @@ millis_t max_inactive_time, // = 0
  * ***************************************************************************
  */
 
-void (*softwareReset) (void)=0;
-
-void setup_PowerConPin()
-{
-    SET_OUTPUT(POWER_OFF_PIN);
-    WRITE(POWER_OFF_PIN,HIGH);
-}
-void PowerDown()
-{
-  for(unsigned char i=0;i<3;i++)
-  {
-    WRITE(POWER_OFF_PIN,LOW);
-    delay(10);
-    WRITE(POWER_OFF_PIN,HIGH);
-    delay(10);
-  }
-}
-
 void setup_killpin() {
   #if HAS_KILL
     SET_INPUT_PULLUP(KILL_PIN);
@@ -962,7 +944,6 @@ void setup() {
     recovery.setup();
   #endif
 
-  setup_PowerConPin();
   setup_killpin();
 
   #if HAS_TMC220x

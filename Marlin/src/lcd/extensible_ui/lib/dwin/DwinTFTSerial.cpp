@@ -19,7 +19,6 @@
 
 #include "../../../../inc/MarlinConfig.h"
 
-
 #if ENABLED(DWIN_TFT)
 
 #include <stdlib.h>

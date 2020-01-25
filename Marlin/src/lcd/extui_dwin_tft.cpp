@@ -19,12 +19,12 @@
  *   location: <http://www.gnu.org/licenses/>.                              *
  ****************************************************************************/
 
-#include "../inc/MarlinConfig.h"
+#include "../inc/MarlinConfigPre.h"
 
-#if BOTH(DWIN_TFT, EXTENSIBLE_UI)
+#if ENABLED(DWIN_TFT)
 
 #include "extensible_ui/ui_api.h"
-#include "extensible_ui/lib/dwin/dwintft.h"
+#include "extensible_ui/lib/dwin/DwinTFT.h"
 
 // To implement a new UI, complete the functions below and
 // read or update Marlin's state using the methods in the

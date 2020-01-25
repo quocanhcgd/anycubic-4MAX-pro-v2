@@ -19,8 +19,10 @@
 
 #pragma once
 
-#include <stdio.h>
 #include "../../../../inc/MarlinConfig.h"
+
+#include <stdio.h>
+
 #include "../../ui_api.h"
 
 char *itostr2(const uint8_t &x);
@@ -30,14 +32,11 @@ char *itostr3(const int);
 char *ftostr32(const float &);
 #endif
 
-#define DWIN_TFT_BAUDRATE 115200
-#define DWIN_TFT_BUFSIZE 4
-#define DWIN_TFT_MAX_CMD_SIZE 96
-
 const char DWIN_TFT_GCODE_G90[] PROGMEM = "G90";
 const char DWIN_TFT_GCODE_G91[] PROGMEM = "G91";
 const char DWIN_TFT_GCODE_M25[] PROGMEM = "M25";
 const char DWIN_TFT_GCODE_M27[] PROGMEM = "M27";
+const char DWIN_TFT_GCODE_M81[] PROGMEM = "M81";
 const char DWIN_TFT_GCODE_M84[] PROGMEM = "M84";
 const char DWIN_TFT_GCODE_M108[] PROGMEM = "M108";
 const char DWIN_TFT_GCODE_M500[] PROGMEM = "M500";

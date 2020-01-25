@@ -19,8 +19,11 @@
 
 #pragma once
 
-#include <stdio.h>
 #include "../../../../inc/MarlinConfig.h"
+
+#include <stdio.h>
+
+#include "../../../../sd/SdFatConfig.h"
 
 class DwinTFTFileBrowserClass {
 public:
@@ -31,9 +34,6 @@ public:
   void listFiles();
   void selectFile();
   void refreshFileList();
-
-private:
-  
 };
 
 extern DwinTFTFileBrowserClass DwinTFTFileBrowser;

@@ -48,6 +48,13 @@
 
 static ExtUI::FileList fileList;
 
+DwinTFTFileBrowserClass DwinTFTFileBrowser;
+
+DwinTFTFileBrowserClass::DwinTFTFileBrowserClass()
+{
+  
+}
+
 void DwinTFTFileBrowserClass::reset()
 {
     selectedFilename[0] = 0;
@@ -132,20 +139,20 @@ void DwinTFTFileBrowserClass::selectFile()
 
 void DwinTFTFileBrowserClass::refreshFileList()
 {
-    if (SelectedDirectory[0]==0) {
+    if (selectedDirectory[0]==0) {
       card.mount();
     } else {
-      if (SelectedDirectory[0] == '.' && SelectedDirectory[1] == '.') {
+      if (selectedDirectory[0] == '.' && selectedDirectory[1] == '.') {
         card.cdup();
       } else {
-        if (SelectedDirectory[0] == '<') {
+        if (selectedDirectory[0] == '<') {
           //HandleSpecialMenu();
         } else {
-          card.cd(SelectedDirectory);
+          card.cd(selectedDirectory);
         }
       }
     }
-    SelectedDirectory[0]=0;
+    selectedDirectory[0]=0;
 
     if(!ExtUI::isMediaInserted())
     {

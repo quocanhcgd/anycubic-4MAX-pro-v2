@@ -47,6 +47,13 @@
 #include "DwinTFTSerial.h"
 #include "DwinTFTFileBrowser.h"
 
+DwinTFTCommandClass DwinTFTCommand;
+
+DwinTFTCommandClass::DwinTFTCommandClass()
+{
+  
+}
+
 void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
 {
     switch(command) {
@@ -70,7 +77,7 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
             sendGetCurrentCoordinates();
             break;
           case DWIN_TFT_RX_GET_SD_CARD_PRINT_STATUS: //A6 GET SD CARD PRINTING STATUS
-            sendGetSDCardPrintigStatus();
+            sendGetSDCardPrintingStatus();
             break;
           case DWIN_TFT_RX_GET_PRINTING_TIME://A7 GET PRINTING TIME
             sendGetPrintingTime();
@@ -99,19 +106,19 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
           case DWIN_TFT_RX_OUTAGE_RESUME: // A15 RESUMING FROM OUTAGE
             break;
           case DWIN_TFT_RX_SET_HOTEND_TEMP: // A16 set hotend temp
-            setHotendTemp();
+            sendSetHotendTemp();
             break;
           case DWIN_TFT_RX_SET_HOTBED_TEMP:// A17 set heated bed temp
-            setHotbedTemp();
+            sendSetHotbedTemp();
             break;
           case DWIN_TFT_RX_SET_FAN_SPEED:// A18 set fan speed
-            setFanSpeed()
+            sendSetFanSpeed();
             break;
           case DWIN_TFT_RX_STEPPER_DRIVER_STOP: // A19 stop stepper drivers
-            stopStepperDriver();
+            sendStopStepperDriver();
             break;
           case DWIN_TFT_RX_GET_PRINT_SPEED:// A20 read printing speed
-            sendGetPrintSpeed()
+            sendGetPrintSpeed();
             break;
           case DWIN_TFT_RX_HOME_ALL: // A21 all home
             sendHomeAll();
@@ -142,7 +149,7 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
             sendGetVersionInfo();
             break;
           case DWIN_TFT_RX_RESET_MAINBOARD: //a40 reset mainboard
-            softwareReset();
+            ExtUI::injectCommands_P(DWIN_TFT_GCODE_M502);
             break;
           case DWIN_TFT_RX_AUTO_POWER_OFF: // auto power off
             sendAutoPowerOff();
@@ -168,10 +175,10 @@ bool DwinTFTCommandClass::codeSeen(char code)
 
 void DwinTFTCommandClass::receiveCommands()
 {
-  while( DwinTFTSerial.available() > 0  && TFTbuflen < TFTBUFSIZE)
+  while( DwinTFTSerial.available() > 0  && TFTbuflen < DWIN_TFT_BUFSIZE)
   {
     serial3_char = DwinTFTSerial.read();
-    if(serial3_char == '\n' || serial3_char == '\r' || serial3_char == ':'  || serial3_count >= (TFT_MAX_CMD_SIZE - 1) )
+    if(serial3_char == '\n' || serial3_char == '\r' || serial3_char == ':'  || serial3_count >= (DWIN_TFT_MAX_CMD_SIZE - 1) )
     {
       if(!serial3_count) { //if empty line
         return;
@@ -189,9 +196,9 @@ void DwinTFTCommandClass::receiveCommands()
           SERIAL_ECHOLNPAIR("TFT Serial Command: ", TFTcmdbuffer[TFTbufindw]);
         #endif
 
-        handleCommand(a_command);
+        handleCommand((DwinTFTCommandsRx)a_command);
       }
-      TFTbufindw = (TFTbufindw + 1) % TFTBUFSIZE;
+      TFTbufindw = (TFTbufindw + 1) % DWIN_TFT_BUFSIZE;
       TFTbuflen += 1;
       serial3_count = 0; //clear buffer
     }
@@ -204,12 +211,12 @@ void DwinTFTCommandClass::receiveCommands()
 
 void DwinTFTCommandClass::loop()
 {
-  if(TFTbuflen<(TFTBUFSIZE-1)) {
+  if(TFTbuflen<(DWIN_TFT_BUFSIZE-1)) {
     receiveCommands();
   }
   if(TFTbuflen) {
     TFTbuflen = (TFTbuflen - 1);
-    TFTbufindr = (TFTbufindr + 1) % TFTBUFSIZE;
+    TFTbufindr = (TFTbufindr + 1) % DWIN_TFT_BUFSIZE;
   }
 }
 
@@ -253,7 +260,7 @@ void DwinTFTCommandClass::sendGetCurrentCoordinates()
   DWIN_TFT_SERIAL_PROTOCOLPGM("A5V");
   DWIN_TFT_SERIAL_SPACE();
   DWIN_TFT_SERIAL_PROTOCOLPGM("X: ");
-  DWIN_TFT_SERIAL_PROTOCOL(ExtUI::getAxisPosition_mm(ExtUI::axis_t::X);
+  DWIN_TFT_SERIAL_PROTOCOL(ExtUI::getAxisPosition_mm(ExtUI::axis_t::X));
   DWIN_TFT_SERIAL_SPACE();
   DWIN_TFT_SERIAL_PROTOCOLPGM("Y: ");
   DWIN_TFT_SERIAL_PROTOCOL(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Y));
@@ -285,7 +292,7 @@ void DwinTFTCommandClass::sendGetPrintingTime()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A7V ");
   duration_t elapsed = print_job_timer.duration();
-  if(elapsed.seconds() != 0) { // print time
+  if(elapsed.second() != 0) { // print time
     DWIN_TFT_SERIAL_PROTOCOL(itostr2(elapsed.hour())); //hours
     DWIN_TFT_SERIAL_SPACE();
     DWIN_TFT_SERIAL_PROTOCOLPGM("H");
@@ -537,10 +544,10 @@ void DwinTFTCommandClass::sendSDCardRefresh()
 
 void DwinTFTCommandClass::sendFilamentTest()
 {
-  if(CodeSeen('O')) {
+  if(codeSeen('O')) {
 
   }
-  else if(CodeSeen('C')) {
+  else if(codeSeen('C')) {
     
   }
   DWIN_TFT_SERIAL_ENTER();
