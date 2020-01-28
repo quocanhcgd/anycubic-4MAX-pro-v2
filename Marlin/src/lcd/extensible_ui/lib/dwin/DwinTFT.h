@@ -72,7 +72,7 @@ public:
   bool getCaseLight();
 
 private:
-  bool caseLight = true;
+  bool caseLight = false;
   void receiveCommands();
   void loop10Hz();
   void checkPowerOff();
