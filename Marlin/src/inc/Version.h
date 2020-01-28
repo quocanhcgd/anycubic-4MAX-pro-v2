@@ -39,16 +39,17 @@
  * Marlin's own build number, e.g. 2.0.x.
  * --- A4MaxPro ---
  * Release: "v{MAJOR}.{MINOR}.{PATCH}"" e.g. "v2.0.0"
- * Development: "{MAJOR}.{MINOR}.{PATCH}-dev" e.g. "2.1.0-dev"
+ * Development: "{MAJOR}.{MINOR}.{PATCH}-dev" e.g. "2.1.0dev"
+ * (Max displayable length = 8)
  */
- #define CUSTOM_BUILD_VERSION "2.1.0-dev"
+ #define CUSTOM_BUILD_VERSION "2.1.0dev"
 
-  /**
-   * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
-   * here we define this default string as the date where the latest release
-   * version was tagged.
-   */
-  #define STRING_DISTRIBUTION_DATE "2020-01-24"
+/**
+ * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
+ * here we define this default string as the date where the latest release
+ * version was tagged.
+ */
+#define STRING_DISTRIBUTION_DATE "2020-01-28"
 
 /**
  * Minimum Configuration.h and Configuration_adv.h file versions.
