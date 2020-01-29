@@ -39,7 +39,7 @@ namespace ExtUI {
     DwinTFT.init();
   }
   void onIdle() {
-    DwinTFT.loop();
+    DwinTFT.tick();
   }
   void onPrinterKilled(PGM_P const error, PGM_P const component) {
     DwinTFT.kill();

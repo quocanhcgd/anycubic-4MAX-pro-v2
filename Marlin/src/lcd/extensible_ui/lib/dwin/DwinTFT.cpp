@@ -135,20 +135,21 @@ void DwinTFTClass::kill()
   #endif
 }
 
-void DwinTFTClass::loop()
+void DwinTFTClass::tick()
 {
   const millis_t ms = millis();
-  static millis_t next10HzCheck = 0;
-  if (ELAPSED(ms, next10HzCheck)) {
-    loop10Hz();
-    next10HzCheck = ms + 100UL;
+  static millis_t next_event_ms = 0;
+
+  if (ELAPSED(ms, next_event_ms)) {
+    next_event_ms = ms + DWIN_TFT_UPDATE_INTERVAL_MS;
+    loop();
   }
-  DwinTFTCommand.loop();
 }
 
-void DwinTFTClass::loop10Hz()
+void DwinTFTClass::loop()
 {
-    checkPowerOff();
+    DwinTFTCommand.loop();
+    //checkPowerOff();
 }
 
 void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
@@ -171,23 +172,41 @@ void DwinTFTClass::checkPowerOff()
     if(autoPowerOff && !ExtUI::isMoving() && !ExtUI::isPrinting() && 
       ExtUI::getActualTemp_celsius(ExtUI::extruder_t::E0) < 100
     ) {
-      ExtUI::injectCommands_P(DWIN_TFT_GCODE_M81);
+      autoPowerOff = false;
+      gcodeNow_P(DWIN_TFT_GCODE_M81);
     }
 }
 
 void DwinTFTClass::setCaseLight(bool state)
 {
-  caseLight = state;
-  if(state) {
+  #if PIN_EXISTS(LED)
+    caseLight = state;
+    if(state) {
         WRITE(LED_PIN, HIGH);
-  } else {
-      WRITE(LED_PIN, LOW);
-  }
+    } else {
+        WRITE(LED_PIN, LOW);
+    }
+  #endif
 }
 
 bool DwinTFTClass::getCaseLight()
 {
   return caseLight;
+}
+
+void DwinTFTClass::gcodeNow_P(PGM_P const gcode)
+{
+  ExtUI::injectCommands_P(gcode);
+}
+
+void DwinTFTClass::gcodeQueue_P(PGM_P const gcode)
+{
+  queue.enqueue_now_P(gcode);
+}
+
+void DwinTFTClass::gcodeQueue(const char* gcode)
+{
+  queue.enqueue_one_now(gcode);
 }
 
 #endif

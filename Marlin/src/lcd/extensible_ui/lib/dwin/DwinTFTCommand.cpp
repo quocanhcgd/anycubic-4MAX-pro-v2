@@ -149,7 +149,7 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
             sendGetVersionInfo();
             break;
           case DWIN_TFT_RX_RESET_MAINBOARD: //a40 reset mainboard
-            ExtUI::injectCommands_P(DWIN_TFT_GCODE_M502);
+            DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M502);
             break;
           case DWIN_TFT_RX_AUTO_POWER_OFF: // auto power off
             sendAutoPowerOff();
@@ -388,7 +388,7 @@ void DwinTFTCommandClass::sendSetHotendTemp()
       ExtUI::setTargetTemp_celsius(float(temp), ExtUI::extruder_t::E0);
     } else if(codeSeen('C') && !ExtUI::isPrinting() && !ExtUI::isMoving()) {
       if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
-        ExtUI::injectCommands_P(DWIN_TFT_GCODE_RAIZE_Z_10); //RASE Z AXIS
+        DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_RAIZE_Z_10); //RASE Z AXIS
       }
       temp = constrain(codeValue(), 0, HEATER_0_MAXTEMP);
       ExtUI::setTargetTemp_celsius(float(temp), ExtUI::extruder_t::E0);
@@ -445,11 +445,11 @@ void DwinTFTCommandClass::sendHomeAll()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(codeSeen('X') || codeSeen('Y') || codeSeen('Z')) {
-      if(codeSeen('X')) ExtUI::injectCommands_P(DWIN_TFT_GCODE_HOME_X);
-      if(codeSeen('Y')) ExtUI::injectCommands_P(DWIN_TFT_GCODE_HOME_Y);
-      if(codeSeen('Z')) ExtUI::injectCommands_P(DWIN_TFT_GCODE_HOME_Z);
+      if(codeSeen('X')) DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_HOME_X);
+      if(codeSeen('Y')) DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_HOME_Y);
+      if(codeSeen('Z')) DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_HOME_Z);
     } else if(codeSeen('C')) {
-      ExtUI::injectCommands_P(DWIN_TFT_GCODE_HOME_ALL);
+      DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_HOME_ALL);
     }
   }
 }
@@ -464,34 +464,36 @@ void DwinTFTCommandClass::sendMove()
       movespeed = codeValue();
     }
 
-    ExtUI::injectCommands_P(DWIN_TFT_GCODE_G91); // relative coordinates
+    DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91); // relative coordinates
 
     if(codeSeen('X')) { // Move in X direction
       coorvalue=codeValue();
-      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G1 X0.1F%i"),movespeed);}
-      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G1 X-0.1F%i"),movespeed);}
-      else {sprintf_P(value,PSTR("G1 X%iF%i"),int(coorvalue),movespeed);}
-      ExtUI::injectCommands_P(value);
+      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 X0.1F%i"),movespeed);}
+      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 X-0.1F%i"),movespeed);}
+      else {sprintf_P(value,PSTR("G0 X%iF%i"),int(coorvalue),movespeed);}
     } else if(codeSeen('Y')) { // Move in Y direction
       coorvalue=codeValue();
-      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G1 Y0.1F%i"),movespeed);}
-      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G1 Y-0.1F%i"),movespeed);}
-      else {sprintf_P(value,PSTR("G1 Y%iF%i"),int(coorvalue),movespeed);}
-      ExtUI::injectCommands_P(value);
+      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 Y0.1F%i"),movespeed);}
+      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 Y-0.1F%i"),movespeed);}
+      else {sprintf_P(value,PSTR("G0 Y%iF%i"),int(coorvalue),movespeed);}
     } else if(codeSeen('Z')) { // Move in Z direction
       coorvalue=codeValue();
-      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G1 Z0.1F%i"),movespeed);}
-      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G1 Z-0.1F%i"),movespeed);}
-      else {sprintf_P(value,PSTR("G1 Z%iF%i"),int(coorvalue),movespeed);}
-      ExtUI::injectCommands_P(value);
+      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 Z0.1F%i"),movespeed);}
+      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 Z-0.1F%i"),movespeed);}
+      else {sprintf_P(value,PSTR("G0 Z%iF%i"),int(coorvalue),movespeed);}
     } else if(codeSeen('E')) { // Extrude
       coorvalue=codeValue();
-      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G1 E0.1F%i"),movespeed);}
-      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G1 E-0.1F%i"),movespeed);}
-      else {sprintf_P(value,PSTR("G1 E%iF500"),int(coorvalue)); }
-      ExtUI::injectCommands_P(value);
+      if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 E0.1F%i"),movespeed);}
+      else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 E-0.1F%i"),movespeed);}
+      else {sprintf_P(value,PSTR("G0 E%iF500"),int(coorvalue)); }
     }
-    ExtUI::injectCommands_P(DWIN_TFT_GCODE_G90); // absolute coordinates
+    if(value != NULL) {
+      DwinTFT.gcodeQueue(value);
+      #ifdef DWIN_TFT_DEBUG
+        SERIAL_ECHOLNPAIR("TFT Serial Debug GCODE: ", value);
+      #endif
+    }
+    DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90); // absolute coordinates
   }
   DWIN_TFT_SERIAL_ENTER();
 }
@@ -500,10 +502,13 @@ void DwinTFTCommandClass::sendPreheatPLA()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
-      ExtUI::injectCommands_P(DWIN_TFT_GCODE_RAIZE_Z_10); // RAISE Z AXIS
+      DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_RAIZE_Z_10); // RAISE Z AXIS
     }
-    ExtUI::setTargetTemp_celsius(PREHEAT_1_TEMP_HOTEND, ExtUI::extruder_t::E0);
-    ExtUI::setTargetTemp_celsius(PREHEAT_1_TEMP_BED, ExtUI::heater_t::BED);
+    ExtUI::setTargetTemp_celsius(float(PREHEAT_1_TEMP_HOTEND), ExtUI::extruder_t::E0);
+    ExtUI::setTargetTemp_celsius(float(PREHEAT_1_TEMP_BED), ExtUI::heater_t::BED);
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: Preheat PLA");
+    #endif
     DWIN_TFT_SERIAL_SUCC_START;
     DWIN_TFT_SERIAL_ENTER();
   }
@@ -513,10 +518,13 @@ void DwinTFTCommandClass::sendPreheatABS()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
-      ExtUI::injectCommands_P(DWIN_TFT_GCODE_RAIZE_Z_10); //RAISE Z AXIS
+      DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_RAIZE_Z_10); //RAISE Z AXIS
     }
-    ExtUI::setTargetTemp_celsius(PREHEAT_2_TEMP_HOTEND, ExtUI::extruder_t::E0);
-    ExtUI::setTargetTemp_celsius(PREHEAT_2_TEMP_BED, ExtUI::heater_t::BED);
+    ExtUI::setTargetTemp_celsius(float(PREHEAT_2_TEMP_HOTEND), ExtUI::extruder_t::E0);
+    ExtUI::setTargetTemp_celsius(float(PREHEAT_2_TEMP_BED), ExtUI::heater_t::BED);
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: Preheat ABS");
+    #endif
     DWIN_TFT_SERIAL_SUCC_START;
     DWIN_TFT_SERIAL_ENTER();
   }
@@ -525,12 +533,12 @@ void DwinTFTCommandClass::sendPreheatABS()
 void DwinTFTCommandClass::sendCooldown()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
-    ExtUI::setTargetTemp_celsius(0, ExtUI::extruder_t::E0);
-    ExtUI::setTargetTemp_celsius(0, ExtUI::heater_t::BED);
+    ExtUI::setTargetTemp_celsius(float(0), ExtUI::extruder_t::E0);
+    ExtUI::setTargetTemp_celsius(float(0), ExtUI::heater_t::BED);
     DWIN_TFT_SERIAL_PROTOCOLPGM("J12"); // J12 cool down
     DWIN_TFT_SERIAL_ENTER();
     #ifdef DWIN_TFT_DEBUG
-    SERIAL_ECHOLNPGM("TFT Serial Debug: Cooling down... J12");
+      SERIAL_ECHOLNPGM("TFT Serial Debug: Cooling down... J12");
     #endif
   }
 }
@@ -581,7 +589,11 @@ void DwinTFTCommandClass::sendAutoPowerOff()
 
 void DwinTFTCommandClass::sendSetCaseLight()
 {
-  DwinTFT.setCaseLight(!DwinTFT.getCaseLight());
+  if(codeSeen('O')) {
+    DwinTFT.setCaseLight(false);
+  } else if (codeSeen('C')) {
+    DwinTFT.setCaseLight(true);
+  }
 }
 
 #endif

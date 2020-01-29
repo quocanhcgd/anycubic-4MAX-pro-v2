@@ -113,8 +113,8 @@ extern void serialEventRun(void) __attribute__((weak));
 #define DWIN_TFT_SERIAL_ENTER() (DwinTFTSerial.write('\r'),DwinTFTSerial.write('\n'))
 #define DWIN_TFT_SERIAL_SPACE() (DwinTFTSerial.write(' '))
 
-const char newErr[] PROGMEM ="ERR ";
-const char newSucc[] PROGMEM ="OK";
+const char newErr[] PROGMEM = "ERR ";
+const char newSucc[] PROGMEM = "OK";
 
 #define DWIN_TFT_SERIAL_ERROR_START (DwinTFTSerialPrintPGM(newErr))
 #define DWIN_TFT_SERIAL_ERROR(x) DWIN_TFT_SERIAL_PROTOCOL(x)

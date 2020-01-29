@@ -25,6 +25,8 @@
 
 #include "../../ui_api.h"
 
+#define DWIN_TFT_UPDATE_INTERVAL_MS  500
+
 char *itostr2(const uint8_t &x);
 
 #ifndef ULTRA_LCD
@@ -66,15 +68,18 @@ public:
   DwinTFTClass();
   void init();
   void kill();
-  void loop();
+  void tick();
   void filamentRunout(const ExtUI::extruder_t extruder);
   void setCaseLight(bool state);
   bool getCaseLight();
+  void gcodeNow_P(PGM_P const gcode);
+  void gcodeQueue_P(PGM_P const gcode);
+  void gcodeQueue(const char* gcode);
 
 private:
   bool caseLight = false;
   void receiveCommands();
-  void loop10Hz();
+  void loop();
   void checkPowerOff();
 };
 
