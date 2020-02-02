@@ -104,9 +104,11 @@ extern void serialEventRun(void) __attribute__((weak));
 #define DWIN_TFT_SERIAL_PROTOCOL(x) (DwinTFTSerial.print(x))
 #define DWIN_TFT_SERIAL_PROTOCOL_F(x,y) (DwinTFTSerial.print(x,y))
 #define DWIN_TFT_SERIAL_PROTOCOLPGM(x) (DwinTFTSerialPrintPGM(PSTR(x)))
+#define DWIN_TFT_SERIAL_PROTOCOL_P(x) (DwinTFTSerialPrintPGM(x))
 #define DWIN_TFT_SERIAL_(x) (DwinTFTSerial.print(x),DwinTFTSerial.write('\n'))
 #define DWIN_TFT_SERIAL_PROTOCOLLN(x) (DwinTFTSerial.print(x),DwinTFTSerial.write('\r'),DwinTFTSerial.write('\n'))
 #define DWIN_TFT_SERIAL_PROTOCOLLNPGM(x) (DwinTFTSerialPrintPGM(PSTR(x)),DwinTFTSerial.write('\r'),DwinTFTSerial.write('\n'))
+#define DWIN_TFT_SERIAL_PROTOCOLLN_P(x) (DwinTFTSerialPrintPGM(x),DwinTFTSerial.write('\r'),DwinTFTSerial.write('\n'))
 
 #define DWIN_TFT_SERIAL_START() (DwinTFTSerial.write('\r'),DwinTFTSerial.write('\n'))
 #define DWIN_TFT_SERIAL_CMD_SEND(x) (DwinTFTSerialPrintPGM(PSTR(x)),DwinTFTSerial.write('\r'),DwinTFTSerial.write('\n'))

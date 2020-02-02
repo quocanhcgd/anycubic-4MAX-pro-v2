@@ -209,4 +209,31 @@ void DwinTFTClass::gcodeQueue(const char* gcode)
   queue.enqueue_one_now(gcode);
 }
 
+void DwinTFTClass::onMediaInserted()
+{
+  if(ExtUI::isMediaInserted()) {
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_INSERTED); // J00 SD Card inserted
+    DWIN_TFT_SERIAL_ENTER();
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: SD card inserted... J00");
+    #endif
+  }
+}
+
+void DwinTFTClass::onMediaError()
+{
+  
+}
+
+void DwinTFTClass::onMediaRemoved()
+{
+  if(!ExtUI::isMediaInserted()) {
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_REMOVED); // J01 SD Card removed
+    DWIN_TFT_SERIAL_ENTER();
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: SD card removed... J01");
+    #endif
+  }
+}
+
 #endif

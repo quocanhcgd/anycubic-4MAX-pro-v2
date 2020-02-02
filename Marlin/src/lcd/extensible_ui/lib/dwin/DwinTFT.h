@@ -75,6 +75,9 @@ public:
   void gcodeNow_P(PGM_P const gcode);
   void gcodeQueue_P(PGM_P const gcode);
   void gcodeQueue(const char* gcode);
+  void onMediaInserted();
+  void onMediaError();
+  void onMediaRemoved();
 
 private:
   bool caseLight = false;

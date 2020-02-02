@@ -25,7 +25,13 @@
 
 #include "../../../../sd/SdFatConfig.h"
 
+#define EXTRA_MENU_Z_UP "<Z Up 0.1>"
+#define EXTRA_MENU_Z_DOWN "<Z Down 0.1>"
+
 class DwinTFTFileBrowserClass {
+private:
+  void buildExtraMenu(uint16_t pos);
+  void handleExtraMenu();
 public:
   char selectedFilename[LONG_FILENAME_LENGTH];
   char selectedDirectory[LONG_FILENAME_LENGTH];

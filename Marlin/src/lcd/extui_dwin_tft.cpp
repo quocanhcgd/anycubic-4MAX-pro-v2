@@ -44,9 +44,15 @@ namespace ExtUI {
   void onPrinterKilled(PGM_P const error, PGM_P const component) {
     DwinTFT.kill();
   }
-  void onMediaInserted() {};
-  void onMediaError() {};
-  void onMediaRemoved() {};
+  void onMediaInserted() {
+    DwinTFT.onMediaInserted();
+  }
+  void onMediaError() {
+    DwinTFT.onMediaError();
+  }
+  void onMediaRemoved() {
+    DwinTFT.onMediaRemoved();
+  }
   void onPlayTone(const uint16_t frequency, const uint16_t duration) {}
   void onPrintTimerStarted() {}
   void onPrintTimerPaused() {}
