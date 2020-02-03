@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -187,6 +187,8 @@ const char NUL_STR[] PROGMEM = "",
            M21_STR[] PROGMEM = "M21",
            M23_STR[] PROGMEM = "M23 %s",
            M24_STR[] PROGMEM = "M24",
+           SP_P_STR[] PROGMEM = " P",
+           SP_T_STR[] PROGMEM = " T",
            SP_X_STR[] PROGMEM = " X",
            SP_Y_STR[] PROGMEM = " Y",
            SP_Z_STR[] PROGMEM = " Z",
@@ -291,7 +293,7 @@ void quickstop_stepper() {
 }
 
 void enable_e_steppers() {
-  #define _ENA_E(N) enable_E##N();
+  #define _ENA_E(N) ENABLE_AXIS_E##N();
   REPEAT(E_STEPPERS, _ENA_E)
 }
 
@@ -299,28 +301,28 @@ void enable_all_steppers() {
   #if ENABLED(AUTO_POWER_CONTROL)
     powerManager.power_on();
   #endif
-  enable_X();
-  enable_Y();
-  enable_Z();
+  ENABLE_AXIS_X();
+  ENABLE_AXIS_Y();
+  ENABLE_AXIS_Z();
   enable_e_steppers();
 }
 
 void disable_e_steppers() {
-  #define _DIS_E(N) disable_E##N();
+  #define _DIS_E(N) DISABLE_AXIS_E##N();
   REPEAT(E_STEPPERS, _DIS_E)
 }
 
 void disable_e_stepper(const uint8_t e) {
-  #define _CASE_DIS_E(N) case N: disable_E##N(); break;
+  #define _CASE_DIS_E(N) case N: DISABLE_AXIS_E##N(); break;
   switch (e) {
     REPEAT(EXTRUDERS, _CASE_DIS_E)
   }
 }
 
 void disable_all_steppers() {
-  disable_X();
-  disable_Y();
-  disable_Z();
+  DISABLE_AXIS_X();
+  DISABLE_AXIS_Y();
+  DISABLE_AXIS_Z();
   disable_e_steppers();
 }
 
@@ -545,13 +547,13 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
       if (!already_shutdown_steppers) {
         already_shutdown_steppers = true;  // L6470 SPI will consume 99% of free time without this
         #if ENABLED(DISABLE_INACTIVE_X)
-          disable_X();
+          DISABLE_AXIS_X();
         #endif
         #if ENABLED(DISABLE_INACTIVE_Y)
-          disable_Y();
+          DISABLE_AXIS_Y();
         #endif
         #if ENABLED(DISABLE_INACTIVE_Z)
-          disable_Z();
+          DISABLE_AXIS_Z();
         #endif
         #if ENABLED(DISABLE_INACTIVE_E)
           disable_e_steppers();
@@ -626,11 +628,14 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
       #if ENABLED(SWITCHING_EXTRUDER)
         bool oldstatus;
         switch (active_extruder) {
-          default: oldstatus = E0_ENABLE_READ(); enable_E0(); break;
+          default: oldstatus = E0_ENABLE_READ(); ENABLE_AXIS_E0(); break;
           #if E_STEPPERS > 1
-            case 2: case 3: oldstatus = E1_ENABLE_READ(); enable_E1(); break;
+            case 2: case 3: oldstatus = E1_ENABLE_READ(); ENABLE_AXIS_E1(); break;
             #if E_STEPPERS > 2
-              case 4: case 5: oldstatus = E2_ENABLE_READ(); enable_E2(); break;
+              case 4: case 5: oldstatus = E2_ENABLE_READ(); ENABLE_AXIS_E2(); break;
+              #if E_STEPPERS > 3
+                case 6: case 7: oldstatus = E3_ENABLE_READ(); ENABLE_AXIS_E3(); break;
+              #endif // E_STEPPERS > 3
             #endif // E_STEPPERS > 2
           #endif // E_STEPPERS > 1
         }
@@ -638,7 +643,7 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
         bool oldstatus;
         switch (active_extruder) {
           default:
-          #define _CASE_EN(N) case N: oldstatus = E##N##_ENABLE_READ(); enable_E##N(); break;
+          #define _CASE_EN(N) case N: oldstatus = E##N##_ENABLE_READ(); ENABLE_AXIS_E##N(); break;
           REPEAT(E_STEPPERS, _CASE_EN);
         }
       #endif
@@ -1069,7 +1074,7 @@ void setup() {
   #endif
 
   #if HAS_Z_SERVO_PROBE
-    servo_probe_init();
+    probe.servo_probe_init();
   #endif
 
   #if HAS_PHOTOGRAPH
