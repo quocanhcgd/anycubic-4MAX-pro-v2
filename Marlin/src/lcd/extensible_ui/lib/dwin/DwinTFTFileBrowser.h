@@ -25,8 +25,19 @@
 
 #include "../../../../sd/SdFatConfig.h"
 
-#define EXTRA_MENU_Z_UP "<Z Up 0.1>"
-#define EXTRA_MENU_Z_DOWN "<Z Down 0.1>"
+#define EXTRA_MENU_AUTO_TUNE_HOTEND_PID "<auto tune hotend pid>"
+#define EXTRA_MENU_AUTO_TUNE_HOTBED_PID "<auto tune hotbed pid>"
+#define EXTRA_MENU_SAVE_EEPROM "<save eeprom>"
+#define EXTRA_MENU_LOAD_FW_DEFAULTS "<load fw defaults>"
+#define EXTRA_MENU_PREHEAT_BED "<preheat bed>"
+#define EXTRA_MENU_START_MESH_LEVELING "<start mesh leveling>"
+#define EXTRA_MENU_NEXT_MESH_POINT "<next mesh point>"
+#define EXTRA_MENU_Z_UP_01 "<z up 0.1>"
+#define EXTRA_MENU_Z_UP_002 "<z up 0.02>"
+#define EXTRA_MENU_Z_DOWN_01 "<z down 0.1>"
+#define EXTRA_MENU_Z_DOWN_002 "<z down 0.02>"
+#define EXTRA_MENU_FILAMENT_CHANGE_PAUSE "<filament change pause>"
+#define EXTRA_MENU_FILAMENT_CHANGE_RESUME "<filament change resume>"
 
 class DwinTFTFileBrowserClass {
 private:

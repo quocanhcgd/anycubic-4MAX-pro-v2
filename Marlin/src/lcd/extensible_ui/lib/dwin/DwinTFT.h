@@ -25,7 +25,7 @@
 
 #include "../../ui_api.h"
 
-#define DWIN_TFT_UPDATE_INTERVAL_MS  500
+#define DWIN_TFT_UPDATE_INTERVAL_MS  250
 
 char *itostr2(const uint8_t &x);
 

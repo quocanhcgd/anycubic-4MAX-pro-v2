@@ -192,12 +192,26 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
     switch (int(pos / 4)) //max display 4 items per page
     {
         case 0:
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM("<../>");
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM("<../>");
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU_Z_UP);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU_Z_UP);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU_Z_DOWN);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU_Z_DOWN);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP("<../>");
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_AUTO_TUNE_HOTEND_PID);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_AUTO_TUNE_HOTBED_PID);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SAVE_EEPROM);
+            break;
+        case 1:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_LOAD_FW_DEFAULTS);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_PREHEAT_BED);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_START_MESH_LEVELING);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_NEXT_MESH_POINT);
+            break;
+        case 2:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_01);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_002);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_002);
+            break;
+        case 3:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_FILAMENT_CHANGE_PAUSE);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_FILAMENT_CHANGE_RESUME);
             break;
     }
 }
@@ -207,14 +221,57 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
     if(strcasecmp_P(selectedFilename, PSTR("<../>")) == 0) {
         reset();
         listFiles();
-    } else if(strcasecmp(selectedFilename, EXTRA_MENU_Z_UP) == 0) {
-        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91); // relative coordinates
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_AUTO_TUNE_HOTEND_PID) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Auto Tune Hotend PID");
+        DwinTFT.gcodeNow_P(PSTR("M106 S204\nM303 E0 S210 C15 U1"));
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_AUTO_TUNE_HOTBED_PID) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Auto Tune Hotbed PID");
+        DwinTFT.gcodeNow_P(PSTR("M303 E-1 S60 C6 U1"));
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_SAVE_EEPROM) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Save EEPROM");
+        DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M500);
+        buzzer.tone(105, 1108);
+        buzzer.tone(210, 1661);
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_LOAD_FW_DEFAULTS) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Load FW Defaults");
+        DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M502);
+        buzzer.tone(105, 1661);
+        buzzer.tone(210, 1108);
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_PREHEAT_BED) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Preheat Bed");
+        DwinTFT.gcodeNow_P(PSTR("M140 S60"));
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_START_MESH_LEVELING) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Start Mesh Leveling");
+        DwinTFT.gcodeNow_P(PSTR("G29 S1"));
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_NEXT_MESH_POINT) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Next Mesh Point");
+        DwinTFT.gcodeNow_P(PSTR("G29 S2"));
+    } else if(strcasecmp(selectedFilename, EXTRA_MENU_Z_UP_01) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Z Up 0.1");
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
         DwinTFT.gcodeQueue_P(PSTR("G0 Z0.1"));
-        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90); // absolute coordinates
-    } else if(strcasecmp(selectedFilename, EXTRA_MENU_Z_DOWN) == 0) {
-        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91); // relative coordinates
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_Z_UP_002) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Z Up 0.02");
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
+        DwinTFT.gcodeQueue_P(PSTR("G0 Z0.02"));
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    } else if(strcasecmp(selectedFilename, EXTRA_MENU_Z_DOWN_01) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Z Down 0.1");
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
         DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.1"));
-        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90); // absolute coordinates
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_Z_DOWN_002) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Z Down 0.02");
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
+        DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.02"));
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_FILAMENT_CHANGE_PAUSE) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: FilamentChange Pause");
+        //FilamentChangePause();
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_FILAMENT_CHANGE_RESUME) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: FilamentChange Resume");
+        //FilamentChangeResume();
     }
 }
 
