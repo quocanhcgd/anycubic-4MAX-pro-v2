@@ -160,7 +160,7 @@ void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
     buzzer.tone(200, 1174);
     buzzer.tone(2000, 1567);
     
-    DWIN_TFT_SERIAL_PROTOCOLPGM("J15"); //J15 FILAMENT LACK
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); //J15 FILAMENT LACK
     DWIN_TFT_SERIAL_ENTER();
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: Filament runout... J15");
@@ -222,7 +222,13 @@ void DwinTFTClass::onMediaInserted()
 
 void DwinTFTClass::onMediaError()
 {
-  
+  if(!ExtUI::isMediaInserted()) {
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_NOT_INSERTED); // J01 SD Card error
+    DWIN_TFT_SERIAL_ENTER();
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: SD card error... J02");
+    #endif
+  }
 }
 
 void DwinTFTClass::onMediaRemoved()
@@ -234,6 +240,68 @@ void DwinTFTClass::onMediaRemoved()
       SERIAL_ECHOLNPGM("TFT Serial Debug: SD card removed... J01");
     #endif
   }
+}
+
+void DwinTFTClass::onStatusChanged(const char * const msg)
+{
+  if(msg) {
+    if(strcasecmp_P(msg, PSTR("Reheating...")) == 0) {
+      DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTEND_HEATING_START);
+      DWIN_TFT_SERIAL_ENTER();
+    }
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPAIR("TFT Serial Debug: statusChanged: ", msg);
+    #endif
+  }
+}
+
+void DwinTFTClass::onUserConfirmRequired(const char * const msg)
+{
+  #if HAS_RESUME_CONTINUE
+    if(msg) {
+      if(strcasecmp_P(msg, PSTR("HeaterTimeout")) == 0) {
+        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTEND_HEATING_START);
+        DWIN_TFT_SERIAL_ENTER();
+        waitForUserConfirm();
+      } else if(strcasecmp_P(msg, PSTR("Reheat finished.")) == 0) {
+        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTEND_HEATING_END);
+        DWIN_TFT_SERIAL_ENTER();
+        waitForUserConfirm();
+      } else if(strcasecmp_P(msg, PSTR("Load Filament")) == 0) {
+        waitForUserConfirm();
+      } else if(strcasecmp_P(msg, PSTR("Filament Purge Running...")) == 0) {
+        waitForUserConfirm();
+      } else if(strcasecmp_P(msg, PSTR("Nozzle Parked")) == 0) {
+        waitForUserConfirm();
+      } else if(strcasecmp_P(msg, PSTR("MMU2 Eject Recover")) == 0) {
+        waitForUserConfirm();
+      } else if(strcasecmp_P(msg, PSTR("M43 Wait Called")) == 0) {
+        waitForUserConfirm();
+      } else {
+        ExtUI::setUserConfirmed();
+      }
+      #ifdef DWIN_TFT_DEBUG
+        SERIAL_ECHOLNPAIR("TFT Serial Debug: userConfirmRequired: ", msg);
+      #endif
+    }
+  #endif
+}
+
+bool DwinTFTClass::isWaitingForUserConfirm()
+{
+  #if HAS_RESUME_CONTINUE
+    return wait_for_user;
+  #else
+    return false;
+  #endif
+}
+
+void DwinTFTClass::waitForUserConfirm()
+{
+  #if HAS_RESUME_CONTINUE
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE);
+    DWIN_TFT_SERIAL_ENTER();
+  #endif
 }
 
 #endif

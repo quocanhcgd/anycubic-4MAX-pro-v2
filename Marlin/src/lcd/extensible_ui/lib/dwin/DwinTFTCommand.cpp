@@ -89,7 +89,11 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
             sendSDCardPause();
             break;
           case DWIN_TFT_RX_SD_CARD_PRINT_RESUME: // A10 resume sd print
-            sendSDCardResume();
+            if(DwinTFT.isWaitingForUserConfirm()) {
+              ExtUI::setUserConfirmed();
+            } else {
+              sendSDCardResume();
+            }
             break;
           case DWIN_TFT_RX_SD_CARD_PRINT_STOP: // A11 STOP SD PRINT
             sendSDCardStop();
@@ -279,7 +283,7 @@ void DwinTFTCommandClass::sendGetSDCardPrintingStatus()
       if(ExtUI::isPrintingFromMedia()) {
         DWIN_TFT_SERIAL_PROTOCOL(itostr3(card.percentDone()));
       } else {
-        DWIN_TFT_SERIAL_PROTOCOLPGM("J02");
+        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_NOT_INSERTED);
       }
     } else {
       DWIN_TFT_SERIAL_PROTOCOLPGM("A6V ---");
@@ -317,6 +321,8 @@ void DwinTFTCommandClass::sendGetSDCardList()
 void DwinTFTCommandClass::sendSDCardPause()
 {
   #ifdef SDSUPPORT
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
+    DWIN_TFT_SERIAL_ENTER();
     if(ExtUI::isPrintingFromMedia()) {
       ExtUI::pausePrint();
       #ifdef DWIN_TFT_DEBUG
@@ -331,7 +337,7 @@ void DwinTFTCommandClass::sendSDCardResume()
   #ifdef SDSUPPORT
     if(ExtUI::isPrintingFromMediaPaused()) {
       ExtUI::resumePrint();
-      DWIN_TFT_SERIAL_PROTOCOLPGM("J04");// J04 printing form sd card now
+      DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_RESUME);// J04 printing form sd card now
       DWIN_TFT_SERIAL_ENTER();
       #ifdef DWIN_TFT_DEBUG
         SERIAL_ECHOLNPGM("TFT Serial Debug: SD print started... J04");
@@ -345,7 +351,7 @@ void DwinTFTCommandClass::sendSDCardStop()
   #ifdef SDSUPPORT
     if(ExtUI::isPrintingFromMedia() || ExtUI::isPrintingFromMediaPaused()) {
       ExtUI::stopPrint();
-      DWIN_TFT_SERIAL_PROTOCOLPGM("J16");
+      DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_STOPPED);
       DWIN_TFT_SERIAL_ENTER();
       #ifdef DWIN_TFT_DEBUG
         SERIAL_ECHOLNPGM("TFT Serial Debug: SD print stopped... J16");
@@ -364,12 +370,10 @@ void DwinTFTCommandClass::sendSDCardFileSelect()
 void DwinTFTCommandClass::sendSDCardStart()
 {
   #ifdef SDSUPPORT
-    if(!ExtUI::isPrintingFromMedia() && !ExtUI::isPrintingFromMediaPaused() && 
-      !ExtUI::isPrinting() && ExtUI::isMediaInserted() && !ExtUI::isMoving()
-    ) {
+    if(ExtUI::isMediaInserted() && !ExtUI::isMoving()) {
       if(card.isFileOpen()) {
         card.startFileprint();
-        DWIN_TFT_SERIAL_PROTOCOLPGM("J04"); // J04 Starting Print
+        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_RESUME); // J04 Starting Print
         DWIN_TFT_SERIAL_ENTER();
         #ifdef DWIN_TFT_DEBUG
           SERIAL_ECHOLNPGM("TFT Serial Debug: Starting SD Print... J04");
@@ -422,10 +426,7 @@ void DwinTFTCommandClass::sendStopStepperDriver()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     quickstop_stepper();
-    disable_X();
-    disable_Y();
-    disable_Z();
-    disable_E0();
+    disable_all_steppers();
     DWIN_TFT_SERIAL_ENTER();
   }
 }
@@ -535,7 +536,7 @@ void DwinTFTCommandClass::sendCooldown()
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     ExtUI::setTargetTemp_celsius(float(0), ExtUI::extruder_t::E0);
     ExtUI::setTargetTemp_celsius(float(0), ExtUI::heater_t::BED);
-    DWIN_TFT_SERIAL_PROTOCOLPGM("J12"); // J12 cool down
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_READY); // J12 cool down
     DWIN_TFT_SERIAL_ENTER();
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: Cooling down... J12");

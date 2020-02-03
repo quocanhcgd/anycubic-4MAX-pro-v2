@@ -78,6 +78,10 @@ public:
   void onMediaInserted();
   void onMediaError();
   void onMediaRemoved();
+  void onStatusChanged(const char * const msg);
+  void onUserConfirmRequired(const char * const msg);
+  bool isWaitingForUserConfirm();
+  void waitForUserConfirm();
 
 private:
   bool caseLight = false;

@@ -60,8 +60,12 @@ namespace ExtUI {
   void onFilamentRunout(const extruder_t extruder) {
     DwinTFT.filamentRunout(extruder);
   }
-  void onUserConfirmRequired(const char * const msg) {}
-  void onStatusChanged(const char * const msg) {}
+  void onUserConfirmRequired(const char * const msg) {
+    DwinTFT.onUserConfirmRequired(msg);
+  }
+  void onStatusChanged(const char * const msg) {
+    DwinTFT.onStatusChanged(msg);
+  }
   void onFactoryReset() {}
 
   void onStoreSettings(char *buff) {

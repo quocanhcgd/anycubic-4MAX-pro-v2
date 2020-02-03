@@ -36,8 +36,6 @@
 #define EXTRA_MENU_Z_UP_002 "<z up 0.02>"
 #define EXTRA_MENU_Z_DOWN_01 "<z down 0.1>"
 #define EXTRA_MENU_Z_DOWN_002 "<z down 0.02>"
-#define EXTRA_MENU_FILAMENT_CHANGE_PAUSE "<filament change pause>"
-#define EXTRA_MENU_FILAMENT_CHANGE_RESUME "<filament change resume>"
 
 class DwinTFTFileBrowserClass {
 private:

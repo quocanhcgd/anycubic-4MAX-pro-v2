@@ -209,10 +209,6 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_002);
             break;
-        case 3:
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_FILAMENT_CHANGE_PAUSE);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_FILAMENT_CHANGE_RESUME);
-            break;
     }
 }
 
@@ -266,12 +262,6 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
         DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.02"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
-    } else if (strcasecmp(selectedFilename, EXTRA_MENU_FILAMENT_CHANGE_PAUSE) == 0) {
-        SERIAL_ECHOLNPGM("Extra Menu: FilamentChange Pause");
-        //FilamentChangePause();
-    } else if (strcasecmp(selectedFilename, EXTRA_MENU_FILAMENT_CHANGE_RESUME) == 0) {
-        SERIAL_ECHOLNPGM("Extra Menu: FilamentChange Resume");
-        //FilamentChangeResume();
     }
 }
 
