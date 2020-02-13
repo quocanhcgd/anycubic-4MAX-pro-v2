@@ -43,14 +43,6 @@ public:
 
     static xyz_pos_t offset;
 
-    // Use offset_xy for read only access
-    // More optimal the XY offset is known to always be zero.
-    #if HAS_PROBE_XY_OFFSET
-      static const xyz_pos_t &offset_xy;
-    #else
-      static constexpr xy_pos_t offset_xy{0};
-    #endif
-
     static bool set_deployed(const bool deploy);
 
     #ifdef Z_AFTER_PROBING
@@ -66,11 +58,18 @@ public:
 
   #else
 
-    static constexpr xyz_pos_t offset{0};
-    static constexpr xy_pos_t offset_xy{0};
+    static constexpr xyz_pos_t offset = xyz_pos_t({ 0, 0, 0 }); // See #16767
 
     static bool set_deployed(const bool) { return false; }
 
+  #endif
+
+  // Use offset_xy for read only access
+  // More optimal the XY offset is known to always be zero.
+  #if HAS_PROBE_XY_OFFSET
+    static const xyz_pos_t &offset_xy;
+  #else
+    static constexpr xy_pos_t offset_xy = xy_pos_t({ 0, 0 });   // See #16767
   #endif
 
   static inline bool deploy() { return set_deployed(true); }
@@ -163,7 +162,7 @@ public:
   #endif
 
 private:
-  static bool move_to_z(const float z, const feedRate_t fr_mm_s);
+  static bool probe_down_to_z(const float z, const feedRate_t fr_mm_s);
   static void do_z_raise(const float z_raise);
   static float run_z_probe();
 };

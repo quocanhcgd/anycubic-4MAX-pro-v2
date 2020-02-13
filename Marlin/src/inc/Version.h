@@ -49,7 +49,7 @@
  * here we define this default string as the date where the latest release
  * version was tagged.
  */
-#define STRING_DISTRIBUTION_DATE "2020-02-03"
+#define STRING_DISTRIBUTION_DATE "2020-02-13"
 
 /**
  * Minimum Configuration.h and Configuration_adv.h file versions.
@@ -58,7 +58,7 @@
  * to alert users to major changes.
  */
 
-#define MARLIN_HEX_VERSION 020000
+#define MARLIN_HEX_VERSION 020004
 #ifndef REQUIRED_CONFIGURATION_H_VERSION
   #define REQUIRED_CONFIGURATION_H_VERSION MARLIN_HEX_VERSION
 #endif

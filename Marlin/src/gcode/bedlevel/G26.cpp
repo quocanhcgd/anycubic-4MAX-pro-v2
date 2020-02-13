@@ -43,13 +43,15 @@
 #include "../../lcd/ultralcd.h"
 
 #define EXTRUSION_MULTIPLIER 1.0
-#define RETRACTION_LENGTH 1
-#define UNRETRACTION_LENGTH 1.2
-#define PRIME_LENGTH 5
-#define OOZE_AMOUNT 2.25
+#define PRIME_LENGTH 10.0
+#define OOZE_AMOUNT 0.3
 
 #define INTERSECTION_CIRCLE_RADIUS 5
 #define CROSSHAIRS_SIZE 3
+
+#ifndef G26_RETRACT_MULTIPLIER
+  #define G26_RETRACT_MULTIPLIER 1.0 // x 1mm
+#endif
 
 #ifndef G26_XY_FEEDRATE
   #define G26_XY_FEEDRATE (PLANNER_XY_FEEDRATE() / 3.0)
@@ -115,9 +117,8 @@
  *                    pliers while holding the LCD Click wheel in a depressed state. If you do not have
  *                    an LCD, you must specify a value if you use P.
  *
- *   Q #  Retract     Retraction length. Defaults to 1mm if not specified.
- *   Z #  Unretract   Unretraction length. Defaults to 1.2mm if not specified.
- *                    Note: If Q is specified but Z isn't, Z defaults to Q * 1.2.
+ *   Q #  Multiplier  Retraction Multiplier. Normally not needed. Retraction defaults to 1.0mm and
+ *                    un-retraction is at 1.2mm   These numbers will be scaled by the specified amount
  *
  *   R #  Repeat      Prints the number of patterns given as a parameter, starting at the current location.
  *                    If a parameter isn't given, every point will be printed unless G26 is interrupted.
@@ -152,8 +153,7 @@ static bool g26_retracted = false; // Track the retracted state of the nozzle so
                                    // retracts/recovers won't result in a bad state.
 
 float g26_extrusion_multiplier,
-      g26_retraction_length,
-      g26_unretraction_length,
+      g26_retraction_multiplier,
       g26_layer_height,
       g26_prime_length;
 
@@ -246,7 +246,7 @@ FORCE_INLINE void move_to(const xyz_pos_t &where, const float &de) { move_to(whe
 void retract_filament(const xyz_pos_t &where) {
   if (!g26_retracted) { // Only retract if we are not already retracted!
     g26_retracted = true;
-    move_to(where, -1.0 * g26_retraction_length);
+    move_to(where, -1.0f * g26_retraction_multiplier);
   }
 }
 
@@ -259,7 +259,7 @@ void retract_lift_move(const xyz_pos_t &s) {
 
 void recover_filament(const xyz_pos_t &where) {
   if (g26_retracted) { // Only un-retract if we are retracted.
-    move_to(where, g26_unretraction_length);
+    move_to(where, 1.2f * g26_retraction_multiplier);
     g26_retracted = false;
   }
 }
@@ -512,8 +512,7 @@ void GcodeSuite::G26() {
   if (parser.seenval('T')) tool_change(parser.value_int());
 
   g26_extrusion_multiplier    = EXTRUSION_MULTIPLIER;
-  g26_retraction_length       = RETRACTION_LENGTH;
-  g26_unretraction_length     = UNRETRACTION_LENGTH;
+  g26_retraction_multiplier   = G26_RETRACT_MULTIPLIER;
   g26_layer_height            = MESH_TEST_LAYER_HEIGHT;
   g26_prime_length            = PRIME_LENGTH;
   g26_bed_temp                = MESH_TEST_BED_TEMP;
@@ -547,44 +546,14 @@ void GcodeSuite::G26() {
 
   if (parser.seen('Q')) {
     if (parser.has_value()) {
-      g26_retraction_length = parser.value_float();
-      if (!WITHIN(g26_retraction_length, 0.05, 15.0)) {
-        SERIAL_ECHOLNPGM("?Specified Retraction length not plausible.");
+      g26_retraction_multiplier = parser.value_float();
+      if (!WITHIN(g26_retraction_multiplier, 0.05, 15.0)) {
+        SERIAL_ECHOLNPGM("?Specified Retraction Multiplier not plausible.");
         return;
       }
     }
     else {
-      SERIAL_ECHOLNPGM("?Retraction length must be specified.");
-      return;
-    }
-  }
-
-  if (parser.seen('Z')) {
-    if (parser.has_value()) {
-      g26_unretraction_length = parser.value_float();
-      if (!WITHIN(g26_unretraction_length, 0.05, 15.0)) {
-        SERIAL_ECHOLNPGM("?Specified Unretraction length not plausible.");
-        return;
-      }
-    }
-    else {
-      SERIAL_ECHOLNPGM("?Unretraction length must be specified.");
-      return;
-    }
-  }
-
-  if (!parser.seen('Z') && parser.seen('Q')) {
-    // retraction without unretraction specified, use 1.2 multiplier (preserve Gcode spec)
-    g26_unretraction_length = g26_retraction_length * 1.2;
-    SERIAL_ECHOPAIR(" Unretraction amount automatically set to ", g26_unretraction_length);
-    SERIAL_EOL();
-  }
-
-  if (parser.seen('Z') && parser.seen('Q')) {
-    // consider typos or unreasonable retract/unretract ratios
-    float g26_retract_unretract_delta = g26_unretraction_length - g26_retraction_length;
-    if (!WITHIN(g26_retract_unretract_delta, -5, 5)) {
-      SERIAL_ECHOLNPGM("?Invalid Retraction/Unretraction ratio. Must be within 5mm.");
+      SERIAL_ECHOLNPGM("?Retraction Multiplier must be specified.");
       return;
     }
   }

@@ -927,7 +927,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
   #elif TOOLCHANGE_ZRAISE < 0
     #error "TOOLCHANGE_ZRAISE must be 0 or higher."
   #elif ENABLED(PARKING_EXTRUDER)
-    #if !PIN_EXISTS(SOL0, SOL1)
+    #if !PINS_EXIST(SOL0, SOL1)
       #error "PARKING_EXTRUDER requires SOL0_PIN and SOL1_PIN."
     #elif !defined(PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE) || !WITHIN(PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE, LOW, HIGH)
       #error "PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE must be defined as HIGH or LOW."
@@ -1227,6 +1227,10 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
     #error "Z_PROBE_LOW_POINT must be less than or equal to 0."
   #endif
 
+  #if HOMING_Z_WITH_PROBE && DISABLED(Z_SAFE_HOMING)
+    #error "Z_SAFE_HOMING is recommended when homing with a probe. Enable it or comment out this line to continue."
+  #endif
+
 #else
 
   /**
@@ -1357,14 +1361,9 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
  * Make sure Z_SAFE_HOMING point is reachable
  */
 #if ENABLED(Z_SAFE_HOMING)
-  #if HAS_BED_PROBE && (ENABLED(DELTA) || IS_SCARA)
-    static_assert(WITHIN(Z_SAFE_HOMING_X_POINT, PROBE_X_MIN, PROBE_X_MAX), "Z_SAFE_HOMING_X_POINT is outside the probe region.");
-    static_assert(WITHIN(Z_SAFE_HOMING_Y_POINT, PROBE_Y_MIN, PROBE_Y_MAX), "Z_SAFE_HOMING_Y_POINT is outside the probe region.");
-  #else
-    static_assert(WITHIN(Z_SAFE_HOMING_X_POINT, X_MIN_POS, X_MAX_POS), "Z_SAFE_HOMING_X_POINT can't be reached by the nozzle.");
-    static_assert(WITHIN(Z_SAFE_HOMING_Y_POINT, Y_MIN_POS, Y_MAX_POS), "Z_SAFE_HOMING_Y_POINT can't be reached by the nozzle.");
-  #endif
-#endif // Z_SAFE_HOMING
+  static_assert(WITHIN(Z_SAFE_HOMING_X_POINT, X_MIN_BED, X_MAX_BED), "Z_SAFE_HOMING_X_POINT can't be reached by the nozzle.");
+  static_assert(WITHIN(Z_SAFE_HOMING_Y_POINT, Y_MIN_BED, Y_MAX_BED), "Z_SAFE_HOMING_Y_POINT can't be reached by the nozzle.");
+#endif
 
 /**
  * Make sure DISABLE_[XYZ] compatible with selected homing options
@@ -1515,9 +1514,9 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
   #error "HEATER_0_PIN not defined for this board."
 #elif !ANY_PIN(TEMP_0, MAX6675_SS)
   #error "TEMP_0_PIN not defined for this board."
-#elif ((defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)) && !PIN_EXISTS(E0_STEP, E0_DIR))
+#elif ((defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)) && !PINS_EXIST(E0_STEP, E0_DIR))
   #error "E0_STEP_PIN or E0_DIR_PIN not defined for this board."
-#elif ( !(defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)) && (!PIN_EXISTS(E0_STEP, E0_DIR) || !HAS_E0_ENABLE))
+#elif ( !(defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)) && (!PINS_EXIST(E0_STEP, E0_DIR) || !HAS_E0_ENABLE))
   #error "E0_STEP_PIN, E0_DIR_PIN, or E0_ENABLE_PIN not defined for this board."
 #elif EXTRUDERS && TEMP_SENSOR_0 == 0
   #error "TEMP_SENSOR_0 is required with any extruders."
@@ -1709,35 +1708,35 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
  */
 #if DISABLED(MK2_MULTIPLEXER) // MK2_MULTIPLEXER uses E0 stepper only
   #if E_STEPPERS
-    #if !(PIN_EXISTS(E0_STEP, E0_DIR) && HAS_E0_ENABLE)
+    #if !(PINS_EXIST(E0_STEP, E0_DIR) && HAS_E0_ENABLE)
       #error "E0_STEP_PIN, E0_DIR_PIN, or E0_ENABLE_PIN not defined for this board."
     #endif
     #if E_STEPPERS > 1
-      #if !(PIN_EXISTS(E1_STEP, E1_DIR) && HAS_E1_ENABLE)
+      #if !(PINS_EXIST(E1_STEP, E1_DIR) && HAS_E1_ENABLE)
         #error "E1_STEP_PIN, E1_DIR_PIN, or E1_ENABLE_PIN not defined for this board."
       #endif
       #if E_STEPPERS > 2
-        #if !(PIN_EXISTS(E2_STEP, E2_DIR) && HAS_E2_ENABLE)
+        #if !(PINS_EXIST(E2_STEP, E2_DIR) && HAS_E2_ENABLE)
           #error "E2_STEP_PIN, E2_DIR_PIN, or E2_ENABLE_PIN not defined for this board."
         #endif
         #if E_STEPPERS > 3
-          #if !(PIN_EXISTS(E3_STEP, E3_DIR) && HAS_E3_ENABLE)
+          #if !(PINS_EXIST(E3_STEP, E3_DIR) && HAS_E3_ENABLE)
             #error "E3_STEP_PIN, E3_DIR_PIN, or E3_ENABLE_PIN not defined for this board."
           #endif
           #if E_STEPPERS > 4
-            #if !(PIN_EXISTS(E4_STEP, E4_DIR) && HAS_E4_ENABLE)
+            #if !(PINS_EXIST(E4_STEP, E4_DIR) && HAS_E4_ENABLE)
               #error "E4_STEP_PIN, E4_DIR_PIN, or E4_ENABLE_PIN not defined for this board."
             #endif
             #if E_STEPPERS > 5
-              #if !(PIN_EXISTS(E5_STEP, E5_DIR) && HAS_E5_ENABLE)
+              #if !(PINS_EXIST(E5_STEP, E5_DIR) && HAS_E5_ENABLE)
                 #error "E5_STEP_PIN, E5_DIR_PIN, or E5_ENABLE_PIN not defined for this board."
               #endif
               #if E_STEPPERS > 6
-                #if !(PIN_EXISTS(E6_STEP, E6_DIR) && HAS_E6_ENABLE)
+                #if !(PINS_EXIST(E6_STEP, E6_DIR) && HAS_E6_ENABLE)
                   #error "E6_STEP_PIN, E6_DIR_PIN, or E6_ENABLE_PIN not defined for this board."
                 #endif
                 #if E_STEPPERS > 7
-                  #if !(PIN_EXISTS(E7_STEP, E7_DIR) && HAS_E7_ENABLE)
+                  #if !(PINS_EXIST(E7_STEP, E7_DIR) && HAS_E7_ENABLE)
                     #error "E7_STEP_PIN, E7_DIR_PIN, or E7_ENABLE_PIN not defined for this board."
                   #endif
                 #endif // E_STEPPERS > 7
@@ -1926,7 +1925,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 /**
  * RGB_LED Requirements
  */
-#define _RGB_TEST (PIN_EXISTS(RGB_LED_R, RGB_LED_G, RGB_LED_B))
+#define _RGB_TEST (PINS_EXIST(RGB_LED_R, RGB_LED_G, RGB_LED_B))
 #if ENABLED(PRINTER_EVENT_LEDS) && !HAS_COLOR_LEDS
   #error "PRINTER_EVENT_LEDS requires BLINKM, PCA9533, PCA9632, RGB_LED, RGBW_LED or NEOPIXEL_LED."
 #elif ENABLED(RGB_LED)
@@ -2081,7 +2080,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 /**
  * Check existing RX/TX pins against enable TMC UART drivers.
  */
-#define INVALID_TMC_UART(ST) (AXIS_HAS_UART(ST) && !(defined(ST##_HARDWARE_SERIAL) || (PIN_EXISTS(ST##_SERIAL_RX, ST##_SERIAL_TX))))
+#define INVALID_TMC_UART(ST) (AXIS_HAS_UART(ST) && !(defined(ST##_HARDWARE_SERIAL) || (PINS_EXIST(ST##_SERIAL_RX, ST##_SERIAL_TX))))
 #if INVALID_TMC_UART(X)
   #error "TMC2208 or TMC2209 on X requires X_HARDWARE_SERIAL or X_SERIAL_(RX|TX)_PIN."
 #elif INVALID_TMC_UART(X2)
@@ -2240,11 +2239,11 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 
 // Sensorless homing is required for both combined steppers in an H-bot
 #if CORE_IS_XY && X_SENSORLESS != Y_SENSORLESS
-  #error "CoreXY requires both X and Y to use sensorless homing if either does."
-#elif CORE_IS_XZ && X_SENSORLESS != Z_SENSORLESS
-  #error "CoreXZ requires both X and Z to use sensorless homing if either does."
-#elif CORE_IS_YZ && Y_SENSORLESS != Z_SENSORLESS
-  #error "CoreYZ requires both Y and Z to use sensorless homing if either does."
+  #error "CoreXY requires both X and Y to use sensorless homing if either one does."
+#elif CORE_IS_XZ && X_SENSORLESS != Z_SENSORLESS && !HOMING_Z_WITH_PROBE
+  #error "CoreXZ requires both X and Z to use sensorless homing if either one does."
+#elif CORE_IS_YZ && Y_SENSORLESS != Z_SENSORLESS && !HOMING_Z_WITH_PROBE
+  #error "CoreYZ requires both Y and Z to use sensorless homing if either one does."
 #endif
 
 // Other TMC feature requirements
@@ -2443,7 +2442,7 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
   #error "PRINTCOUNTER requires EEPROM_SETTINGS. Please update your Configuration."
 #endif
 
-#if ENABLED(USB_FLASH_DRIVE_SUPPORT) && !PIN_EXISTS(USB_CS, USB_INTR)
+#if ENABLED(USB_FLASH_DRIVE_SUPPORT) && !PINS_EXIST(USB_CS, USB_INTR)
   #error "USB_CS_PIN and USB_INTR_PIN are required for USB_FLASH_DRIVE_SUPPORT."
 #endif
 
@@ -2651,6 +2650,6 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
  * Check to make sure MONITOR_DRIVER_STATUS isn't enabled
  * on boards where TMC drivers share the SPI bus with SD.
  */
-#if TMC_HAS_SPI && ALL(MONITOR_DRIVER_STATUS, SDSUPPORT, USES_SHARED_SPI)
+#if HAS_TMC_SPI && ALL(MONITOR_DRIVER_STATUS, SDSUPPORT, USES_SHARED_SPI)
   #error "MONITOR_DRIVER_STATUS and SDSUPPORT cannot be used together on boards with shared SPI."
 #endif
