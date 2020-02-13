@@ -56,114 +56,113 @@ DwinTFTCommandClass::DwinTFTCommandClass()
 
 void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
 {
-    switch(command) {
-
-          case DWIN_TFT_RX_GET_HOTEND_TEMP: //A0 GET HOTEND TEMP
-            sendGetHotendTemp();
-            break;
-          case DWIN_TFT_RX_GET_HOTEND_TARGET_TEMP: //A1  GET HOTEND TARGET TEMP
-            sendGetHotendTargetTemp();
-            break;
-          case DWIN_TFT_RX_GET_HOTBED_TEMP: //A2 GET HOTBED TEMP
-            sendGetHotbedTemp();
-            break;
-          case DWIN_TFT_RX_GET_HOTBED_TARGET_TEMP: //A3 GET HOTBED TARGET TEMP
-            sendGetHotbedTargetTemp();
-            break;
-          case DWIN_TFT_RX_GET_FAN_SPEED://A4 GET FAN SPEED
-            sendGetFanSpeed();
-            break;
-          case DWIN_TFT_RX_GET_CURRENT_COORDINATES:// A5 GET CURRENT COORDINATE
-            sendGetCurrentCoordinates();
-            break;
-          case DWIN_TFT_RX_GET_SD_CARD_PRINT_STATUS: //A6 GET SD CARD PRINTING STATUS
-            sendGetSDCardPrintingStatus();
-            break;
-          case DWIN_TFT_RX_GET_PRINTING_TIME://A7 GET PRINTING TIME
-            sendGetPrintingTime();
-            break;
-          case DWIN_TFT_RX_GET_SD_CARD_LIST: // A8 GET  SD LIST
-            sendGetSDCardList();
-            break;
-          case DWIN_TFT_RX_SD_CARD_PRINT_PAUSE: // A9 pause sd print
-            sendSDCardPause();
-            break;
-          case DWIN_TFT_RX_SD_CARD_PRINT_RESUME: // A10 resume sd print
-            if(DwinTFT.isWaitingForUserConfirm()) {
-              ExtUI::setUserConfirmed();
-            } else {
-              sendSDCardResume();
-            }
-            break;
-          case DWIN_TFT_RX_SD_CARD_PRINT_STOP: // A11 STOP SD PRINT
-            sendSDCardStop();
-            break;
-          case DWIN_TFT_RX_KILL: // A12 kill
-            kill(PSTR(MSG_ERR_KILLED));
-            break;
-          case DWIN_TFT_RX_SD_CARD_FILE_SELECT: // A13 SELECTION FILE
-            sendSDCardFileSelect();
-            break;
-          case DWIN_TFT_RX_SD_CARD_PRINT_START: // A14 START PRINTING
-            sendSDCardStart();
-            break;
-          case DWIN_TFT_RX_OUTAGE_RESUME: // A15 RESUMING FROM OUTAGE
-            break;
-          case DWIN_TFT_RX_SET_HOTEND_TEMP: // A16 set hotend temp
-            sendSetHotendTemp();
-            break;
-          case DWIN_TFT_RX_SET_HOTBED_TEMP:// A17 set heated bed temp
-            sendSetHotbedTemp();
-            break;
-          case DWIN_TFT_RX_SET_FAN_SPEED:// A18 set fan speed
-            sendSetFanSpeed();
-            break;
-          case DWIN_TFT_RX_STEPPER_DRIVER_STOP: // A19 stop stepper drivers
-            sendStopStepperDriver();
-            break;
-          case DWIN_TFT_RX_GET_PRINT_SPEED:// A20 read printing speed
-            sendGetPrintSpeed();
-            break;
-          case DWIN_TFT_RX_HOME_ALL: // A21 all home
-            sendHomeAll();
-            break;
-          case DWIN_TFT_RX_MOVE: // A22 move X/Y/Z or extrude
-            sendMove();
-            break;
-          case DWIN_TFT_RX_PREHEAT_PLA: // A23 preheat pla
-            sendPreheatPLA();
-            break;
-          case DWIN_TFT_RX_PREHEAT_ABS:// A24 preheat abs
-            sendPreheatABS();
-            break;
-          case DWIN_TFT_RX_COOLDOWN: // A25 cool down
-            sendCooldown();
-            break;
-          case DWIN_TFT_RX_SD_CARD_FILE_REFRESH: // A26 refresh SD
-            sendSDCardRefresh();
-            break;
-          case DWIN_TFT_RX_ADJUST_SERVO: // A27 servos angles  adjust
-            break;
-          case DWIN_TFT_RX_TEST_FILAMENT: // A28 filament test
-            sendFilamentTest();
-            break;
-          case DWIN_TFT_RX_SET_Z_PROBE_OFFSET: // A29 Z PROBE OFFESET SET
-            break;
-          case DWIN_TFT_RX_GET_VERSION_INFO: // A33 get version info
-            sendGetVersionInfo();
-            break;
-          case DWIN_TFT_RX_RESET_MAINBOARD: //a40 reset mainboard
-            DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M502);
-            break;
-          case DWIN_TFT_RX_AUTO_POWER_OFF: // auto power off
-            sendAutoPowerOff();
-            break;
-          case DWIN_TFT_RX_SET_CASE_LED: // 4max pro led strip
-            sendSetCaseLight();
-            break;
-          default:
-            break;
-        }
+  switch(command) {
+    case DWIN_TFT_RX_GET_HOTEND_TEMP: //A0 GET HOTEND TEMP
+      sendGetHotendTemp();
+      break;
+    case DWIN_TFT_RX_GET_HOTEND_TARGET_TEMP: //A1  GET HOTEND TARGET TEMP
+      sendGetHotendTargetTemp();
+      break;
+    case DWIN_TFT_RX_GET_HOTBED_TEMP: //A2 GET HOTBED TEMP
+      sendGetHotbedTemp();
+      break;
+    case DWIN_TFT_RX_GET_HOTBED_TARGET_TEMP: //A3 GET HOTBED TARGET TEMP
+      sendGetHotbedTargetTemp();
+      break;
+    case DWIN_TFT_RX_GET_FAN_SPEED://A4 GET FAN SPEED
+      sendGetFanSpeed();
+      break;
+    case DWIN_TFT_RX_GET_CURRENT_COORDINATES:// A5 GET CURRENT COORDINATE
+      sendGetCurrentCoordinates();
+      break;
+    case DWIN_TFT_RX_GET_SD_CARD_PRINT_STATUS: //A6 GET SD CARD PRINTING STATUS
+      sendGetSDCardPrintingStatus();
+      break;
+    case DWIN_TFT_RX_GET_PRINTING_TIME://A7 GET PRINTING TIME
+      sendGetPrintingTime();
+      break;
+    case DWIN_TFT_RX_GET_SD_CARD_LIST: // A8 GET  SD LIST
+      sendGetSDCardList();
+      break;
+    case DWIN_TFT_RX_SD_CARD_PRINT_PAUSE: // A9 pause sd print
+      sendSDCardPause();
+      break;
+    case DWIN_TFT_RX_SD_CARD_PRINT_RESUME: // A10 resume sd print
+      if(DwinTFT.isWaitingForUserConfirm()) {
+        ExtUI::setUserConfirmed();
+      } else {
+        sendSDCardResume();
+      }
+      break;
+    case DWIN_TFT_RX_SD_CARD_PRINT_STOP: // A11 STOP SD PRINT
+      sendSDCardStop();
+      break;
+    case DWIN_TFT_RX_KILL: // A12 kill
+      kill(PSTR(MSG_ERR_KILLED));
+      break;
+    case DWIN_TFT_RX_SD_CARD_FILE_SELECT: // A13 SELECTION FILE
+      sendSDCardFileSelect();
+      break;
+    case DWIN_TFT_RX_SD_CARD_PRINT_START: // A14 START PRINTING
+      sendSDCardStart();
+      break;
+    case DWIN_TFT_RX_OUTAGE_RESUME: // A15 RESUMING FROM OUTAGE
+      break;
+    case DWIN_TFT_RX_SET_HOTEND_TEMP: // A16 set hotend temp
+      sendSetHotendTemp();
+      break;
+    case DWIN_TFT_RX_SET_HOTBED_TEMP:// A17 set heated bed temp
+      sendSetHotbedTemp();
+      break;
+    case DWIN_TFT_RX_SET_FAN_SPEED:// A18 set fan speed
+      sendSetFanSpeed();
+      break;
+    case DWIN_TFT_RX_STEPPER_DRIVER_STOP: // A19 stop stepper drivers
+      sendStopStepperDriver();
+      break;
+    case DWIN_TFT_RX_GET_PRINT_SPEED:// A20 read printing speed
+      sendGetPrintSpeed();
+      break;
+    case DWIN_TFT_RX_HOME_ALL: // A21 all home
+      sendHomeAll();
+      break;
+    case DWIN_TFT_RX_MOVE: // A22 move X/Y/Z or extrude
+      sendMove();
+      break;
+    case DWIN_TFT_RX_PREHEAT_PLA: // A23 preheat pla
+      sendPreheatPLA();
+      break;
+    case DWIN_TFT_RX_PREHEAT_ABS:// A24 preheat abs
+      sendPreheatABS();
+      break;
+    case DWIN_TFT_RX_COOLDOWN: // A25 cool down
+      sendCooldown();
+      break;
+    case DWIN_TFT_RX_SD_CARD_FILE_REFRESH: // A26 refresh SD
+      sendSDCardRefresh();
+      break;
+    case DWIN_TFT_RX_ADJUST_SERVO: // A27 servos angles  adjust
+      break;
+    case DWIN_TFT_RX_TEST_FILAMENT: // A28 filament test
+      sendFilamentTest();
+      break;
+    case DWIN_TFT_RX_SET_Z_PROBE_OFFSET: // A29 Z PROBE OFFESET SET
+      break;
+    case DWIN_TFT_RX_GET_VERSION_INFO: // A33 get version info
+      sendGetVersionInfo();
+      break;
+    case DWIN_TFT_RX_RESET_MAINBOARD: //a40 reset mainboard
+      DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M502);
+      break;
+    case DWIN_TFT_RX_AUTO_POWER_OFF: // auto power off
+      sendAutoPowerOff();
+      break;
+    case DWIN_TFT_RX_SET_CASE_LED: // 4max pro led strip
+      sendSetCaseLight();
+      break;
+    default:
+      break;
+  }
 }
 
 float DwinTFTCommandClass::codeValue()
@@ -572,29 +571,15 @@ void DwinTFTCommandClass::sendGetVersionInfo()
 void DwinTFTCommandClass::sendAutoPowerOff()
 {
   if(codeSeen('O')) {
-    DwinTFT.autoPowerOff = true;
-    return;
+    DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
   } else if (codeSeen('C')) {
-    DwinTFT.autoPowerOff = false;
-  }
-  if(codeSeen('S')) {
-    if(DwinTFT.autoPowerOff) {
-      DWIN_TFT_SERIAL_PROTOCOLPGM("J35 ");
-      DWIN_TFT_SERIAL_ENTER();
-    } else { //didn't open print done and auto power off
-      DWIN_TFT_SERIAL_PROTOCOLPGM("J34 ");
-      DWIN_TFT_SERIAL_ENTER();
-    }
+    DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_OFF);
   }
 }
 
 void DwinTFTCommandClass::sendSetCaseLight()
 {
-  if(codeSeen('O')) {
-    DwinTFT.setCaseLight(false);
-  } else if (codeSeen('C')) {
-    DwinTFT.setCaseLight(true);
-  }
+  DwinTFT.setCaseLight(!DwinTFT.getCaseLight());
 }
 
 #endif

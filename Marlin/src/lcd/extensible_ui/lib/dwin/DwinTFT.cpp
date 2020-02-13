@@ -108,6 +108,11 @@ void DwinTFTClass::init()
   DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_READY);
   DWIN_TFT_SERIAL_ENTER();
 
+  #if PIN_EXISTS(PS_ON)
+    pinMode(PS_ON_PIN, OUTPUT);
+    WRITE(PS_ON_PIN, HIGH);
+  #endif
+
   #if ENABLED(SDSUPPORT) && PIN_EXISTS(SD_DETECT)
     pinMode(SD_DETECT_PIN, INPUT);
     WRITE(SD_DETECT_PIN, HIGH);
@@ -117,6 +122,8 @@ void DwinTFTClass::init()
     pinMode(LED_PIN, OUTPUT);
     WRITE(LED_PIN, LOW);
   #endif
+
+  gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
 
   #ifdef STARTUP_CHIME
     buzzer.tone(250, 554); // C#5
@@ -133,48 +140,40 @@ void DwinTFTClass::kill()
   #ifdef DWIN_TFT_DEBUG
     SERIAL_ECHOLNPGM("TFT Serial Debug: Kill command... J11");
   #endif
+  PowerDown();
 }
 
 void DwinTFTClass::tick()
 {
   const millis_t ms = millis();
-  static millis_t next_event_ms = 0;
+  static millis_t nextUpdateCheckMs = 0;
 
-  if (ELAPSED(ms, next_event_ms)) {
-    next_event_ms = ms + DWIN_TFT_UPDATE_INTERVAL_MS;
+  if (ELAPSED(ms, nextUpdateCheckMs)) {
+    nextUpdateCheckMs = ms + DWIN_TFT_UPDATE_INTERVAL_MS;
     loop();
   }
 }
 
 void DwinTFTClass::loop()
 {
-    DwinTFTCommand.loop();
-    //checkPowerOff();
+  DwinTFTCommand.loop();
 }
 
 void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
 {
-    buzzer.tone(200, 1567);
-    buzzer.tone(200, 1174);
-    buzzer.tone(200, 1567);
-    buzzer.tone(200, 1174);
-    buzzer.tone(2000, 1567);
-    
-    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); //J15 FILAMENT LACK
-    DWIN_TFT_SERIAL_ENTER();
-    #ifdef DWIN_TFT_DEBUG
-      SERIAL_ECHOLNPGM("TFT Serial Debug: Filament runout... J15");
-    #endif
-}
+  buzzer.tone(200, 1567);
+  buzzer.tone(200, 1174);
+  buzzer.tone(200, 1567);
+  buzzer.tone(200, 1174);
+  buzzer.tone(2000, 1567);
 
-void DwinTFTClass::checkPowerOff()
-{
-    if(autoPowerOff && !ExtUI::isMoving() && !ExtUI::isPrinting() && 
-      ExtUI::getActualTemp_celsius(ExtUI::extruder_t::E0) < 100
-    ) {
-      autoPowerOff = false;
-      gcodeNow_P(DWIN_TFT_GCODE_M81);
-    }
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); //J15 FILAMENT LACK
+  DWIN_TFT_SERIAL_ENTER();
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); // send 2 times
+  DWIN_TFT_SERIAL_ENTER();
+  #ifdef DWIN_TFT_DEBUG
+    SERIAL_ECHOLNPGM("TFT Serial Debug: Filament runout... J15");
+  #endif
 }
 
 void DwinTFTClass::setCaseLight(bool state)
@@ -299,8 +298,26 @@ bool DwinTFTClass::isWaitingForUserConfirm()
 void DwinTFTClass::waitForUserConfirm()
 {
   #if HAS_RESUME_CONTINUE
-    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE);
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
     DWIN_TFT_SERIAL_ENTER();
+  #endif
+}
+
+void DwinTFTClass::PowerDown()
+{
+  //marlin PSU_OFF() don't work
+  #if PIN_EXISTS(PS_ON)
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: Power down");
+    #endif
+
+    for(unsigned char i = 0; i < 3; i++)
+    {
+      WRITE(PS_ON_PIN, LOW);
+      delay(10);
+      WRITE(PS_ON_PIN, HIGH);
+      delay(10);
+    }
   #endif
 }
 

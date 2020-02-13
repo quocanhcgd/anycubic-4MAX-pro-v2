@@ -53,7 +53,12 @@ namespace ExtUI {
   void onMediaRemoved() {
     DwinTFT.onMediaRemoved();
   }
-  void onPlayTone(const uint16_t frequency, const uint16_t duration) {}
+  void onPlayTone(const uint16_t frequency, const uint16_t duration) {
+    #if ENABLED(SPEAKER)
+      // fix speaker for extui
+      ::tone(BEEPER_PIN, frequency, duration);
+    #endif
+  }
   void onPrintTimerStarted() {}
   void onPrintTimerPaused() {}
   void onPrintTimerStopped() {}
