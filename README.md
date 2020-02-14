@@ -1,7 +1,8 @@
 # Marlin 2.0.x (Ai3M-2.0.x based) for Anycubic 4Max Pro
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat&color=blue)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HYDQNE7EAQH3G&source=url)
-[![Forum](https://img.shields.io/badge/Social-Forum-brightgreen.svg)](https://drucktipps3d.de/forum/topic/anycubic-4max-pro)
+[![Forum](https://img.shields.io/badge/Social-Forum-blue.svg)](https://drucktipps3d.de/forum/topic/anycubic-4max-pro)
+[![Gitter](https://img.shields.io/gitter/room/marlin-a4maxpro/community?color=blue)](https://gitter.im/marlin-a4maxpro/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![GitHub stars](https://img.shields.io/github/stars/Poket-Jony/Marlin-A4MaxPro-2.0.x?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Poket-Jony/Marlin-A4MaxPro-2.0.x/total.svg?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases)
 [![Latest Release](https://img.shields.io/github/release/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=blue)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/latest/)

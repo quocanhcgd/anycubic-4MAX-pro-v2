@@ -279,11 +279,7 @@ void DwinTFTCommandClass::sendGetSDCardPrintingStatus()
   #ifdef SDSUPPORT
     if(ExtUI::isPrinting()) {
       DWIN_TFT_SERIAL_PROTOCOLPGM("A6V ");
-      if(ExtUI::isPrintingFromMedia()) {
-        DWIN_TFT_SERIAL_PROTOCOL(itostr3(card.percentDone()));
-      } else {
-        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_NOT_INSERTED);
-      }
+      DWIN_TFT_SERIAL_PROTOCOL(itostr3(ExtUI::getProgress_percent()));
     } else {
       DWIN_TFT_SERIAL_PROTOCOLPGM("A6V ---");
     }
