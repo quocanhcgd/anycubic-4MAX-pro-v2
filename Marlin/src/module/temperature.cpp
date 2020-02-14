@@ -403,7 +403,7 @@ volatile bool Temperature::raw_temps_ready = false;
       next_auto_fan_check_ms = next_temp_ms + 2500UL;
     #endif
 
-    if (target > GHV(BED_MAXTEMP - 10, temp_range[heater].maxtemp - 10)) {
+    if (target > GHV(BED_MAXTEMP - 10, temp_range[heater].maxtemp - 15)) {
       SERIAL_ECHOLNPGM(MSG_PID_TEMP_TOO_HIGH);
       #if ENABLED(EXTENSIBLE_UI)
         ExtUI::OnPidTuning(ExtUI::result_t::PID_TEMP_TOO_HIGH);
@@ -574,8 +574,6 @@ volatile bool Temperature::raw_temps_ready = false;
       }
 
       if (cycles > ncycles && cycles > 2) {
-        BUZZ(105, 1108);
-        BUZZ(210, 1661);
         SERIAL_ECHOLNPGM(MSG_PID_AUTOTUNE_FINISHED);
 
         #if HAS_PID_FOR_BOTH

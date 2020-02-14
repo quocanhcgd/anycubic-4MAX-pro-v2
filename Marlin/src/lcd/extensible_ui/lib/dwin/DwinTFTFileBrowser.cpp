@@ -66,59 +66,61 @@ void DwinTFTFileBrowserClass::listFiles()
     if(!ExtUI::isMediaInserted()) {
         DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_NOT_INSERTED); //no sd card found
         DWIN_TFT_SERIAL_ENTER();
-    } else {
-        uint16_t itemPos = 0;
-        if(DwinTFTCommand.codeSeen('S')) {
-            itemPos = DwinTFTCommand.codeValue();
-        }
-
-        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_FILE_LIST_START); // Filelist start
-        DWIN_TFT_SERIAL_ENTER();
-
-        if(strcasecmp_P(selectedDirectory, PSTR("<Extra Menu>")) == 0) {
-            buildExtraMenu(itemPos);
-        } else {
-            uint16_t itemCount = fileList.count();
-            uint16_t maxItems = constrain(itemPos + 4, 0, itemCount);
-            if(itemPos == 0) {
-                if(!fileList.isAtRootDir()) {
-                    DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
-                    DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
-                    maxItems = constrain(itemPos + 3, 1, itemCount + 1);
-                } else {
-                    DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
-                    DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
-                    maxItems = constrain(itemPos + 3, 1, itemCount + 1);
-                }
-            } else {
-                itemPos--;
-            }
-            
-            for(uint16_t pos = itemPos; pos < maxItems; pos++) {
-                fileList.seek(pos);
-
-                if(fileList.isDir()) {
-                    DWIN_TFT_SERIAL_PROTOCOL(fileList.shortFilename());
-                    DWIN_TFT_SERIAL_PROTOCOLLNPGM("/");
-                    DWIN_TFT_SERIAL_PROTOCOL(fileList.filename());
-                    DWIN_TFT_SERIAL_PROTOCOLLNPGM("/");
-                    SERIAL_ECHO(pos);
-                    SERIAL_ECHOPGM(":");
-                    SERIAL_ECHO(fileList.filename());
-                    SERIAL_ECHOLNPGM("/");
-                } else {
-                    DWIN_TFT_SERIAL_PROTOCOLLN(fileList.shortFilename());
-                    DWIN_TFT_SERIAL_PROTOCOLLN(fileList.filename());
-                    SERIAL_ECHO(pos);
-                    SERIAL_ECHOPGM(":");
-                    SERIAL_ECHOLN(fileList.filename());
-                }
-            }
-        }
-
-        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_FILE_LIST_END); // Filelist stop
-        DWIN_TFT_SERIAL_ENTER();
+        return;
     }
+
+    uint16_t itemPos = 0;
+    if(DwinTFTCommand.codeSeen('S')) {
+        itemPos = DwinTFTCommand.codeValue();
+    }
+
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_FILE_LIST_START); // Filelist start
+    DWIN_TFT_SERIAL_ENTER();
+
+    if(strcasecmp_P(selectedDirectory, PSTR("<Extra Menu>")) == 0) {
+        buildExtraMenu(itemPos);
+    } else {
+        uint16_t itemCount = fileList.count();
+        uint16_t maxItems = constrain(itemPos + 4, 0, itemCount);
+        if(itemPos == 0) {
+            if(!fileList.isAtRootDir()) {
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
+                maxItems = constrain(itemPos + 3, 1, itemCount + 1);
+            } else {
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
+                maxItems = constrain(itemPos + 3, 1, itemCount + 1);
+            }
+        } else {
+            itemPos--;
+        }
+        
+        for(uint16_t pos = itemPos; pos < maxItems; pos++) {
+            fileList.seek(pos);
+
+            if(fileList.isDir()) {
+                DWIN_TFT_SERIAL_PROTOCOL(fileList.shortFilename());
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM("/");
+                DWIN_TFT_SERIAL_PROTOCOL(fileList.filename());
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM("/");
+                SERIAL_ECHO(pos);
+                SERIAL_ECHOPGM(":");
+                SERIAL_ECHO(fileList.filename());
+                SERIAL_ECHOLNPGM("/");
+            } else {
+                DWIN_TFT_SERIAL_PROTOCOLLN(fileList.shortFilename());
+                DWIN_TFT_SERIAL_PROTOCOLLN(fileList.filename());
+                SERIAL_ECHO(pos);
+                SERIAL_ECHOPGM(":");
+                SERIAL_ECHOLN(fileList.filename());
+            }
+        }
+    }
+
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_FILE_LIST_END); // Filelist stop
+    DWIN_TFT_SERIAL_ENTER();
+    delay(DWIN_TFT_UPDATE_INTERVAL_MS); // prohibits double entries
 }
 
 void DwinTFTFileBrowserClass::selectFile()
@@ -126,48 +128,48 @@ void DwinTFTFileBrowserClass::selectFile()
     if(!ExtUI::isMediaInserted()) {
         DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_NOT_INSERTED);
         DWIN_TFT_SERIAL_ENTER();
-    } else {
-        char *starpos = strchr(DwinTFTCommand.TFTstrchr_pointer + 4, '*');
-        size_t lastCharPos = strlen(DwinTFTCommand.TFTstrchr_pointer) - 1;
-        if (DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '/' && 
-            DwinTFTCommand.TFTstrchr_pointer[4] == '.' && 
-            DwinTFTCommand.TFTstrchr_pointer[5] == '.') { //dir up
-            fileList.upDir();
-            listFiles();
-        } else if (DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '/') { //directory
-            memcpy(selectedDirectory, DwinTFTCommand.TFTstrchr_pointer + 4, lastCharPos - 1);
-            selectedDirectory[strlen(selectedDirectory) - 1] = '\0';
-            fileList.changeDir(selectedDirectory);
-            listFiles();
-        } else if(strcasecmp_P(DwinTFTCommand.TFTstrchr_pointer + 4, PSTR("<Extra Menu>")) == 0) {
-            strcpy(selectedDirectory, DwinTFTCommand.TFTstrchr_pointer + 4);
-            listFiles();
-        } else if(DwinTFTCommand.TFTstrchr_pointer[4] == '<' && 
-            DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '>') {
-            strcpy(selectedFilename, DwinTFTCommand.TFTstrchr_pointer + 4);
-            handleExtraMenu();
-        } else {
-            if(starpos != NULL) {
-                *(starpos - 1) = '\0';
-            }
-            strcpy(selectedFilename, DwinTFTCommand.TFTstrchr_pointer + 4);
-            card.openFileRead(selectedFilename);
-            if(card.isFileOpen()) {
-                DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_OPEN_SUCCESS); // J20 Open successful
-                DWIN_TFT_SERIAL_ENTER();
-                #ifdef DWIN_TFT_DEBUG
-                    SERIAL_ECHOLNPGM("TFT Serial Debug: File open successful... J20");
-                #endif
-            } else {
-                DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_OPEN_FAILED); // J21 Open failed
-                DWIN_TFT_SERIAL_ENTER();
-                #ifdef DWIN_TFT_DEBUG
-                    SERIAL_ECHOLNPGM("TFT Serial Debug: File open failed... J21");
-                #endif
-            }
-        }
-        DWIN_TFT_SERIAL_ENTER();
+        return;
     }
+    char *starpos = strchr(DwinTFTCommand.TFTstrchr_pointer + 4, '*');
+    size_t lastCharPos = strlen(DwinTFTCommand.TFTstrchr_pointer) - 1;
+    if (DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '/' && 
+        DwinTFTCommand.TFTstrchr_pointer[4] == '.' && 
+        DwinTFTCommand.TFTstrchr_pointer[5] == '.') { //dir up
+        fileList.upDir();
+        listFiles();
+    } else if (DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '/') { //directory
+        memcpy(selectedDirectory, DwinTFTCommand.TFTstrchr_pointer + 4, lastCharPos - 1);
+        selectedDirectory[strlen(selectedDirectory) - 1] = '\0';
+        fileList.changeDir(selectedDirectory);
+        listFiles();
+    } else if(strcasecmp_P(DwinTFTCommand.TFTstrchr_pointer + 4, PSTR("<Extra Menu>")) == 0) {
+        strcpy(selectedDirectory, DwinTFTCommand.TFTstrchr_pointer + 4);
+        listFiles();
+    } else if(DwinTFTCommand.TFTstrchr_pointer[4] == '<' && 
+        DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '>') {
+        strcpy(selectedFilename, DwinTFTCommand.TFTstrchr_pointer + 4);
+        handleExtraMenu();
+    } else {
+        if(starpos != NULL) {
+            *(starpos - 1) = '\0';
+        }
+        strcpy(selectedFilename, DwinTFTCommand.TFTstrchr_pointer + 4);
+        card.openFileRead(selectedFilename);
+        if(card.isFileOpen()) {
+            DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_OPEN_SUCCESS); // J20 Open successful
+            DWIN_TFT_SERIAL_ENTER();
+            #ifdef DWIN_TFT_DEBUG
+                SERIAL_ECHOLNPGM("TFT Serial Debug: File open successful... J20");
+            #endif
+        } else {
+            DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_OPEN_FAILED); // J21 Open failed
+            DWIN_TFT_SERIAL_ENTER();
+            #ifdef DWIN_TFT_DEBUG
+                SERIAL_ECHOLNPGM("TFT Serial Debug: File open failed... J21");
+            #endif
+        }
+    }
+    DWIN_TFT_SERIAL_ENTER();
 }
 
 void DwinTFTFileBrowserClass::refreshFileList()
@@ -176,12 +178,12 @@ void DwinTFTFileBrowserClass::refreshFileList()
     if(!ExtUI::isMediaInserted()) {
         DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_NOT_INSERTED);
         DWIN_TFT_SERIAL_ENTER();
-    } else {
-        while (!fileList.isAtRootDir()) {
-            fileList.upDir();
-        }
-        listFiles();
+        return;
     }
+    while (!fileList.isAtRootDir()) {
+        fileList.upDir();
+    }
+    listFiles();
 }
 
 void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
@@ -208,6 +210,8 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_002);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_002);
+            break;
+        default: // if last page has 4 items, then is next page empty
             break;
     }
 }

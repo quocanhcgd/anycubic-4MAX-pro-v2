@@ -25,6 +25,8 @@
 
 #include "../../../../sd/SdFatConfig.h"
 
+#define EXTRA_MENU_PAGES 3
+
 #define EXTRA_MENU_AUTO_TUNE_HOTEND_PID "<auto tune hotend pid>"
 #define EXTRA_MENU_AUTO_TUNE_HOTBED_PID "<auto tune hotbed pid>"
 #define EXTRA_MENU_SAVE_EEPROM "<save eeprom>"
