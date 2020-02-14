@@ -123,8 +123,6 @@ void DwinTFTClass::init()
     WRITE(LED_PIN, LOW);
   #endif
 
-  gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
-
   #ifdef STARTUP_CHIME
     buzzer.tone(250, 554); // C#5
     buzzer.tone(250, 740); // F#5
