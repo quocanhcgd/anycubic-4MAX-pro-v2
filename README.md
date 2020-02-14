@@ -2,14 +2,13 @@
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat&color=blue)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HYDQNE7EAQH3G&source=url)
 [![Forum](https://img.shields.io/badge/Social-Forum-blue.svg)](https://drucktipps3d.de/forum/topic/anycubic-4max-pro)
-[![Gitter](https://img.shields.io/gitter/room/marlin-a4maxpro/community?color=blue)](https://gitter.im/marlin-a4maxpro/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://img.shields.io/gitter/room/marlin-a4maxpro/development?color=blue)](https://gitter.im/marlin-a4maxpro/development?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![GitHub stars](https://img.shields.io/github/stars/Poket-Jony/Marlin-A4MaxPro-2.0.x?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Poket-Jony/Marlin-A4MaxPro-2.0.x/total.svg?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases)
 [![Latest Release](https://img.shields.io/github/release/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=blue)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/latest/)
 [![Open Issues](https://img.shields.io/github/issues-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aopen+is%3Aissue)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aissue+is%3Aclosed)
 [![Travis CI](https://api.travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?branch=master)](https://travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x)
-[![License](https://img.shields.io/github/license/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=blue)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/blob/master/LICENSE)
 
 
 This is the newest version of the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin), customized and optimized for the 4Max Pro based on [davidramiro](https://github.com/davidramiro/Marlin-Ai3M-2.0.x), [derhopp](https://github.com/derhopp/Marlin-with-Anycubic-i3-Mega-TFT) and [alfrank](https://drucktipps3d.de/forum/topic/anycubic-4max-pro-marlin-1-1-9-firmware-ai3m-basierend/) changes.
