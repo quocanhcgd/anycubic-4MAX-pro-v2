@@ -1,12 +1,17 @@
 # Marlin 2.0.x (Ai3M-2.0.x based) for Anycubic 4Max Pro
 
-[![Downloads](https://img.shields.io/github/downloads/Poket-Jony/Marlin-A4MaxPro-2.0.x/total.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases) [![Open Issues](https://img.shields.io/github/issues-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aopen+is%3Aissue) [![License](https://img.shields.io/github/license/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/blob/master/LICENSE) [![Latest Release](https://img.shields.io/github/release/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/latest/) [![Last commit](https://img.shields.io/github/last-commit/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/commits/)  [![Travis CI](https://api.travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?branch=master)](https://travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x)  
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat&color=blue)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HYDQNE7EAQH3G&source=url)
+[![Forum](https://img.shields.io/badge/Social-Forum-brightgreen.svg)](https://drucktipps3d.de/forum/topic/anycubic-4max-pro)
+[![GitHub stars](https://img.shields.io/github/stars/Poket-Jony/Marlin-A4MaxPro-2.0.x?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Poket-Jony/Marlin-A4MaxPro-2.0.x/total.svg?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases)
+[![Latest Release](https://img.shields.io/github/release/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=blue)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/latest/)
+[![Open Issues](https://img.shields.io/github/issues-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aopen+is%3Aissue)
+[![Closed Issues](https://img.shields.io/github/issues-closed-raw/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=brightgreen)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/issues?q=is%3Aissue+is%3Aclosed)
+[![Travis CI](https://api.travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?branch=master)](https://travis-ci.org/Poket-Jony/Marlin-A4MaxPro-2.0.x)
+[![License](https://img.shields.io/github/license/Poket-Jony/Marlin-A4MaxPro-2.0.x.svg?style=flat&color=blue)](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/blob/master/LICENSE)
 
-**Beta build - use with caution!**
 
-This is the newest version of the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin), customized and optimized for the 4Max Pro based on [davidramiro's Ai3M-2.0.x repo](https://github.com/davidramiro/Marlin-Ai3M-2.0.x) and [alfrank's changes](https://drucktipps3d.de/forum/topic/anycubic-4max-pro-marlin-1-1-9-firmware-ai3m-basierend/) for the Anycubic 4Max Pro. The DWIN TFT screen is based on [derhopp's repo](https://github.com/derhopp/Marlin-with-Anycubic-i3-Mega-TFT) with his remarkable efforts to get this working with the latest versions of Marlin.
-
-**Make sure to take a look at the [Wiki](https://github.com/davidramiro/Marlin-Ai3M-2.0.x/wiki/) in [davidramiro's Ai3M-2.0.x repo](https://github.com/davidramiro/Marlin-Ai3M-2.0.x) and also the [FAQ](https://github.com/davidramiro/Marlin-Ai3M-2.0.x/wiki/Frequently-Asked-Questions).**
+This is the newest version of the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin), customized and optimized for the 4Max Pro based on [davidramiro](https://github.com/davidramiro/Marlin-Ai3M-2.0.x), [derhopp](https://github.com/derhopp/Marlin-with-Anycubic-i3-Mega-TFT) and [alfrank](https://drucktipps3d.de/forum/topic/anycubic-4max-pro-marlin-1-1-9-firmware-ai3m-basierend/) changes.
 
 ## Why should use this firmware?
 Anycubic's touchscreen implementation is very hacked together and is based on the old Marlin beta version 1.1.0-RC8.
@@ -15,43 +20,63 @@ Also if your hotbed is concave or not straight you can use the [mesh bed levelin
 
 ## How to use?
 **Warning: If your 4Max Pro works satisfactorily for you there is no reason to do a firmware update.**
+**Remember: There is always a way back to the original firmware [Anycubic 1.1.7 (Marlin 1.1.0-RC8)](https://drive.google.com/file/d/1FwKHQcOxPabLgirkihu3LnBMuHuZLqZR/view).**
 
-- There is always a way back to the original firmware. Before the update, please note the currently installed version: Menu Tools / About / Firmware Version on the display of the printer.
-- If you don't want to change the firmware yourself, you can simply use Cura to load the latest `.hex` file from the [release](https://github.com/Poket-Jony/Marlin-A4MaxPro/releases).
-- If you want to go back to the Original Anycubic 1.1.7 (Marlin 1.1.0-RC8) firmware download it from [here](https://drive.google.com/file/d/1FwKHQcOxPabLgirkihu3LnBMuHuZLqZR/view)
-- After flashing the firmware, no matter which way, you have to reset and save the EEPROM values using a terminal program (e.g. [Pronterface](https://www.pronterface.com/)).
-    - connect the printer to the computer via USB cable
-    - open the terminal program, select the appropriate USB serial interface (on Mac: `SLAB_USBtoUART`)
-    - change `baud rate` or `Baudrate` to `250000 bps`
-    - connect and wait for the EEPROM values to be output
-    - then enter the following: `M502` and `M500`
-- Now you can disconnect again, for safety's turn the printer off and on again.
-- The new firmware is shown in the printer display (see above) as `v2.0.0`.
+### Use precompiled hex:
+If you don't want to change the firmware yourself, download the latest `.hex` file from the [releases](https://github.com/Poket-Jony/Marlin-A4MaxPro/releases).
 
-#### Info: The original Anycubic firmware is set to a baud rate of `115200 bps`.
+### Or compile it yourself:
+- Download and install [Arduino IDE](https://www.arduino.cc/en/main/software)
+- Clone or download this repo with `git clone https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x.git`
+- Browse into the Marlin folder and open `Marlin.ino` with Arduino IDE
+- [Customize if needed](http://marlinfw.org/docs/configuration/configuration.html#configuring-marlin)
+(`Configuration.h` and `Configuration_adv.h` files are located in Marlin folder)
+- In the Arduino IDE, under `Tools -> Board` menu select `Genuino Mega 2560` and `ATmega2560`
+- Under `Sketch` menu, select `Export compiled binary`
+- Look for the `.hex` files in the Marlin directory (only use the `Marlin.ino.hex`, not the `Marlin.ino.with_bootloader.hex`!)
 
-## Known Issues
-#### [Marlin-A4MaxPro-2.0.x/v1.4.5](https://github.com/Poket-Jony/Marlin-A4MaxPro-2.0.x/releases/tag/v1.4.5)
-- LED control: It would be better to enable `case lights` menu option with PWM control
-- Light flickers when printing
-- PID from the hotend no longer fits => Can be fixed by [PID tuning](https://github.com/davidramiro/Marlin-Ai3M-2.0.x/wiki/Calibration#pid-tuning)
+### After obtaining the `.hex` file
+Flash your printer with obtained hex file. After flashing the firmware, no matter which way, you have to reset all configurable settings to their factory defaults using a terminal program (OctoPrint, [Pronterface](https://www.pronterface.com/), Repetier Host, ...):
 
-#### [Marlin-Ai3M-2.0.x/v1.4.5](https://github.com/davidramiro/Marlin-Ai3M-2.0.x/releases/tag/v1.4.5)
+- connect the printer via USB cable
+- open the terminal program, select the appropriate USB serial interface (on Mac: `SLAB_USBtoUART`)
+- change `baud rate` or `Baudrate` to `250000 bps` _(the original Anycubic firmware is set to a baud rate of `115200 bps`)_
+- connect and wait for the EEPROM values to be output
+- send the following commands: `M502` (Factory Reset) and `M500` (Save Settings)
+- now you can disconnect the printer, for safety's turn the printer off and on again.
+- the new firmware version is shown in the printer display
 
-#### [Marlin/2.0.0](https://github.com/MarlinFirmware/Marlin/releases/tag/2.0.0)
-- Mixing Extruder with G10/G11 may have quirks
-- Sensor-less probing is still pretty experimental
+
+**The latest CP210x USB drivers for your printer can be downloaded [here](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers).**
+
+## Calibration
+***Do NOT skip this section! Your 3D printer is exceptionally accurate piece of equipment BUT ONLY if it is calibrated!***
+
+- **Optional:** (To avoid warping) Stock fan duct replacement (Ex: [Vortex Fan Duct](https://www.thingiverse.com/thing:3772311) or [Dowble side fan duct](https://www.thingiverse.com/thing:3763851)).
+- **Mandatory:** Check hotend termistor - it can be loose! Try to slightly pool or push termistor's wires. If termistor moves freely - slide it all the way in the heater block. Clamp the brass tube around termistor's wires a little to secure it.
+- **Mandatory:** [Extruder PIDs auto tuning](https://github.com/davidramiro/Marlin-Ai3M/wiki/Calibration#pid-tuning)
+- **Mandatory:** [Extruder steps calibration](https://github.com/davidramiro/Marlin-Ai3M/wiki/Calibration#extruder-steps)
+- **Recommended:** [Manual Mesh Bed Leveling](https://github.com/davidramiro/Marlin-Ai3M#manual-mesh-bed-leveling)
+- **Recommended:** [Check FAQ in davidramiro's repo](https://github.com/davidramiro/Marlin-AI3M/wiki/Frequently-Asked-Questions)
+
+### Linear Advance
+[Marlin Documentation](https://marlinfw.org/docs/features/lin_advance.html)
+
+- To calibrate your linear advance K-factor you can use [this form](https://marlinfw.org/tools/lin_advance/k-factor.html).
+- Linear advance K-factor should be calibrated for every material which you use. To set new K-factor use `M900` command **OR**
+- Use Linear Advance Settings plugin for Cura to use specific K-factor value in your profiles (or leave it `0` to disable Linear Advance). Can be found in Material tab.
 
 ## Credits
-Marlin-Ai3M-2.0.x administrator:
+Marlin-A4MaxPro:
+- Jonas Plamann [[@Poket-Jony](https://github.com/Poket-Jony)]
+- Ruslan Kolosovskyi [[@rkolosovskyi](https://github.com/rkolosovskyi)]
+- [[@mpk](https://drucktipps3d.de/forum/profile/mpk)]
+- [[@m-kozlowski](https://github.com/m-kozlowski)]
+
+Marlin-Ai3M:
 - David Ramiro [[@davidramiro](https://github.com/davidramiro)]
 
-Marlin-A4MaxPro-2.0.x contributors:
-- [[@alfrank](https://drucktipps3d.de/forum/profile/alfrank/)]
-- [[@mpk](https://drucktipps3d.de/forum/profile/mpk/)]
-- Jonas Plamann [[@Poket-Jony](https://github.com/Poket-Jony)]
-
-Marlin-2.0.x dev team:
+Marlin:
  - Scott Lahteine [[@thinkyhead](https://github.com/thinkyhead)]
  - Roxanne Neufeld [[@Roxy-3D](https://github.com/Roxy-3D)]
  - Chris Pepper [[@p3p](https://github.com/p3p)]
