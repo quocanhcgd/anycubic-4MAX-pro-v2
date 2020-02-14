@@ -579,7 +579,17 @@ void DwinTFTCommandClass::sendAutoPowerOff()
 
 void DwinTFTCommandClass::sendSetCaseLight()
 {
-  ExtUI::setCaseLightState(!ExtUI::getCaseLightState());
+  if(ExtUI::getCaseLightBrightness_percent() < 25) {
+    ExtUI::setCaseLightBrightness_percent(25);
+  } else if(ExtUI::getCaseLightBrightness_percent() < 50) {
+    ExtUI::setCaseLightBrightness_percent(50);
+  } else if(ExtUI::getCaseLightBrightness_percent() < 75) {
+    ExtUI::setCaseLightBrightness_percent(75);
+  } else if(ExtUI::getCaseLightBrightness_percent() < 100) {
+    ExtUI::setCaseLightBrightness_percent(100);
+  } else if(ExtUI::getCaseLightBrightness_percent() == 100) {
+    ExtUI::setCaseLightBrightness_percent(0);
+  }
 }
 
 #endif
