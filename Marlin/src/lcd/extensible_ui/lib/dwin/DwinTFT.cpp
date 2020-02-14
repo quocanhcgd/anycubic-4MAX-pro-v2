@@ -293,7 +293,8 @@ void DwinTFTClass::PowerDown()
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: Power down");
     #endif
-
+    buzzer.tone(250, 554); // C#5
+    delay(250);
     for(unsigned char i = 0; i < 3; i++)
     {
       WRITE(PS_ON_PIN, LOW);
@@ -301,6 +302,18 @@ void DwinTFTClass::PowerDown()
       WRITE(PS_ON_PIN, HIGH);
       delay(10);
     }
+  #endif
+}
+
+void DwinTFTClass::onMeshUpdate(const int8_t xpos, const int8_t ypos, const float zval)
+{
+  //caution: called at startup
+}
+
+void DwinTFTClass::onPidTuning(const ExtUI::result_t rst)
+{
+  #if HAS_PID_HEATING
+    buzzer.tone(250, 554); // C#5
   #endif
 }
 

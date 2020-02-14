@@ -83,8 +83,6 @@ Marlin:
  - Bob Kuhn [[@Bob-the-Kuhn](https://github.com/Bob-the-Kuhn)]
  - João Brazio [[@jbrazio](https://github.com/jbrazio)]
  - Erik van der Zalm [[@ErikZalm](https://github.com/ErikZalm)]
-
-Notable contributors include:
  - Alexey Shvetsov [[@alexxy](https://github.com/alexxy)]
  - Andreas Hardtung [[@AnHardt](https://github.com/AnHardt)]
  - Ben Lye [[@benlye](https://github.com/benlye)]

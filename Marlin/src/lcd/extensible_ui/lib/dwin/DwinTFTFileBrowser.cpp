@@ -221,6 +221,7 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
     if(strcasecmp_P(selectedFilename, PSTR("<../>")) == 0) {
         reset();
         listFiles();
+        return;
     } else if (strcasecmp(selectedFilename, EXTRA_MENU_AUTO_TUNE_HOTEND_PID) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Auto Tune Hotend PID");
         DwinTFT.gcodeNow_P(PSTR("M106 S204\nM303 E0 S210 C15 U1"));
@@ -230,13 +231,9 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
     } else if (strcasecmp(selectedFilename, EXTRA_MENU_SAVE_EEPROM) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Save EEPROM");
         DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M500);
-        buzzer.tone(105, 1108);
-        buzzer.tone(210, 1661);
     } else if (strcasecmp(selectedFilename, EXTRA_MENU_LOAD_FW_DEFAULTS) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Load FW Defaults");
         DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M502);
-        buzzer.tone(105, 1661);
-        buzzer.tone(210, 1108);
     } else if (strcasecmp(selectedFilename, EXTRA_MENU_PREHEAT_BED) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Preheat Bed");
         DwinTFT.gcodeNow_P(PSTR("M140 S60"));
@@ -267,6 +264,7 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
         DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.02"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
     }
+    buzzer.tone(100, 554); // C#5
 }
 
 #endif

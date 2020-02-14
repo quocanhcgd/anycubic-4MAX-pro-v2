@@ -55,7 +55,7 @@ namespace ExtUI {
   }
   void onPlayTone(const uint16_t frequency, const uint16_t duration) {
     #if ENABLED(SPEAKER)
-      // fix speaker for extui
+      // fix speaker for ExtUI
       ::tone(BEEPER_PIN, frequency, duration);
     #endif
   }
@@ -104,7 +104,7 @@ namespace ExtUI {
   }
 
   void onMeshUpdate(const int8_t xpos, const int8_t ypos, const float zval) {
-    // This is called when any mesh points are updated
+    DwinTFT.onMeshUpdate(xpos, ypos, zval);
   }
 
   #if ENABLED(POWER_LOSS_RECOVERY)
@@ -115,7 +115,7 @@ namespace ExtUI {
 
   #if HAS_PID_HEATING
     void OnPidTuning(const result_t rst) {
-      // Called for temperature PID tuning result
+      DwinTFT.onPidTuning(rst);
     }
   #endif
 }
