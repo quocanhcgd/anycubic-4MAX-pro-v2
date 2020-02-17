@@ -70,8 +70,10 @@ Flash your printer with obtained hex file. After flashing the firmware, no matte
 Marlin-A4MaxPro:
 - Jonas Plamann [[@Poket-Jony](https://github.com/Poket-Jony)]
 - Ruslan Kolosovskyi [[@rkolosovskyi](https://github.com/rkolosovskyi)]
+- Bernhard Berger [[@bernhardberger](https://github.com/bernhardberger)]
 - [[@mpk](https://drucktipps3d.de/forum/profile/mpk)]
 - [[@m-kozlowski](https://github.com/m-kozlowski)]
+- [[@whitecube](https://drucktipps3d.de/forum/profile/whitecube)]
 
 Marlin-Ai3M:
 - David Ramiro [[@davidramiro](https://github.com/davidramiro)]
