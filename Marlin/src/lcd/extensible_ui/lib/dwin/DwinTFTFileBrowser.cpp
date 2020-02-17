@@ -81,7 +81,7 @@ void DwinTFTFileBrowserClass::listFiles()
         buildExtraMenu(itemPos);
     } else {
         uint16_t itemCount = fileList.count();
-        uint16_t maxItems = constrain(itemPos + 4, 0, itemCount);
+        uint16_t maxItems = 0;
         if(itemPos == 0) {
             if(!fileList.isAtRootDir()) {
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
@@ -93,7 +93,8 @@ void DwinTFTFileBrowserClass::listFiles()
                 maxItems = constrain(itemPos + 3, 1, itemCount + 1);
             }
         } else {
-            itemPos--;
+            itemPos--; //items above zero are counted normally
+            maxItems = constrain(itemPos + 4, 0, itemCount);
         }
         
         for(uint16_t pos = itemPos; pos < maxItems; pos++) {
