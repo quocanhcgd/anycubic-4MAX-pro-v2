@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -135,14 +135,7 @@
 
 #endif
 
-// Common LCD messages
-
-  /* nothing here yet */
-
-// Common serial messages
-#define MSG_MARLIN "Marlin"
-
-// Serial Console Messages (do not translate those!)
+// Common Serial Console Messages (do not translate those!)
 
 #define MSG_ENQUEUEING                      "enqueueing \""
 #define MSG_POWERUP                         "PowerUp"
@@ -169,8 +162,7 @@
 #define MSG_E_STEPPER_NOT_SPECIFIED         "E stepper not specified"
 #define MSG_INVALID_SOLENOID                "Invalid solenoid"
 #define MSG_ERR_NO_THERMISTORS              "No thermistors - no temperature"
-#define MSG_M115_REPORT                     "FIRMWARE_NAME:Marlin " DETAILED_BUILD_VERSION " MARLIN-A4MAXPRO_VERSION:" CUSTOM_BUILD_VERSION " SOURCE_CODE_URL:" SOURCE_CODE_URL " PROTOCOL_VERSION:" PROTOCOL_VERSION " MACHINE_TYPE:" MACHINE_NAME " EXTRUDER_COUNT:" STRINGIFY(EXTRUDERS) " UUID:" MACHINE_UUID
-#define MSG_MARLIN_A4MAXPRO                     "Marlin-A4MAXPRO"
+#define MSG_M115_REPORT                     "FIRMWARE_NAME:Marlin " DETAILED_BUILD_VERSION " MARLIN_CUSTOM_VERSION:" CUSTOM_BUILD_VERSION " SOURCE_CODE_URL:" SOURCE_CODE_URL " PROTOCOL_VERSION:" PROTOCOL_VERSION " MACHINE_TYPE:" MACHINE_NAME " EXTRUDER_COUNT:" STRINGIFY(EXTRUDERS) " UUID:" MACHINE_UUID
 #define MSG_COUNT_X                         " Count X:"
 #define MSG_COUNT_A                         " Count A:"
 #define MSG_WATCHDOG_FIRED                  "Watchdog timeout. Reset required."
@@ -197,6 +189,8 @@
 #define MSG_Z2_MAX                          "z2_max"
 #define MSG_Z3_MIN                          "z3_min"
 #define MSG_Z3_MAX                          "z3_max"
+#define MSG_Z4_MIN                          "z4_min"
+#define MSG_Z4_MAX                          "z4_max"
 #define MSG_Z_PROBE                         "z_probe"
 #define MSG_FILAMENT_RUNOUT_SENSOR          "filament"
 #define MSG_PROBE_OFFSET                    "Probe Offset"
@@ -221,6 +215,10 @@
 #define MSG_SOFT_ENDSTOPS                   "Soft endstops: "
 #define MSG_SOFT_MIN                        "  Min: "
 #define MSG_SOFT_MAX                        "  Max: "
+
+#define MSG_SAVED_POS                       "Position saved"
+#define MSG_RESTORING_POS                   "Restoring position"
+#define MSG_INVALID_POS_SLOT                "Invalid slot. Total: "
 
 #define MSG_SD_CANT_OPEN_SUBDIR             "Cannot open subdir "
 #define MSG_SD_INIT_FAIL                    "SD init fail"
@@ -254,10 +252,10 @@
 #define MSG_FILAMENT_CHANGE_INSERT_M108     "Insert filament and send M108"
 #define MSG_FILAMENT_CHANGE_WAIT_M108       "Send M108 to resume"
 
-#define MSG_STOP_BLTOUCH                    "STOP called because of BLTouch error - restart with M999"
-#define MSG_STOP_UNHOMED                    "STOP called because of unhomed error - restart with M999"
-#define MSG_KILL_INACTIVE_TIME              "KILL caused by too much inactive time - current command: "
-#define MSG_KILL_BUTTON                     "KILL caused by KILL button/pin"
+#define MSG_STOP_BLTOUCH                    "!! STOP called because of BLTouch error - restart with M999"
+#define MSG_STOP_UNHOMED                    "!! STOP called because of unhomed error - restart with M999"
+#define MSG_KILL_INACTIVE_TIME              "!! KILL caused by too much inactive time - current command: "
+#define MSG_KILL_BUTTON                     "!! KILL caused by KILL button/pin"
 
 // temperature.cpp strings
 #define MSG_PID_AUTOTUNE_PREFIX             "PID Autotune"
@@ -335,6 +333,7 @@
 #define MSG_Y2 "Y2"
 #define MSG_Z2 "Z2"
 #define MSG_Z3 "Z3"
+#define MSG_Z4 "Z4"
 
 #define LCD_STR_A MSG_A
 #define LCD_STR_B MSG_B
@@ -358,6 +357,8 @@
   #define LCD_STR_N3 "3"
   #define LCD_STR_N4 "4"
   #define LCD_STR_N5 "5"
+  #define LCD_STR_N6 "6"
+  #define LCD_STR_N7 "7"
 #else
   #define LCD_FIRST_TOOL '1'
   #define LCD_STR_N0 "1"
@@ -366,6 +367,8 @@
   #define LCD_STR_N3 "4"
   #define LCD_STR_N4 "5"
   #define LCD_STR_N5 "6"
+  #define LCD_STR_N6 "7"
+  #define LCD_STR_N7 "8"
 #endif
 
 #define LCD_STR_E0 "E" LCD_STR_N0
@@ -374,6 +377,8 @@
 #define LCD_STR_E3 "E" LCD_STR_N3
 #define LCD_STR_E4 "E" LCD_STR_N4
 #define LCD_STR_E5 "E" LCD_STR_N5
+#define LCD_STR_E6 "E" LCD_STR_N6
+#define LCD_STR_E7 "E" LCD_STR_N7
 
 #include "multi_language.h"   // Allow multiple languages
 

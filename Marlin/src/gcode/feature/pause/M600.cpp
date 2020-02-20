@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -28,11 +28,6 @@
 #include "../../../feature/pause.h"
 #include "../../../module/motion.h"
 #include "../../../module/printcounter.h"
-
-#ifdef ANYCUBIC_TFT_MODEL
-  #include "../../../lcd/anycubic_TFT.h"
-  #include "../../../sd/cardreader.h"
-#endif
 
 #if EXTRUDERS > 1
   #include "../../../module/tool_change.h"
@@ -65,27 +60,6 @@
  *  Default values are used for omitted arguments.
  */
 void GcodeSuite::M600() {
-
-  #ifdef ANYCUBIC_TFT_MODEL
-    #ifdef SDSUPPORT
-      if (card.isPrinting()) { // are we printing from sd?
-        if (AnycubicTFT.a4maxpro_pause_state < 2) {
-          AnycubicTFT.a4maxpro_pause_state = 2;
-          #ifdef ANYCUBIC_TFT_DEBUG
-            SERIAL_ECHOPAIR(" DEBUG: M600 - A4MAXPRO Pause State set to: ", AnycubicTFT.a4maxpro_pause_state);
-            SERIAL_EOL();
-          #endif
-        }
-        #ifdef ANYCUBIC_TFT_DEBUG
-            SERIAL_ECHOLNPGM("DEBUG: Enter M600 TFTstate routine");
-        #endif
-        AnycubicTFT.TFTstate=ANYCUBIC_TFT_STATE_SDPAUSE_REQ; // enter correct display state to show resume button
-        #ifdef ANYCUBIC_TFT_DEBUG
-            SERIAL_ECHOLNPGM("DEBUG: Set TFTstate to SDPAUSE_REQ");
-        #endif
-      }
-    #endif
-  #endif
 
   xyz_pos_t park_point = NOZZLE_PARK_POINT;
 

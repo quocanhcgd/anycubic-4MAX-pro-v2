@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -47,8 +47,8 @@
 
 #include "../../lcd/ultralcd.h"
 
-#if HAS_DRIVER(L6470)                         // set L6470 absolute position registers to counts
-  #include "../../libs/L6470/L6470_Marlin.h"
+#if HAS_L64XX                         // set L6470 absolute position registers to counts
+  #include "../../libs/L64XX/L64XX_Marlin.h"
 #endif
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -133,7 +133,7 @@
     destination.set(safe_homing_xy, current_position.z);
 
     #if HOMING_Z_WITH_PROBE
-      destination -= probe_offset;
+      destination -= probe.offset_xy;
     #endif
 
     if (position_is_reachable(destination)) {
@@ -262,7 +262,7 @@ void GcodeSuite::G28(const bool always_home_all) {
 
   #if HAS_HOMING_CURRENT
     auto debug_current = [](const char * const s, const int16_t a, const int16_t b){
-      DEBUG_ECHO(s); DEBUG_ECHOLNPGM(" current: ", a, " -> ", b);
+      DEBUG_ECHO(s); DEBUG_ECHOLNPAIR(" current: ", a, " -> ", b);
     };
     #if HAS_CURRENT_HOME(X)
       const int16_t tmc_save_current_X = stepperX.getMilliamps();
@@ -284,11 +284,6 @@ void GcodeSuite::G28(const bool always_home_all) {
       stepperY2.rms_current(Y2_CURRENT_HOME);
       if (DEBUGGING(LEVELING)) debug_current("Y2", tmc_save_current_Y2, Y2_CURRENT_HOME);
     #endif
-  #endif
-
-  #if BOTH(STEALTHCHOP_XY, HOME_USING_SPREADCYCLE)
-    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Set XY to spreadCycle...");
-    process_subcommands_now_P(PSTR("M569S0XY"));
   #endif
 
   #if ENABLED(IMPROVE_HOMING_RELIABILITY)
@@ -410,6 +405,7 @@ void GcodeSuite::G28(const bool always_home_all) {
 
     // Home Z last if homing towards the bed
     #if Z_HOME_DIR < 0
+
       if (doZ) {
         #if ENABLED(BLTOUCH)
           bltouch.init();
@@ -421,10 +417,17 @@ void GcodeSuite::G28(const bool always_home_all) {
         #endif
 
         #if HOMING_Z_WITH_PROBE && defined(Z_AFTER_PROBING)
-          move_z_after_probing();
+          #if Z_AFTER_HOMING > Z_AFTER_PROBING
+            do_blocking_move_to_z(Z_AFTER_HOMING);
+          #else
+            probe.move_z_after_probing();
+          #endif
+        #elif defined(Z_AFTER_HOMING)
+          do_blocking_move_to_z(Z_AFTER_HOMING);
         #endif
 
       } // doZ
+
     #endif // Z_HOME_DIR < 0
 
     sync_plan_position();
@@ -515,11 +518,6 @@ void GcodeSuite::G28(const bool always_home_all) {
     #endif
   #endif
 
-  #if BOTH(STEALTHCHOP_XY, HOME_USING_SPREADCYCLE)
-    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Set XY to StealthChop...");
-    process_subcommands_now_P(PSTR("M569S1XY"));
-  #endif
-
   ui.refresh();
 
   report_current_position();
@@ -536,11 +534,18 @@ void GcodeSuite::G28(const bool always_home_all) {
 
   if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("<<< G28");
 
-  #if HAS_DRIVER(L6470)
+  #if HAS_L64XX
     // Set L6470 absolute position registers to counts
-    for (uint8_t j = 1; j <= L6470::chain[0]; j++) {
-      const uint8_t cv = L6470::chain[j];
-      L6470.set_param(cv, L6470_ABS_POS, stepper.position((AxisEnum)L6470.axis_xref[cv]));
+    // constexpr *might* move this to PROGMEM.
+    // If not, this will need a PROGMEM directive and an accessor.
+    static constexpr AxisEnum L64XX_axis_xref[MAX_L64XX] = {
+      X_AXIS, Y_AXIS, Z_AXIS,
+      X_AXIS, Y_AXIS, Z_AXIS, Z_AXIS,
+      E_AXIS, E_AXIS, E_AXIS, E_AXIS, E_AXIS, E_AXIS
+    };
+    for (uint8_t j = 1; j <= L64XX::chain[0]; j++) {
+      const uint8_t cv = L64XX::chain[j];
+      L64xxManager.set_param((L64XX_axis_t)cv, L6470_ABS_POS, stepper.position(L64XX_axis_xref[cv]));
     }
   #endif
 }

@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -37,7 +37,47 @@
   #define SERVO3_PIN        6
 #endif
 
-#define LARGE_FLASH        true
+//
+// Custom Limit Switches
+//
+//#define ANYCUBIC_4_MAX_PRO_ENDSTOPS
+#if ENABLED(ANYCUBIC_4_MAX_PRO_ENDSTOPS)
+  #define X_MAX_PIN        43
+  #define Y_MIN_PIN        19
+#endif
+
+// Labeled pins
+#define TRIGORILLA_HEATER_BED_PIN  8
+#define TRIGORILLA_HEATER_0_PIN   10
+#define TRIGORILLA_HEATER_1_PIN   45   // Anycubic Kossel: Unused
+
+#define TRIGORILLA_FAN0_PIN        9   // Anycubic Kossel: Usually the part cooling fan
+#define TRIGORILLA_FAN1_PIN        7   // Anycubic Kossel: Unused
+#define TRIGORILLA_FAN2_PIN       44   // Anycubic Kossel: Hotend fan
+
+// Remap MOSFET pins to common usages:
+
+#define RAMPS_D10_PIN    TRIGORILLA_HEATER_0_PIN // HEATER_0_PIN is always RAMPS_D10_PIN in pins_RAMPS.h
+
+#if HOTENDS > 1   // EEF and EEB
+  #define RAMPS_D9_PIN   TRIGORILLA_HEATER_1_PIN
+  #if !TEMP_SENSOR_BED
+    // EEF
+    #define RAMPS_D8_PIN TRIGORILLA_FAN0_PIN
+  #else
+    // EEB
+    #define RAMPS_D8_PIN TRIGORILLA_HEATER_BED_PIN
+    #define FAN_PIN      TRIGORILLA_FAN0_PIN    // Override pin 4 in pins_RAMPS.h
+  #endif
+#elif TEMP_SENSOR_BED
+  // EFB (Anycubic Kossel default)
+  #define RAMPS_D9_PIN   TRIGORILLA_FAN0_PIN
+  #define RAMPS_D8_PIN   TRIGORILLA_HEATER_BED_PIN
+#else
+  // EFF
+  #define RAMPS_D9_PIN   TRIGORILLA_FAN1_PIN
+  #define RAMPS_D8_PIN   TRIGORILLA_FAN0_PIN
+#endif
 
 // Misc PINs
 #define BUZZER 			   31
@@ -104,7 +144,7 @@
 #define TEMP_BED_PIN       14
 
 // POWER
-#define POWER_OFF_PIN      21
+#define PS_ON_PIN      21
 
 // Servos
 #if TRIGORILLA_VERSION == 0 // Default Trigorilla
@@ -141,13 +181,13 @@
   #endif
 #endif // #if TRIGORILLA_VERSION
 
-#if defined(ANYCUBIC_TFT_MODEL)
+#if defined(DWIN_TFT)
   #define BEEPER_PIN       31
   #define SD_DETECT_PIN    49
 #endif
 
 // LCD
-#if defined(REPRAP_DISCOUNT_SMART_CONTROLLER) || defined(G3D_PANEL) || defined(ANYCUBIC_TFT_MODEL)
+#if defined(REPRAP_DISCOUNT_SMART_CONTROLLER) || defined(G3D_PANEL) || defined(DWIN_TFT)
 	#define KILL_PIN        41
 #else
 	#define KILL_PIN        -1

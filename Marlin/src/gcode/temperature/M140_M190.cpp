@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -20,6 +20,12 @@
  *
  */
 
+/**
+ * gcode/temperature/M140_M190.cpp
+ *
+ * Bed target temperature control
+ */
+
 #include "../../inc/MarlinConfig.h"
 
 #if HAS_HEATED_BED
@@ -37,10 +43,7 @@
   #include "../../feature/leds/leds.h"
 #endif
 
-#if ENABLED(ANYCUBIC_TFT_MODEL)
-  #include "../../lcd/anycubic_TFT.h"
-#endif
-#include "../../Marlin.h" // for wait_for_heatup and idle()
+#include "../../MarlinCore.h" // for wait_for_heatup, idle, startOrResumeJob
 
 /**
  * M140: Set bed temperature
@@ -48,11 +51,22 @@
 void GcodeSuite::M140() {
   if (DEBUGGING(DRYRUN)) return;
   if (parser.seenval('S')) thermalManager.setTargetBed(parser.value_celsius());
+
+  #if ENABLED(PRINTJOB_TIMER_AUTOSTART)
+    /**
+     * Stop the timer at the end of print. Both hotend and bed target
+     * temperatures need to be set below mintemp. Order of M140 and M104
+     * at the end of the print does not matter.
+     */
+    thermalManager.check_timer_autostart(false, true);
+  #endif
 }
 
 /**
  * M190: Sxxx Wait for bed current temp to reach target temp. Waits only when heating
  *       Rxxx Wait for bed current temp to reach target temp. Waits when heating and cooling
+ *
+ * With PRINTJOB_TIMER_AUTOSTART also start the job timer on heating.
  */
 void GcodeSuite::M190() {
   if (DEBUGGING(DRYRUN)) return;
@@ -61,15 +75,10 @@ void GcodeSuite::M190() {
   if (no_wait_for_cooling || parser.seenval('R')) {
     thermalManager.setTargetBed(parser.value_celsius());
     #if ENABLED(PRINTJOB_TIMER_AUTOSTART)
-      if (parser.value_celsius() > BED_MINTEMP)
-        startOrResumeJob();
+      thermalManager.check_timer_autostart(true, false);
     #endif
   }
   else return;
-
-  #ifdef ANYCUBIC_TFT_MODEL
-    AnycubicTFT.BedHeatingStart();
-  #endif
 
   ui.set_status_P(thermalManager.isHeatingBed() ? GET_TEXT(MSG_BED_HEATING) : GET_TEXT(MSG_BED_COOLING));
 
