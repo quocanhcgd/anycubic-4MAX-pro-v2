@@ -121,7 +121,7 @@ void DwinTFTFileBrowserClass::listFiles()
 
     DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_FILE_LIST_END); // Filelist stop
     DWIN_TFT_SERIAL_ENTER();
-    delay(DWIN_TFT_UPDATE_INTERVAL_MS); // prohibits double entries
+    ExtUI::delay_ms(DWIN_TFT_UPDATE_INTERVAL_MS); // prohibits double entries
 }
 
 void DwinTFTFileBrowserClass::selectFile()

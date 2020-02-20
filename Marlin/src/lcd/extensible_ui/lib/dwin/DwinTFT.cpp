@@ -104,7 +104,7 @@ void DwinTFTClass::init()
   //DWIN_TFT_SERIAL_START();
   DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_MAINBOARD_RESET);
   DWIN_TFT_SERIAL_ENTER();
-  delay(10);
+  ExtUI::delay_ms(10);
   DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_READY);
   DWIN_TFT_SERIAL_ENTER();
 
@@ -292,13 +292,13 @@ void DwinTFTClass::PowerDown()
       SERIAL_ECHOLNPGM("TFT Serial Debug: Power down");
     #endif
     buzzer.tone(250, 554); // C#5
-    delay(250);
+    ExtUI::delay_ms(250);
     for(unsigned char i = 0; i < 3; i++)
     {
       WRITE(PS_ON_PIN, LOW);
-      delay(10);
+      ExtUI::delay_ms(10);
       WRITE(PS_ON_PIN, HIGH);
-      delay(10);
+      ExtUI::delay_ms(10);
     }
   #endif
 }
