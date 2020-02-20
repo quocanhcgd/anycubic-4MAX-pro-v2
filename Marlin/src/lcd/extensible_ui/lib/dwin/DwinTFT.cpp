@@ -123,6 +123,9 @@ void DwinTFTClass::init()
     WRITE(LED_PIN, LOW);
   #endif
 
+  //activate auto shutdown
+  max_inactive_time = DWIN_TFT_INACTIVITY_SHUTDOWN_MS;
+
   #ifdef STARTUP_CHIME
     buzzer.tone(250, 554); // C#5
     buzzer.tone(250, 740); // F#5

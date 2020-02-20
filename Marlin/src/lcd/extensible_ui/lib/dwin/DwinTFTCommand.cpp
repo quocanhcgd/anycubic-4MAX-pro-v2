@@ -562,14 +562,39 @@ void DwinTFTCommandClass::sendGetVersionInfo()
   DWIN_TFT_SERIAL_PROTOCOLPGM("J33 ");
   DWIN_TFT_SERIAL_PROTOCOLPGM(CUSTOM_BUILD_VERSION);
   DWIN_TFT_SERIAL_ENTER();
+  #ifdef DWIN_TFT_DEBUG
+    SERIAL_ECHOLNPGM("TFT Serial Debug: send version info... J33");
+  #endif
 }
 
 void DwinTFTCommandClass::sendAutoPowerOff()
 {
-  if(codeSeen('O')) {
-    DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
-  } else if (codeSeen('C')) {
-    DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_OFF);
+  if(codeSeen('O')) { //enable
+    max_inactive_time = DWIN_TFT_INACTIVITY_SHUTDOWN_MS;
+    buzzer.tone(100, 554); // C#5
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: enabled auto shutdown");
+    #endif
+  } else if (codeSeen('C')) { //disable
+    max_inactive_time = 0;
+    buzzer.tone(100, 554); // C#5
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPGM("TFT Serial Debug: disabled auto shutdown");
+    #endif
+  } else if(codeSeen('S')) { //request current state
+    if(max_inactive_time != 0) {
+      DWIN_TFT_SERIAL_PROTOCOLPGM("J35 ");
+      DWIN_TFT_SERIAL_ENTER();
+      #ifdef DWIN_TFT_DEBUG
+        SERIAL_ECHOLNPGM("TFT Serial Debug: send info enabled auto shutdown... J35");
+      #endif
+    } else {
+      DWIN_TFT_SERIAL_PROTOCOLPGM("J34 ");
+      DWIN_TFT_SERIAL_ENTER();
+      #ifdef DWIN_TFT_DEBUG
+        SERIAL_ECHOLNPGM("TFT Serial Debug: send info disabled auto shutdown... J34");
+      #endif
+    }
   }
 }
 
@@ -586,6 +611,9 @@ void DwinTFTCommandClass::sendSetCaseLight()
   } else if(ExtUI::getCaseLightBrightness_percent() == 100) {
     ExtUI::setCaseLightBrightness_percent(0);
   }
+  #ifdef DWIN_TFT_DEBUG
+    SERIAL_ECHOLNPGM("TFT Serial Debug: toggle case light");
+  #endif
 }
 
 #endif
