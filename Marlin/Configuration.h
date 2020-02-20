@@ -414,7 +414,7 @@
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_6 0
 #define TEMP_SENSOR_7 0
-#define TEMP_SENSOR_BED 11
+#define TEMP_SENSOR_BED 5
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 0
 
@@ -745,7 +745,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 100.06,80.06,800,392.16 }//400* }//  NORMAL IS 100,80,800,400   2019.6.10修改，为了测试
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 100, 80, 800, 418 }
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
