@@ -124,7 +124,7 @@ void DwinTFTClass::init()
   #endif
 
   //activate auto shutdown
-  max_inactive_time = DWIN_TFT_INACTIVITY_SHUTDOWN_MS;
+  DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
 
   #ifdef STARTUP_CHIME
     buzzer.tone(250, 554); // C#5
@@ -294,14 +294,12 @@ void DwinTFTClass::PowerDown()
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: Power down");
     #endif
-    buzzer.tone(250, 554); // C#5
-    ExtUI::delay_ms(250);
     for(unsigned char i = 0; i < 3; i++)
     {
       WRITE(PS_ON_PIN, LOW);
-      ExtUI::delay_ms(10);
+      delay(10);
       WRITE(PS_ON_PIN, HIGH);
-      ExtUI::delay_ms(10);
+      delay(10);
     }
   #endif
 }

@@ -570,13 +570,13 @@ void DwinTFTCommandClass::sendGetVersionInfo()
 void DwinTFTCommandClass::sendAutoPowerOff()
 {
   if(codeSeen('O')) { //enable
-    max_inactive_time = DWIN_TFT_INACTIVITY_SHUTDOWN_MS;
+    DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
     buzzer.tone(100, 554); // C#5
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: enabled auto shutdown");
     #endif
   } else if (codeSeen('C')) { //disable
-    max_inactive_time = 0;
+    DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_OFF);
     buzzer.tone(100, 554); // C#5
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: disabled auto shutdown");

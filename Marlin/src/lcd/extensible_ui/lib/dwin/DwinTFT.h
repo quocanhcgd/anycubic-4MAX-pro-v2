@@ -26,7 +26,6 @@
 #include "../../ui_api.h"
 
 #define DWIN_TFT_UPDATE_INTERVAL_MS 250
-#define DWIN_TFT_INACTIVITY_SHUTDOWN_MS 900000 //15 min
 
 char *itostr2(const uint8_t &x);
 
@@ -62,6 +61,8 @@ const char DWIN_TFT_GCODE_HOME_ALL[] PROGMEM = "G28";
 const char DWIN_TFT_GCODE_HOME_X[] PROGMEM = "G28 X";
 const char DWIN_TFT_GCODE_HOME_Y[] PROGMEM = "G28 Y";
 const char DWIN_TFT_GCODE_HOME_Z[] PROGMEM = "G28 Z";
+const char DWIN_TFT_GCODE_INACTIVITY_ON[] PROGMEM = "M85 S900"; // 15 min
+const char DWIN_TFT_GCODE_INACTIVITY_OFF[] PROGMEM = "M85 S0";
 
 class DwinTFTClass {
 public:
