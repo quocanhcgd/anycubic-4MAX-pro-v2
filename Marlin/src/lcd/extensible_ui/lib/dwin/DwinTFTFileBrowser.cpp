@@ -86,14 +86,14 @@ void DwinTFTFileBrowserClass::listFiles()
             if(!fileList.isAtRootDir()) {
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
-                maxItems = constrain(itemPos + 3, 1, itemCount + 1);
+                maxItems = constrain(3, 1, itemCount);
             } else {
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
-                maxItems = constrain(itemPos + 3, 1, itemCount + 1);
+                maxItems = constrain(3, 1, itemCount);
             }
         } else {
-            itemPos--; //items above zero are counted normally
+            itemPos--; //items above zero are counted regular
             maxItems = constrain(itemPos + 4, 0, itemCount);
         }
         
