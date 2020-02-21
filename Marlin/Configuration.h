@@ -484,9 +484,9 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // A4MaxPro
-  #define DEFAULT_Kp 18.55
-  #define DEFAULT_Ki 1.26
-  #define DEFAULT_Kd 68.00
+  #define DEFAULT_Kp 18.53
+  #define DEFAULT_Ki 1.27
+  #define DEFAULT_Kd 67.55
 
   // Ultimaker
   // #define DEFAULT_Kp 22.2
@@ -539,9 +539,9 @@
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
   //Anycubic 4Max Pro Ultrabase (0.9Ω @ 22°C)
-  #define DEFAULT_bedKp 143.88
-  #define DEFAULT_bedKi 34.88
-  #define DEFAULT_bedKd 619.44
+  #define DEFAULT_bedKp 100.68
+  #define DEFAULT_bedKi 17.07
+  #define DEFAULT_bedKd 395.86
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
@@ -2157,7 +2157,7 @@
 // affecting heaters, and the fan if FAN_SOFT_PWM is enabled.
 // However, control resolution will be halved for each increment;
 // at zero value, there are 128 effective control positions.
-#define SOFT_PWM_SCALE 2
+#define SOFT_PWM_SCALE 0
 
 // If SOFT_PWM_SCALE is set to a value higher than 0, dithering can
 // be used to mitigate the associated resolution loss. If enabled,
