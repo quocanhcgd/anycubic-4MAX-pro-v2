@@ -282,6 +282,8 @@ bool DwinTFTClass::isWaitingForUserConfirm()
 void DwinTFTClass::waitForUserConfirm()
 {
   #if HAS_RESUME_CONTINUE
+    buzzer.tone(250, 554); // C#5
+    buzzer.tone(500, 831); // G#5
     DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
     DWIN_TFT_SERIAL_ENTER();
   #endif
@@ -312,7 +314,27 @@ void DwinTFTClass::onMeshUpdate(const int8_t xpos, const int8_t ypos, const floa
 void DwinTFTClass::onPidTuning(const ExtUI::result_t rst)
 {
   #if HAS_PID_HEATING
-    buzzer.tone(250, 554); // C#5
+    buzzer.tone(250, 831); // G#5
+    buzzer.tone(500, 554); // C#5
+  #endif
+}
+
+void DwinTFTClass::onPrintTimerStarted()
+{
+
+}
+
+void DwinTFTClass::onPrintTimerPaused()
+{
+
+}
+
+void DwinTFTClass::onPrintTimerStopped()
+{
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_FINISHED);// J14 print done
+  DWIN_TFT_SERIAL_ENTER();
+  #ifdef DWIN_TFT_DEBUG
+    SERIAL_ECHOLNPGM("TFT Serial Debug: SD print done... J14");
   #endif
 }
 

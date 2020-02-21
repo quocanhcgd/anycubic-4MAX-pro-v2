@@ -84,6 +84,9 @@ public:
   void PowerDown();
   void onMeshUpdate(const int8_t xpos, const int8_t ypos, const float zval);
   void onPidTuning(const ExtUI::result_t rst);
+  void onPrintTimerStarted();
+  void onPrintTimerPaused();
+  void onPrintTimerStopped();
 
 private:
   void receiveCommands();

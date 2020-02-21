@@ -59,9 +59,15 @@ namespace ExtUI {
       ::tone(BEEPER_PIN, frequency, duration);
     #endif
   }
-  void onPrintTimerStarted() {}
-  void onPrintTimerPaused() {}
-  void onPrintTimerStopped() {}
+  void onPrintTimerStarted() {
+    DwinTFT.onPrintTimerStarted();
+  }
+  void onPrintTimerPaused() {
+    DwinTFT.onPrintTimerPaused();
+  }
+  void onPrintTimerStopped() {
+    DwinTFT.onPrintTimerStopped();
+  }
   void onFilamentRunout(const extruder_t extruder) {
     DwinTFT.filamentRunout(extruder);
   }
