@@ -209,8 +209,8 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
         case 2:
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_01);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_002);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_002);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
             break;
         default: // if last page has 4 items, then is next page empty
             break;
@@ -247,22 +247,22 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
     } else if(strcasecmp(selectedFilename, EXTRA_MENU_Z_UP_01) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Z Up 0.1");
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
-        DwinTFT.gcodeQueue_P(PSTR("G0 Z0.1"));
+        DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.1"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
     } else if (strcasecmp(selectedFilename, EXTRA_MENU_Z_UP_002) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Z Up 0.02");
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
+        DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.02"));
+        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    } else if (strcasecmp(selectedFilename, EXTRA_MENU_Z_DOWN_002) == 0) {
+        SERIAL_ECHOLNPGM("Extra Menu: Z Down 0.02");
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
         DwinTFT.gcodeQueue_P(PSTR("G0 Z0.02"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
     } else if(strcasecmp(selectedFilename, EXTRA_MENU_Z_DOWN_01) == 0) {
         SERIAL_ECHOLNPGM("Extra Menu: Z Down 0.1");
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
-        DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.1"));
-        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
-    } else if (strcasecmp(selectedFilename, EXTRA_MENU_Z_DOWN_002) == 0) {
-        SERIAL_ECHOLNPGM("Extra Menu: Z Down 0.02");
-        DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
-        DwinTFT.gcodeQueue_P(PSTR("G0 Z-0.02"));
+        DwinTFT.gcodeQueue_P(PSTR("G0 Z0.1"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
     }
     buzzer.tone(100, 554); // C#5
