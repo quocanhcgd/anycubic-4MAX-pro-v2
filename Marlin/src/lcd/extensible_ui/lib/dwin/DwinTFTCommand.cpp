@@ -463,16 +463,19 @@ void DwinTFTCommandClass::sendMove()
     DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91); // relative coordinates
 
     if(codeSeen('X')) { // Move in X direction
+      movespeed = int(ExtUI::getAxisMaxFeedrate_mm_s(ExtUI::axis_t::X)*60/3000*movespeed);
       coorvalue=codeValue();
       if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 X0.1F%i"),movespeed);}
       else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 X-0.1F%i"),movespeed);}
       else {sprintf_P(value,PSTR("G0 X%iF%i"),int(coorvalue),movespeed);}
     } else if(codeSeen('Y')) { // Move in Y direction
+      movespeed = int(ExtUI::getAxisMaxFeedrate_mm_s(ExtUI::axis_t::Y)*60/3000*movespeed);
       coorvalue=codeValue();
       if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 Y0.1F%i"),movespeed);}
       else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 Y-0.1F%i"),movespeed);}
       else {sprintf_P(value,PSTR("G0 Y%iF%i"),int(coorvalue),movespeed);}
     } else if(codeSeen('Z')) { // Move in Z direction
+      movespeed = int(ExtUI::getAxisMaxFeedrate_mm_s(ExtUI::axis_t::Z)*60/3000*movespeed);
       coorvalue=codeValue();
       if((coorvalue<=0.2)&&coorvalue>0) {sprintf_P(value,PSTR("G0 Z0.1F%i"),movespeed);}
       else if((coorvalue<=-0.1)&&coorvalue>-1) {sprintf_P(value,PSTR("G0 Z-0.1F%i"),movespeed);}
