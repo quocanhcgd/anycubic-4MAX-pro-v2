@@ -39,7 +39,7 @@
  * Marlin's own build number, e.g. 2.0.x.
  * (Max displayable length = 8)
  */
- #define CUSTOM_BUILD_VERSION "2.1.4rc"
+ #define CUSTOM_BUILD_VERSION "2.1.5rc"
 
 /**
  * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
