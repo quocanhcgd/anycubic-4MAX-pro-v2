@@ -98,7 +98,7 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
       sendSDCardStop();
       break;
     case DWIN_TFT_RX_KILL: // A12 kill
-      kill(PSTR(MSG_ERR_KILLED));
+      kill(PSTR(STR_ERR_KILLED));
       break;
     case DWIN_TFT_RX_SD_CARD_FILE_SELECT: // A13 SELECTION FILE
       sendSDCardFileSelect();
