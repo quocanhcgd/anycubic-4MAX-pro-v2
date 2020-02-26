@@ -66,6 +66,16 @@ Flash your printer with obtained hex file. After flashing the firmware, no matte
 - Linear advance K-factor should be calibrated for every material which you use. To set new K-factor use `M900` command **OR**
 - Use Linear Advance Settings plugin for Cura to use specific K-factor value in your profiles (or leave it `0` to disable Linear Advance). Can be found in Material tab.
 
+## Features
+### Filament Runout
+As soon as the filament is empty when printing, a message appears on the display and the printer removes the remaining filament. Please insert a new one and press "Continue". (Sometimes the command is not transmitted correctly, then first press "Pause" and then "Continue") Now the new filament is drawn in and printing continues.
+
+### Advanced Pause
+If you press "Pause" while printing, it stops and your print head moves to the waiting position. If you want to continue printing, press "Continue". Now the printhead is heated up and then moves back into position.
+
+### Mesh Leveling
+Due to the concave print bed on the Anycubic, you can use the mesh leveling to fix the unevenness. Insert an SD card first and then go to the "Extra Menu" in the print menu. Select "start mesh leveling" there. The print head now moves to the first position. Place a sheet of paper under the nozzle and select "z up" or "z down" on the next page until you notice a slight rubbing on the paper. Now press "next mesh point" and repeat the process. As soon as you have reached the last point, the print head returns to the home position and you can save the new values by clicking on "save eeprom". Don't forget to integrate the mesh leveling into your gcode start script.
+
 ## Credits
 Marlin-A4MaxPro:
 - Jonas Plamann [[@Poket-Jony](https://github.com/Poket-Jony)]

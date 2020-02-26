@@ -85,10 +85,17 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
       sendGetSDCardList();
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_PAUSE: // A9 pause sd print
-      sendSDCardPause();
+      if(DwinTFT.isWaitingForUserConfirm()) { //workaround for busy printer
+        DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
+        DWIN_TFT_SERIAL_ENTER();
+      } else {
+        sendSDCardPause();
+      }
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_RESUME: // A10 resume sd print
       if(DwinTFT.isWaitingForUserConfirm()) {
+        buzzer.tone(250, 554); // C#5
+        buzzer.tone(500, 831); // G#5
         ExtUI::setUserConfirmed();
       } else {
         sendSDCardResume();
