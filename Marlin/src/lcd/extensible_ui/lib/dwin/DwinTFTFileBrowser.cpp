@@ -76,8 +76,10 @@ void DwinTFTFileBrowserClass::listFiles()
     DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_SD_CARD_FILE_LIST_START); // Filelist start
     DWIN_TFT_SERIAL_ENTER();
 
-    if(strcasecmp_P(selectedDirectory, PSTR("<Extra Menu>")) == 0) {
+    if(strcasecmp_P(selectedDirectory, PSTR(EXTRA_MENU)) == 0) {
         buildExtraMenu(itemPos);
+    } else if(strcasecmp_P(selectedDirectory, PSTR(DEBUG_MENU)) == 0) {
+        buildDebugMenu(itemPos);
     } else {
         uint16_t itemCount = fileList.count();
         uint16_t maxItems = 0;
@@ -87,8 +89,8 @@ void DwinTFTFileBrowserClass::listFiles()
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
                 maxItems = constrain(3, 1, itemCount);
             } else {
-                DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
-                DWIN_TFT_SERIAL_PROTOCOLLNPGM("<Extra Menu>");
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU);
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU);
                 maxItems = constrain(3, 1, itemCount);
             }
         } else {
@@ -142,13 +144,18 @@ void DwinTFTFileBrowserClass::selectFile()
         selectedDirectory[strlen(selectedDirectory) - 1] = '\0';
         fileList.changeDir(selectedDirectory);
         listFiles();
-    } else if(strcasecmp_P(DwinTFTCommand.TFTstrchr_pointer + 4, PSTR("<Extra Menu>")) == 0) {
+    } else if(strcasecmp_P(DwinTFTCommand.TFTstrchr_pointer + 4, PSTR(EXTRA_MENU)) == 0 || 
+        strcasecmp_P(DwinTFTCommand.TFTstrchr_pointer + 4, PSTR(DEBUG_MENU)) == 0) {
         strcpy(selectedDirectory, DwinTFTCommand.TFTstrchr_pointer + 4);
         listFiles();
     } else if(DwinTFTCommand.TFTstrchr_pointer[4] == '<' && 
         DwinTFTCommand.TFTstrchr_pointer[lastCharPos] == '>') {
         strcpy(selectedFilename, DwinTFTCommand.TFTstrchr_pointer + 4);
-        handleExtraMenu();
+        if(strcasecmp_P(selectedDirectory, PSTR(EXTRA_MENU)) == 0) {
+            handleExtraMenu();
+        } else if(strcasecmp_P(selectedDirectory, PSTR(DEBUG_MENU)) == 0) {
+            handleDebugMenu();
+        }
     } else {
         if(starpos != NULL) {
             *(starpos - 1) = '\0';
@@ -195,21 +202,41 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
     {
         case 0:
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP("<../>");
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_AUTO_TUNE_HOTEND_PID);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_AUTO_TUNE_HOTBED_PID);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SAVE_EEPROM);
             break;
         case 1:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SAVE_EEPROM);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_LOAD_FW_DEFAULTS);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_PREHEAT_BED);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_START_MESH_LEVELING);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_NEXT_MESH_POINT);
             break;
         case 2:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_NEXT_MESH_POINT);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_01);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_002);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_002);
+            break;
+        case 3:
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
+        default: // if last page has 4 items, then is next page empty
+            break;
+    }
+}
+
+void DwinTFTFileBrowserClass::buildDebugMenu(uint16_t pos)
+{
+    if(pos % 4 != 0) { //check if pos is divisible by 4
+        return;
+    }
+    switch (int(pos / 4)) //max display 4 items per page
+    {
+        case 0:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP("<../>");
+            #ifdef DWIN_TFT_DEBUG
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS);
+            #endif
             break;
         default: // if last page has 4 items, then is next page empty
             break;
@@ -263,6 +290,23 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
         DwinTFT.gcodeQueue_P(PSTR("G0 Z0.1"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    }
+    DwinTFT.playInfoTone();
+}
+
+void DwinTFTFileBrowserClass::handleDebugMenu()
+{
+    if(strcasecmp_P(selectedFilename, PSTR("<../>")) == 0) {
+        reset();
+        strcpy(selectedDirectory, EXTRA_MENU);
+        listFiles();
+        return;
+    } else if (strcasecmp(selectedFilename, DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS) == 0) {
+        char value[4];
+        sprintf(value, "J%02d", debugDisplayTxCommand);
+        DWIN_TFT_SERIAL_PROTOCOLLN(value);
+        SERIAL_ECHOLNPAIR("Debug Menu: test display tx commands... ", value);
+        debugDisplayTxCommand++;
     }
     DwinTFT.playInfoTone();
 }

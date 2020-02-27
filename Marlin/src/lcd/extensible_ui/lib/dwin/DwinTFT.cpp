@@ -163,10 +163,7 @@ void DwinTFTClass::loop()
 void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
 {
   playErrorTone();
-
   DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); //J15 FILAMENT LACK
-  DWIN_TFT_SERIAL_ENTER();
-  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); // send 2 times
   DWIN_TFT_SERIAL_ENTER();
   #ifdef DWIN_TFT_DEBUG
     SERIAL_ECHOLNPGM("TFT Serial Debug: Filament runout... J15");

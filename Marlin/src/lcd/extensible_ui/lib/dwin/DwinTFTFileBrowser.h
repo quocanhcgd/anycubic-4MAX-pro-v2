@@ -25,8 +25,7 @@
 
 #include "../../../../sd/SdFatConfig.h"
 
-#define EXTRA_MENU_PAGES 3
-
+#define EXTRA_MENU "<Extra Menu>"
 #define EXTRA_MENU_AUTO_TUNE_HOTEND_PID "<auto tune hotend pid>"
 #define EXTRA_MENU_AUTO_TUNE_HOTBED_PID "<auto tune hotbed pid>"
 #define EXTRA_MENU_SAVE_EEPROM "<save eeprom>"
@@ -39,10 +38,16 @@
 #define EXTRA_MENU_Z_DOWN_01 "<z down 0.1>"
 #define EXTRA_MENU_Z_DOWN_002 "<z down 0.02>"
 
+#define DEBUG_MENU "<Debug Menu>"
+#define DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS "<test display tx commands>"
+
 class DwinTFTFileBrowserClass {
 private:
+  uint8_t debugDisplayTxCommand = 0;
   void buildExtraMenu(uint16_t pos);
+  void buildDebugMenu(uint16_t pos);
   void handleExtraMenu();
+  void handleDebugMenu();
 public:
   char selectedFilename[LONG_FILENAME_LENGTH];
   char selectedDirectory[LONG_FILENAME_LENGTH];
