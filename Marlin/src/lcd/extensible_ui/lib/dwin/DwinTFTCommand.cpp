@@ -230,42 +230,42 @@ void DwinTFTCommandClass::loop()
 
 void DwinTFTCommandClass::handleGetHotendTemp()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A0V ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTEND_TEMP);
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getActualTemp_celsius(ExtUI::extruder_t::E0))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
 void DwinTFTCommandClass::handleGetHotendTargetTemp()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A1V ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTEND_TARGET_TEMP);
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getTargetTemp_celsius(ExtUI::extruder_t::E0))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
 void DwinTFTCommandClass::handleGetHotbedTemp()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A2V ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTBED_TEMP);
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getActualTemp_celsius(ExtUI::heater_t::BED))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
 void DwinTFTCommandClass::handleGetHotbedTargetTemp()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A3V ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_HOTBED_TARGET_TEMP);
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getTargetTemp_celsius(ExtUI::heater_t::BED))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
 void DwinTFTCommandClass::handleGetFanSpeed()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A4V ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FAN_SPEED);
   DWIN_TFT_SERIAL_PROTOCOL(int(ExtUI::getActualFan_percent(ExtUI::fan_t::FAN0)));
   DWIN_TFT_SERIAL_ENTER();
 }
 
 void DwinTFTCommandClass::handleGetCurrentCoordinates()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A5V");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_CURRENT_COORDINATES);
   DWIN_TFT_SERIAL_SPACE();
   DWIN_TFT_SERIAL_PROTOCOLPGM("X: ");
   DWIN_TFT_SERIAL_PROTOCOL(ExtUI::getAxisPosition_mm(ExtUI::axis_t::X));
@@ -283,7 +283,7 @@ void DwinTFTCommandClass::handleGetSDCardPrintingStatus()
 {
   #ifdef SDSUPPORT
     if(ExtUI::isPrinting()) {
-      DWIN_TFT_SERIAL_PROTOCOLPGM("A6V ");
+      DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINTING_STATUS);
       DWIN_TFT_SERIAL_PROTOCOL(itostr3(ExtUI::getProgress_percent()));
     } else {
       DWIN_TFT_SERIAL_PROTOCOLPGM("A6V ---");
@@ -294,7 +294,7 @@ void DwinTFTCommandClass::handleGetSDCardPrintingStatus()
 
 void DwinTFTCommandClass::handleGetPrintingTime()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("A7V ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINTING_TIME);
   duration_t elapsed = print_job_timer.duration();
   if(elapsed.second() != 0) { // print time
     DWIN_TFT_SERIAL_PROTOCOL(itostr2(elapsed.hour())); //hours
@@ -436,7 +436,7 @@ void DwinTFTCommandClass::handleGetPrintSpeed()
   if(codeSeen('S')) {
     ExtUI::setFeedrate_percent(float(constrain(codeValue(), 40, 999)));
   } else {
-    DWIN_TFT_SERIAL_PROTOCOLPGM("A20V ");
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_SPEED);
     DWIN_TFT_SERIAL_PROTOCOL(int(ExtUI::getFeedrate_percent()));
     DWIN_TFT_SERIAL_ENTER();
   }
@@ -556,18 +556,20 @@ void DwinTFTCommandClass::handleSDCardRefresh()
 
 void DwinTFTCommandClass::handleFilamentTest()
 {
-  if(codeSeen('O')) {
+  /** Currently not used
+  if(codeSeen(DWIN_TFT_RX_CODE_ENABLE)) {
 
   }
-  else if(codeSeen('C')) {
+  else if(codeSeen(DWIN_TFT_RX_CODE_DISABLE)) {
     
   }
   DWIN_TFT_SERIAL_ENTER();
+  */
 }
 
 void DwinTFTCommandClass::handleGetVersionInfo()
 {
-  DWIN_TFT_SERIAL_PROTOCOLPGM("J33 ");
+  DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_VERSION_INFO);
   DWIN_TFT_SERIAL_PROTOCOLPGM(CUSTOM_BUILD_VERSION);
   DWIN_TFT_SERIAL_ENTER();
   #ifdef DWIN_TFT_DEBUG
@@ -577,27 +579,27 @@ void DwinTFTCommandClass::handleGetVersionInfo()
 
 void DwinTFTCommandClass::handleAutoPowerOff()
 {
-  if(codeSeen('O')) { //enable
+  if(codeSeen(DWIN_TFT_RX_CODE_ENABLE)) { //enable
     DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
     DwinTFT.playInfoTone();
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: enabled auto shutdown");
     #endif
-  } else if (codeSeen('C')) { //disable
+  } else if (codeSeen(DWIN_TFT_RX_CODE_DISABLE)) { //disable
     DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_OFF);
     DwinTFT.playInfoTone();
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: disabled auto shutdown");
     #endif
-  } else if(codeSeen('S')) { //request current state
+  } else if(codeSeen(DWIN_TFT_RX_CODE_STATUS)) { //request current state
     if(max_inactive_time != 0) {
-      DWIN_TFT_SERIAL_PROTOCOLPGM("J35 ");
+      DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_AUTO_SHUTDOWN_STATUS_ON);
       DWIN_TFT_SERIAL_ENTER();
       #ifdef DWIN_TFT_DEBUG
         SERIAL_ECHOLNPGM("TFT Serial Debug: send info enabled auto shutdown... J35");
       #endif
     } else {
-      DWIN_TFT_SERIAL_PROTOCOLPGM("J34 ");
+      DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_AUTO_SHUTDOWN_STATUS_OFF);
       DWIN_TFT_SERIAL_ENTER();
       #ifdef DWIN_TFT_DEBUG
         SERIAL_ECHOLNPGM("TFT Serial Debug: send info disabled auto shutdown... J34");
