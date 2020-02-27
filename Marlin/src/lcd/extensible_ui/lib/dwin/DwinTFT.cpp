@@ -127,10 +127,10 @@ void DwinTFTClass::init()
   DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
 
   #ifdef STARTUP_CHIME
-    buzzer.tone(250, 554); // C#5
-    buzzer.tone(250, 740); // F#5
-    buzzer.tone(250, 554); // C#5
-    buzzer.tone(500, 831); // G#5
+    playTone(250, 554); // C#5
+    playTone(250, 740); // F#5
+    playTone(250, 554); // C#5
+    playTone(500, 831); // G#5
   #endif
 }
 
@@ -162,11 +162,7 @@ void DwinTFTClass::loop()
 
 void DwinTFTClass::filamentRunout(const ExtUI::extruder_t extruder)
 {
-  buzzer.tone(200, 1567);
-  buzzer.tone(200, 1174);
-  buzzer.tone(200, 1567);
-  buzzer.tone(200, 1174);
-  buzzer.tone(2000, 1567);
+  playErrorTone();
 
   DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_FILAMENT_RUNOUT); //J15 FILAMENT LACK
   DWIN_TFT_SERIAL_ENTER();
@@ -282,8 +278,7 @@ bool DwinTFTClass::isWaitingForUserConfirm()
 void DwinTFTClass::waitForUserConfirm()
 {
   #if HAS_RESUME_CONTINUE
-    buzzer.tone(250, 554); // C#5
-    buzzer.tone(500, 831); // G#5
+    playSuccessTone();
     DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
     DWIN_TFT_SERIAL_ENTER();
   #endif
@@ -314,8 +309,7 @@ void DwinTFTClass::onMeshUpdate(const int8_t xpos, const int8_t ypos, const floa
 void DwinTFTClass::onPidTuning(const ExtUI::result_t rst)
 {
   #if HAS_PID_HEATING
-    buzzer.tone(250, 831); // G#5
-    buzzer.tone(500, 554); // C#5
+    playSuccessTone();
   #endif
 }
 
@@ -336,6 +330,31 @@ void DwinTFTClass::onPrintTimerStopped()
   #ifdef DWIN_TFT_DEBUG
     SERIAL_ECHOLNPGM("TFT Serial Debug: SD print done... J14");
   #endif
+}
+
+void DwinTFTClass::playTone(const uint16_t duration, const uint16_t frequency)
+{
+  #if HAS_BUZZER
+    buzzer.tone(duration, frequency);
+  #endif
+}
+
+void DwinTFTClass::playInfoTone()
+{
+  playTone(100, 554); // C#5
+}
+
+void DwinTFTClass::playSuccessTone()
+{
+  playTone(250, 554); // C#5
+  playTone(500, 831); // G#5
+}
+
+void DwinTFTClass::playErrorTone()
+{
+  playTone(250, 831); // G#5
+  playTone(250, 554); // C#5
+  playTone(500, 831); // G#5
 }
 
 #endif

@@ -34,7 +34,6 @@
 #include "../../../../gcode/queue.h"
 #include "../../../../feature/emergency_parser.h"
 #include "../../../../feature/pause.h"
-#include "../../../../libs/buzzer.h"
 #include "../../../../module/planner.h"
 #include "../../../../module/printcounter.h"
 #include "../../../../module/stepper.h"
@@ -94,8 +93,7 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_RESUME: // A10 resume sd print
       if(DwinTFT.isWaitingForUserConfirm()) {
-        buzzer.tone(250, 554); // C#5
-        buzzer.tone(500, 831); // G#5
+        DwinTFT.playSuccessTone();
         ExtUI::setUserConfirmed();
       } else {
         sendSDCardResume();
@@ -581,13 +579,13 @@ void DwinTFTCommandClass::sendAutoPowerOff()
 {
   if(codeSeen('O')) { //enable
     DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
-    buzzer.tone(100, 554); // C#5
+    DwinTFT.playInfoTone();
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: enabled auto shutdown");
     #endif
   } else if (codeSeen('C')) { //disable
     DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_OFF);
-    buzzer.tone(100, 554); // C#5
+    DwinTFT.playInfoTone();
     #ifdef DWIN_TFT_DEBUG
       SERIAL_ECHOLNPGM("TFT Serial Debug: disabled auto shutdown");
     #endif

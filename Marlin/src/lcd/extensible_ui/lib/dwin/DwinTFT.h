@@ -87,6 +87,10 @@ public:
   void onPrintTimerStarted();
   void onPrintTimerPaused();
   void onPrintTimerStopped();
+  void playTone(const uint16_t duration, const uint16_t frequency);
+  void playInfoTone();
+  void playSuccessTone();
+  void playErrorTone();
 
 private:
   void receiveCommands();

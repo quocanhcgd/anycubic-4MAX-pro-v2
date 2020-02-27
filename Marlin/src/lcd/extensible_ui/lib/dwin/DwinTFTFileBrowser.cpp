@@ -34,7 +34,6 @@
 #include "../../../../gcode/queue.h"
 #include "../../../../feature/emergency_parser.h"
 #include "../../../../feature/pause.h"
-#include "../../../../libs/buzzer.h"
 #include "../../../../module/planner.h"
 #include "../../../../module/printcounter.h"
 #include "../../../../module/stepper.h"
@@ -265,7 +264,7 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
         DwinTFT.gcodeQueue_P(PSTR("G0 Z0.1"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
     }
-    buzzer.tone(100, 554); // C#5
+    DwinTFT.playInfoTone();
 }
 
 #endif
