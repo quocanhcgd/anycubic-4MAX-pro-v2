@@ -57,38 +57,38 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
 {
   switch(command) {
     case DWIN_TFT_RX_GET_HOTEND_TEMP: //A0 GET HOTEND TEMP
-      sendGetHotendTemp();
+      handleGetHotendTemp();
       break;
     case DWIN_TFT_RX_GET_HOTEND_TARGET_TEMP: //A1  GET HOTEND TARGET TEMP
-      sendGetHotendTargetTemp();
+      handleGetHotendTargetTemp();
       break;
     case DWIN_TFT_RX_GET_HOTBED_TEMP: //A2 GET HOTBED TEMP
-      sendGetHotbedTemp();
+      handleGetHotbedTemp();
       break;
     case DWIN_TFT_RX_GET_HOTBED_TARGET_TEMP: //A3 GET HOTBED TARGET TEMP
-      sendGetHotbedTargetTemp();
+      handleGetHotbedTargetTemp();
       break;
     case DWIN_TFT_RX_GET_FAN_SPEED://A4 GET FAN SPEED
-      sendGetFanSpeed();
+      handleGetFanSpeed();
       break;
     case DWIN_TFT_RX_GET_CURRENT_COORDINATES:// A5 GET CURRENT COORDINATE
-      sendGetCurrentCoordinates();
+      handleGetCurrentCoordinates();
       break;
     case DWIN_TFT_RX_GET_SD_CARD_PRINT_STATUS: //A6 GET SD CARD PRINTING STATUS
-      sendGetSDCardPrintingStatus();
+      handleGetSDCardPrintingStatus();
       break;
     case DWIN_TFT_RX_GET_PRINTING_TIME://A7 GET PRINTING TIME
-      sendGetPrintingTime();
+      handleGetPrintingTime();
       break;
     case DWIN_TFT_RX_GET_SD_CARD_LIST: // A8 GET  SD LIST
-      sendGetSDCardList();
+      handleGetSDCardList();
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_PAUSE: // A9 pause sd print
       if(DwinTFT.isWaitingForUserConfirm()) { //workaround for busy printer
         DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
         DWIN_TFT_SERIAL_ENTER();
       } else {
-        sendSDCardPause();
+        handleSDCardPause();
       }
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_RESUME: // A10 resume sd print
@@ -96,74 +96,74 @@ void DwinTFTCommandClass::handleCommand(DwinTFTCommandsRx command)
         DwinTFT.playSuccessTone();
         ExtUI::setUserConfirmed();
       } else {
-        sendSDCardResume();
+        handleSDCardResume();
       }
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_STOP: // A11 STOP SD PRINT
-      sendSDCardStop();
+      handleSDCardStop();
       break;
     case DWIN_TFT_RX_KILL: // A12 kill
       kill(PSTR(STR_ERR_KILLED));
       break;
     case DWIN_TFT_RX_SD_CARD_FILE_SELECT: // A13 SELECTION FILE
-      sendSDCardFileSelect();
+      handleSDCardFileSelect();
       break;
     case DWIN_TFT_RX_SD_CARD_PRINT_START: // A14 START PRINTING
-      sendSDCardStart();
+      handleSDCardStart();
       break;
     case DWIN_TFT_RX_OUTAGE_RESUME: // A15 RESUMING FROM OUTAGE
       break;
     case DWIN_TFT_RX_SET_HOTEND_TEMP: // A16 set hotend temp
-      sendSetHotendTemp();
+      handleSetHotendTemp();
       break;
     case DWIN_TFT_RX_SET_HOTBED_TEMP:// A17 set heated bed temp
-      sendSetHotbedTemp();
+      handleSetHotbedTemp();
       break;
     case DWIN_TFT_RX_SET_FAN_SPEED:// A18 set fan speed
-      sendSetFanSpeed();
+      handleSetFanSpeed();
       break;
     case DWIN_TFT_RX_STEPPER_DRIVER_STOP: // A19 stop stepper drivers
-      sendStopStepperDriver();
+      handleStopStepperDriver();
       break;
     case DWIN_TFT_RX_GET_PRINT_SPEED:// A20 read printing speed
-      sendGetPrintSpeed();
+      handleGetPrintSpeed();
       break;
     case DWIN_TFT_RX_HOME_ALL: // A21 all home
-      sendHomeAll();
+      handleHomeAll();
       break;
     case DWIN_TFT_RX_MOVE: // A22 move X/Y/Z or extrude
-      sendMove();
+      handleMove();
       break;
     case DWIN_TFT_RX_PREHEAT_PLA: // A23 preheat pla
-      sendPreheatPLA();
+      handlePreheatPLA();
       break;
     case DWIN_TFT_RX_PREHEAT_ABS:// A24 preheat abs
-      sendPreheatABS();
+      handlePreheatABS();
       break;
     case DWIN_TFT_RX_COOLDOWN: // A25 cool down
-      sendCooldown();
+      handleCooldown();
       break;
     case DWIN_TFT_RX_SD_CARD_FILE_REFRESH: // A26 refresh SD
-      sendSDCardRefresh();
+      handleSDCardRefresh();
       break;
     case DWIN_TFT_RX_ADJUST_SERVO: // A27 servos angles  adjust
       break;
     case DWIN_TFT_RX_TEST_FILAMENT: // A28 filament test
-      sendFilamentTest();
+      handleFilamentTest();
       break;
     case DWIN_TFT_RX_SET_Z_PROBE_OFFSET: // A29 Z PROBE OFFESET SET
       break;
     case DWIN_TFT_RX_GET_VERSION_INFO: // A33 get version info
-      sendGetVersionInfo();
+      handleGetVersionInfo();
       break;
     case DWIN_TFT_RX_RESET_MAINBOARD: //a40 reset mainboard
       DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_M502);
       break;
     case DWIN_TFT_RX_AUTO_POWER_OFF: // auto power off
-      sendAutoPowerOff();
+      handleAutoPowerOff();
       break;
     case DWIN_TFT_RX_SET_CASE_LED: // 4max pro led strip
-      sendSetCaseLight();
+      handleSetCaseLight();
       break;
     default:
       break;
@@ -228,42 +228,42 @@ void DwinTFTCommandClass::loop()
   }
 }
 
-void DwinTFTCommandClass::sendGetHotendTemp()
+void DwinTFTCommandClass::handleGetHotendTemp()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A0V ");
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getActualTemp_celsius(ExtUI::extruder_t::E0))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetHotendTargetTemp()
+void DwinTFTCommandClass::handleGetHotendTargetTemp()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A1V ");
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getTargetTemp_celsius(ExtUI::extruder_t::E0))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetHotbedTemp()
+void DwinTFTCommandClass::handleGetHotbedTemp()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A2V ");
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getActualTemp_celsius(ExtUI::heater_t::BED))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetHotbedTargetTemp()
+void DwinTFTCommandClass::handleGetHotbedTargetTemp()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A3V ");
   DWIN_TFT_SERIAL_PROTOCOL(itostr3(int(ExtUI::getTargetTemp_celsius(ExtUI::heater_t::BED))));
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetFanSpeed()
+void DwinTFTCommandClass::handleGetFanSpeed()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A4V ");
   DWIN_TFT_SERIAL_PROTOCOL(int(ExtUI::getActualFan_percent(ExtUI::fan_t::FAN0)));
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetCurrentCoordinates()
+void DwinTFTCommandClass::handleGetCurrentCoordinates()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A5V");
   DWIN_TFT_SERIAL_SPACE();
@@ -279,7 +279,7 @@ void DwinTFTCommandClass::sendGetCurrentCoordinates()
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetSDCardPrintingStatus()
+void DwinTFTCommandClass::handleGetSDCardPrintingStatus()
 {
   #ifdef SDSUPPORT
     if(ExtUI::isPrinting()) {
@@ -292,7 +292,7 @@ void DwinTFTCommandClass::sendGetSDCardPrintingStatus()
   #endif
 }
 
-void DwinTFTCommandClass::sendGetPrintingTime()
+void DwinTFTCommandClass::handleGetPrintingTime()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("A7V ");
   duration_t elapsed = print_job_timer.duration();
@@ -311,14 +311,14 @@ void DwinTFTCommandClass::sendGetPrintingTime()
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetSDCardList()
+void DwinTFTCommandClass::handleGetSDCardList()
 {
   #ifdef SDSUPPORT
     DwinTFTFileBrowser.listFiles();
   #endif
 }
 
-void DwinTFTCommandClass::sendSDCardPause()
+void DwinTFTCommandClass::handleSDCardPause()
 {
   #ifdef SDSUPPORT
     DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
@@ -332,7 +332,7 @@ void DwinTFTCommandClass::sendSDCardPause()
   #endif
 }
 
-void DwinTFTCommandClass::sendSDCardResume()
+void DwinTFTCommandClass::handleSDCardResume()
 {
   #ifdef SDSUPPORT
     if(ExtUI::isPrintingFromMediaPaused()) {
@@ -346,7 +346,7 @@ void DwinTFTCommandClass::sendSDCardResume()
   #endif
 }
 
-void DwinTFTCommandClass::sendSDCardStop()
+void DwinTFTCommandClass::handleSDCardStop()
 {
   #ifdef SDSUPPORT
     if(ExtUI::isPrintingFromMedia() || ExtUI::isPrintingFromMediaPaused()) {
@@ -360,14 +360,14 @@ void DwinTFTCommandClass::sendSDCardStop()
   #endif
 }
 
-void DwinTFTCommandClass::sendSDCardFileSelect()
+void DwinTFTCommandClass::handleSDCardFileSelect()
 {
   #ifdef SDSUPPORT
     DwinTFTFileBrowser.selectFile();
   #endif
 }
 
-void DwinTFTCommandClass::sendSDCardStart()
+void DwinTFTCommandClass::handleSDCardStart()
 {
   #ifdef SDSUPPORT
     if(ExtUI::isMediaInserted() && !ExtUI::isMoving()) {
@@ -383,7 +383,7 @@ void DwinTFTCommandClass::sendSDCardStart()
   #endif
 }
 
-void DwinTFTCommandClass::sendSetHotendTemp()
+void DwinTFTCommandClass::handleSetHotendTemp()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     uint16_t temp;
@@ -400,7 +400,7 @@ void DwinTFTCommandClass::sendSetHotendTemp()
   }
 }
 
-void DwinTFTCommandClass::sendSetHotbedTemp()
+void DwinTFTCommandClass::handleSetHotbedTemp()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(codeSeen('S')) {
@@ -410,7 +410,7 @@ void DwinTFTCommandClass::sendSetHotbedTemp()
   }
 }
 
-void DwinTFTCommandClass::sendSetFanSpeed()
+void DwinTFTCommandClass::handleSetFanSpeed()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if (codeSeen('S')) {
@@ -422,7 +422,7 @@ void DwinTFTCommandClass::sendSetFanSpeed()
   }
 }
 
-void DwinTFTCommandClass::sendStopStepperDriver()
+void DwinTFTCommandClass::handleStopStepperDriver()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     quickstop_stepper();
@@ -431,7 +431,7 @@ void DwinTFTCommandClass::sendStopStepperDriver()
   }
 }
 
-void DwinTFTCommandClass::sendGetPrintSpeed()
+void DwinTFTCommandClass::handleGetPrintSpeed()
 {
   if(codeSeen('S')) {
     ExtUI::setFeedrate_percent(float(constrain(codeValue(), 40, 999)));
@@ -442,7 +442,7 @@ void DwinTFTCommandClass::sendGetPrintSpeed()
   }
 }
 
-void DwinTFTCommandClass::sendHomeAll()
+void DwinTFTCommandClass::handleHomeAll()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(codeSeen('X') || codeSeen('Y') || codeSeen('Z')) {
@@ -455,7 +455,7 @@ void DwinTFTCommandClass::sendHomeAll()
   }
 }
 
-void DwinTFTCommandClass::sendMove()
+void DwinTFTCommandClass::handleMove()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     float coorvalue;
@@ -502,7 +502,7 @@ void DwinTFTCommandClass::sendMove()
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendPreheatPLA()
+void DwinTFTCommandClass::handlePreheatPLA()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
@@ -518,7 +518,7 @@ void DwinTFTCommandClass::sendPreheatPLA()
   }
 }
 
-void DwinTFTCommandClass::sendPreheatABS()
+void DwinTFTCommandClass::handlePreheatABS()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     if(ExtUI::getAxisPosition_mm(ExtUI::axis_t::Z) < 10) {
@@ -534,7 +534,7 @@ void DwinTFTCommandClass::sendPreheatABS()
   }
 }
 
-void DwinTFTCommandClass::sendCooldown()
+void DwinTFTCommandClass::handleCooldown()
 {
   if(!ExtUI::isPrinting() && !ExtUI::isMoving()) {
     ExtUI::setTargetTemp_celsius(float(0), ExtUI::extruder_t::E0);
@@ -547,14 +547,14 @@ void DwinTFTCommandClass::sendCooldown()
   }
 }
 
-void DwinTFTCommandClass::sendSDCardRefresh()
+void DwinTFTCommandClass::handleSDCardRefresh()
 {
   #ifdef SDSUPPORT
     DwinTFTFileBrowser.refreshFileList();
   #endif
 }
 
-void DwinTFTCommandClass::sendFilamentTest()
+void DwinTFTCommandClass::handleFilamentTest()
 {
   if(codeSeen('O')) {
 
@@ -565,7 +565,7 @@ void DwinTFTCommandClass::sendFilamentTest()
   DWIN_TFT_SERIAL_ENTER();
 }
 
-void DwinTFTCommandClass::sendGetVersionInfo()
+void DwinTFTCommandClass::handleGetVersionInfo()
 {
   DWIN_TFT_SERIAL_PROTOCOLPGM("J33 ");
   DWIN_TFT_SERIAL_PROTOCOLPGM(CUSTOM_BUILD_VERSION);
@@ -575,7 +575,7 @@ void DwinTFTCommandClass::sendGetVersionInfo()
   #endif
 }
 
-void DwinTFTCommandClass::sendAutoPowerOff()
+void DwinTFTCommandClass::handleAutoPowerOff()
 {
   if(codeSeen('O')) { //enable
     DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
@@ -606,7 +606,7 @@ void DwinTFTCommandClass::sendAutoPowerOff()
   }
 }
 
-void DwinTFTCommandClass::sendSetCaseLight()
+void DwinTFTCommandClass::handleSetCaseLight()
 {
   if(ExtUI::getCaseLightBrightness_percent() < 25) {
     ExtUI::setCaseLightBrightness_percent(25);
