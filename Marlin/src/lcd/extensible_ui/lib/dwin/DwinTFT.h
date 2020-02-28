@@ -20,9 +20,6 @@
 #pragma once
 
 #include "../../../../inc/MarlinConfigPre.h"
-
-#include <stdio.h>
-
 #include "../../ui_api.h"
 
 #define DWIN_TFT_UPDATE_INTERVAL_MS 250

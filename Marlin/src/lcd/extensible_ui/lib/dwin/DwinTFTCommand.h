@@ -20,9 +20,6 @@
 #pragma once
 
 #include "../../../../inc/MarlinConfigPre.h"
-
-#include <stdio.h>
-
 #include "DwinTFT.h"
 
 #define DWIN_TFT_BAUDRATE 115200

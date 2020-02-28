@@ -21,23 +21,6 @@
 
 #if BOTH(DWIN_TFT, SDSUPPORT)
 
-#include "Arduino.h"
-#include <inttypes.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../../../../MarlinCore.h"
-#include "../../../../core/language.h"
-#include "../../../../core/macros.h"
-#include "../../../../core/serial.h"
-#include "../../../../gcode/queue.h"
-#include "../../../../feature/emergency_parser.h"
-#include "../../../../feature/pause.h"
-#include "../../../../module/planner.h"
-#include "../../../../module/printcounter.h"
-#include "../../../../module/stepper.h"
-#include "../../../../module/temperature.h"
 #include "../../../../sd/cardreader.h"
 #include "../../ui_api.h"
 

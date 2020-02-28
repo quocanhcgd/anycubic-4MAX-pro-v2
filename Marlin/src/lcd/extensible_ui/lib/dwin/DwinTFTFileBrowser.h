@@ -20,9 +20,6 @@
 #pragma once
 
 #include "../../../../inc/MarlinConfigPre.h"
-
-#include <stdio.h>
-
 #include "../../../../sd/SdFatConfig.h"
 
 #define DIR_UP "../"
