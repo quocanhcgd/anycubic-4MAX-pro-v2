@@ -85,8 +85,8 @@ void DwinTFTFileBrowserClass::listFiles()
         uint16_t maxItems = 0;
         if(itemPos == 0) {
             if(!fileList.isAtRootDir()) {
-                DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
-                DWIN_TFT_SERIAL_PROTOCOLLNPGM("../");
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM(DIR_UP);
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM(DIR_UP);
                 maxItems = constrain(3, 1, itemCount);
             } else {
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM(EXTRA_MENU);
@@ -201,24 +201,31 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
     switch (int(pos / 4)) //max display 4 items per page
     {
         case 0:
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP("<../>");
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_DIR_UP);
+            #ifdef DWIN_TFT_DEBUG
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU);
+            #else
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SPACER);
+            #endif
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_AUTO_TUNE_HOTEND_PID);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_AUTO_TUNE_HOTBED_PID);
             break;
         case 1:
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SAVE_EEPROM);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_LOAD_FW_DEFAULTS);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_PREHEAT_BED);
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_START_MESH_LEVELING);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SPACER);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SPACER);
             break;
         case 2:
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_PREHEAT_BED);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_START_MESH_LEVELING);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_NEXT_MESH_POINT);
+            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_SPACER);
+            break;
+        case 3:
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_01);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_UP_002);
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_002);
-            break;
-        case 3:
             DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_Z_DOWN_01);
         default: // if last page has 4 items, then is next page empty
             break;
@@ -227,25 +234,25 @@ void DwinTFTFileBrowserClass::buildExtraMenu(uint16_t pos)
 
 void DwinTFTFileBrowserClass::buildDebugMenu(uint16_t pos)
 {
-    if(pos % 4 != 0) { //check if pos is divisible by 4
-        return;
-    }
-    switch (int(pos / 4)) //max display 4 items per page
-    {
-        case 0:
-            DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP("<../>");
-            #ifdef DWIN_TFT_DEBUG
+    #ifdef DWIN_TFT_DEBUG
+        if(pos % 4 != 0) { //check if pos is divisible by 4
+            return;
+        }
+        switch (int(pos / 4)) //max display 4 items per page
+        {
+            case 0:
+                DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_DIR_UP);
                 DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS);
-            #endif
-            break;
-        default: // if last page has 4 items, then is next page empty
-            break;
-    }
+                break;
+            default: // if last page has 4 items, then is next page empty
+                break;
+        }
+    #endif
 }
 
 void DwinTFTFileBrowserClass::handleExtraMenu()
 {
-    if(strcasecmp_P(selectedFilename, PSTR("<../>")) == 0) {
+    if(strcasecmp_P(selectedFilename, PSTR(EXTRA_MENU_DIR_UP)) == 0) {
         reset();
         listFiles();
         return;
@@ -290,25 +297,31 @@ void DwinTFTFileBrowserClass::handleExtraMenu()
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G91);
         DwinTFT.gcodeQueue_P(PSTR("G0 Z0.1"));
         DwinTFT.gcodeQueue_P(DWIN_TFT_GCODE_G90);
+    } else { //do nothing for spacer
+        return;
     }
     DwinTFT.playInfoTone();
 }
 
 void DwinTFTFileBrowserClass::handleDebugMenu()
 {
-    if(strcasecmp_P(selectedFilename, PSTR("<../>")) == 0) {
-        reset();
-        strcpy(selectedDirectory, EXTRA_MENU);
-        listFiles();
-        return;
-    } else if (strcasecmp(selectedFilename, DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS) == 0) {
-        char value[4];
-        sprintf(value, "J%02d", debugDisplayTxCommand);
-        DWIN_TFT_SERIAL_PROTOCOLLN(value);
-        SERIAL_ECHOLNPAIR("Debug Menu: test display tx commands... ", value);
-        debugDisplayTxCommand++;
-    }
-    DwinTFT.playInfoTone();
+    #ifdef DWIN_TFT_DEBUG
+        if(strcasecmp_P(selectedFilename, PSTR(EXTRA_MENU_DIR_UP)) == 0) {
+            reset();
+            strcpy(selectedDirectory, EXTRA_MENU);
+            listFiles();
+            return;
+        } else if (strcasecmp(selectedFilename, DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS) == 0) {
+            char value[4];
+            sprintf(value, "J%02d", debugDisplayTxCommand);
+            DWIN_TFT_SERIAL_PROTOCOLLN(value);
+            SERIAL_ECHOLNPAIR("Debug Menu: test display tx commands... ", value);
+            debugDisplayTxCommand++;
+        } else { //do nothing for spacer
+            return;
+        }
+        DwinTFT.playInfoTone();
+    #endif
 }
 
 #endif

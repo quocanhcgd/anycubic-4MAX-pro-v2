@@ -25,6 +25,10 @@
 
 #include "../../../../sd/SdFatConfig.h"
 
+#define DIR_UP "../"
+#define EXTRA_MENU_DIR_UP "<../>"
+#define EXTRA_MENU_SPACER "<--->"
+
 #define EXTRA_MENU "<Extra Menu>"
 #define EXTRA_MENU_AUTO_TUNE_HOTEND_PID "<auto tune hotend pid>"
 #define EXTRA_MENU_AUTO_TUNE_HOTBED_PID "<auto tune hotbed pid>"
