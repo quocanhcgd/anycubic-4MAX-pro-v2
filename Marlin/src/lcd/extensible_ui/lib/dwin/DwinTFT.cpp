@@ -259,8 +259,16 @@ void DwinTFTClass::waitForUserConfirm()
 {
   #if HAS_RESUME_CONTINUE
     playSuccessTone();
+    DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE);
+    DWIN_TFT_SERIAL_ENTER();
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPAIR("TFT Serial Debug: waitForUserConfirm: ", DWIN_TFT_TX_PRINT_PAUSE);
+    #endif
     DWIN_TFT_SERIAL_PROTOCOLPGM(DWIN_TFT_TX_PRINT_PAUSE_REQ);
     DWIN_TFT_SERIAL_ENTER();
+    #ifdef DWIN_TFT_DEBUG
+      SERIAL_ECHOLNPAIR("TFT Serial Debug: waitForUserConfirm: ", DWIN_TFT_TX_PRINT_PAUSE_REQ);
+    #endif
   #endif
 }
 

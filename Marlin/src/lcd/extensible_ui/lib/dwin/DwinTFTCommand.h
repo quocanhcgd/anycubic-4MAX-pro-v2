@@ -82,11 +82,11 @@ enum DwinTFTCommandsRx : uint8_t {
 #define DWIN_TFT_TX_HOTEND_TEMP_LOW "J13" //Status: Low E0 Temp
 #define DWIN_TFT_TX_PRINT_FINISHED "J14" //Alert: Print done
 //#define DWIN_TFT_TX_FILAMENT_RUNOUT "J15" //Alert: Lack of filament //replaced by J23
-#define DWIN_TFT_TX_PRINT_STOPPED "J16"
+#define DWIN_TFT_TX_PRINT_STOPPED "J16" //Switch Screen to Status: Stopped
 #define DWIN_TFT_TX_MAINBOARD_RESET "J17" //Status: Stop
-#define DWIN_TFT_TX_PRINT_PAUSE_REQ "J18"
-#define DWIN_TFT_TX_SD_CARD_OPEN_SUCCESS "J20"
-#define DWIN_TFT_TX_SD_CARD_OPEN_FAILED "J21"
+#define DWIN_TFT_TX_PRINT_PAUSE_REQ "J18" //Status: Pause
+#define DWIN_TFT_TX_SD_CARD_OPEN_SUCCESS "J20" //Switch Screen to File Browser: Print avalible
+#define DWIN_TFT_TX_SD_CARD_OPEN_FAILED "J21" //Switch Screen to File Browser: Print not avalible
 #define DWIN_TFT_TX_FILAMENT_RUNOUT "J23" //Alert: Lack of filament
 #define DWIN_TFT_TX_VERSION_INFO "J33 "
 #define DWIN_TFT_TX_AUTO_SHUTDOWN_STATUS_OFF "J34 "

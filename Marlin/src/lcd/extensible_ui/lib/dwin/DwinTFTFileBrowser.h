@@ -41,6 +41,7 @@
 
 #define DEBUG_MENU "<Debug Menu>"
 #define DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS "<test display tx commands>"
+#define DEBUG_MENU_TEST_DISPLAY_INTERACTION "<test display interaction>"
 
 class DwinTFTFileBrowserClass {
 private:

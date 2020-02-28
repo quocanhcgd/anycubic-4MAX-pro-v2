@@ -226,6 +226,7 @@ void DwinTFTFileBrowserClass::buildDebugMenu(uint16_t pos)
       case 0:
         DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(EXTRA_MENU_DIR_UP);
         DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU_TEST_DISPLAY_TX_COMMANDS);
+        DWIN_TFT_SERIAL_PROTOCOLLNPGM_LOOP(DEBUG_MENU_TEST_DISPLAY_INTERACTION);
         break;
       default: // if last page has 4 items, then is next page empty
         break;
@@ -300,6 +301,9 @@ void DwinTFTFileBrowserClass::handleDebugMenu()
       DWIN_TFT_SERIAL_PROTOCOLLN(value);
       SERIAL_ECHOLNPAIR("Debug Menu: test display tx commands... ", value);
       debugDisplayTxCommand++;
+    } else if(strcasecmp(selectedFilename, DEBUG_MENU_TEST_DISPLAY_INTERACTION) == 0) {
+      DwinTFT.waitForUserConfirm();
+      SERIAL_ECHOLNPGM("Debug Menu: test display interaction");
     } else { //do nothing for spacer
       return;
     }
