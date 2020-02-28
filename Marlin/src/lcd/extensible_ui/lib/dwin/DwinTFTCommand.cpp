@@ -610,17 +610,8 @@ void DwinTFTCommandClass::handleAutoPowerOff()
 
 void DwinTFTCommandClass::handleSetCaseLight()
 {
-  if(ExtUI::getCaseLightBrightness_percent() < 25) {
-    ExtUI::setCaseLightBrightness_percent(25);
-  } else if(ExtUI::getCaseLightBrightness_percent() < 50) {
-    ExtUI::setCaseLightBrightness_percent(50);
-  } else if(ExtUI::getCaseLightBrightness_percent() < 75) {
-    ExtUI::setCaseLightBrightness_percent(75);
-  } else if(ExtUI::getCaseLightBrightness_percent() < 100) {
-    ExtUI::setCaseLightBrightness_percent(100);
-  } else if(ExtUI::getCaseLightBrightness_percent() == 100) {
-    ExtUI::setCaseLightBrightness_percent(0);
-  }
+  float brightness = ExtUI::getCaseLightBrightness_percent();
+  ExtUI::setCaseLightBrightness_percent(float(brightness == 100 ? 0 : brightness + 25));
   #ifdef DWIN_TFT_DEBUG
     SERIAL_ECHOLNPGM("TFT Serial Debug: toggle case light");
   #endif
