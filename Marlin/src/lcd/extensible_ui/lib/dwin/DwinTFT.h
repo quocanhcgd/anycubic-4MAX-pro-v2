@@ -22,6 +22,8 @@
 #include "../../../../inc/MarlinConfigPre.h"
 #include "../../ui_api.h"
 
+#include "DwinTFTBuzzer.h"
+
 #define DWIN_TFT_UPDATE_INTERVAL_MS 250
 
 char *itostr2(const uint8_t &x);

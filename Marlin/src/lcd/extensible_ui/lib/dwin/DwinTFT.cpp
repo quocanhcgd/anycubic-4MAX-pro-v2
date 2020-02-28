@@ -110,10 +110,10 @@ void DwinTFTClass::init()
   DwinTFT.gcodeNow_P(DWIN_TFT_GCODE_INACTIVITY_ON);
 
   #ifdef STARTUP_CHIME
-    playTone(250, 554); // C#5
-    playTone(250, 740); // F#5
-    playTone(250, 554); // C#5
-    playTone(500, 831); // G#5
+    playTone(250, NOTE_C5);
+    playTone(250, NOTE_F5);
+    playTone(250, NOTE_C5);
+    playTone(500, NOTE_G5);
   #endif
 }
 
@@ -321,20 +321,20 @@ void DwinTFTClass::playTone(const uint16_t duration, const uint16_t frequency)
 
 void DwinTFTClass::playInfoTone()
 {
-  playTone(100, 554); // C#5
+  playTone(100, NOTE_C5);
 }
 
 void DwinTFTClass::playSuccessTone()
 {
-  playTone(250, 554); // C#5
-  playTone(500, 831); // G#5
+  playTone(250, NOTE_C5);
+  playTone(500, NOTE_G5);
 }
 
 void DwinTFTClass::playErrorTone()
 {
-  playTone(250, 831); // G#5
-  playTone(250, 554); // C#5
-  playTone(500, 831); // G#5
+  playTone(250, NOTE_G5);
+  playTone(250, NOTE_C5);
+  playTone(500, NOTE_G5);
 }
 
 #endif
