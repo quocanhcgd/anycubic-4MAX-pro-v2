@@ -32,6 +32,7 @@
 #define EXTRA_MENU_SAVE_EEPROM "<save eeprom>"
 #define EXTRA_MENU_LOAD_FW_DEFAULTS "<load fw defaults>"
 #define EXTRA_MENU_PREHEAT_BED "<preheat bed>"
+#define EXTRA_MENU_START_BLTOUCH_LEVELING "<start bltouch leveling>"
 #define EXTRA_MENU_START_MESH_LEVELING "<start mesh leveling>"
 #define EXTRA_MENU_NEXT_MESH_POINT "<next mesh point>"
 #define EXTRA_MENU_Z_UP_01 "<z up 0.1>"
