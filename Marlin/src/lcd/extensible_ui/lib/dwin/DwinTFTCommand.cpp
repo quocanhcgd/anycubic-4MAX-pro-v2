@@ -288,7 +288,7 @@ void DwinTFTCommandClass::handleGetPrintingTime()
     DWIN_TFT_SERIAL_SPACE();
     DWIN_TFT_SERIAL_PROTOCOLPGM("H");
     DWIN_TFT_SERIAL_SPACE();
-    DWIN_TFT_SERIAL_PROTOCOL(itostr2(elapsed.minute())); //minutes
+    DWIN_TFT_SERIAL_PROTOCOL(itostr2(elapsed.minute() - (elapsed.hour() * 60))); //minutes
     DWIN_TFT_SERIAL_SPACE();
     DWIN_TFT_SERIAL_PROTOCOLPGM("M");
   } else {
