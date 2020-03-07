@@ -162,7 +162,9 @@ typedef struct { xyz_pos_t min, max; } axis_limits_t;
   #define update_software_endstops(...) NOOP
 #endif
 
+void report_real_position();
 void report_current_position();
+void report_current_position_projected();
 
 void get_cartesian_from_steppers();
 void set_current_from_steppers_for_axis(const AxisEnum axis);
@@ -182,7 +184,7 @@ void sync_plan_position_e();
  */
 void line_to_current_position(const feedRate_t &fr_mm_s=feedrate_mm_s);
 
-void prepare_move_to_destination();
+void prepare_line_to_destination();
 
 void _internal_move_to_destination(const feedRate_t &fr_mm_s=0.0f
   #if IS_KINEMATIC
