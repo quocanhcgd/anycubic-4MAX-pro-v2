@@ -1,38 +1,28 @@
-/*********************
- * extui_example.cpp *
- *********************/
-
-/****************************************************************************
- *   Written By Marcio Teixeira 2018 - Aleph Objects, Inc.                  *
- *                                                                          *
- *   This program is free software: you can redistribute it and/or modify   *
- *   it under the terms of the GNU General Public License as published by   *
- *   the Free Software Foundation, either version 3 of the License, or      *
- *   (at your option) any later version.                                    *
- *                                                                          *
- *   This program is distributed in the hope that it will be useful,        *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of         *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
- *   GNU General Public License for more details.                           *
- *                                                                          *
- *   To view a copy of the GNU General Public License, go to the following  *
- *   location: <http://www.gnu.org/licenses/>.                              *
- ****************************************************************************/
+/**
+ * DWIN TFT Support for Anycubic i3 Mega and 4Max Pro
+ * Based on the work of Christian Hopp and David Ramiro.
+ * Copyright (c) 2020 by Jonas Plamann <https://github.com/Poket-Jony>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "../inc/MarlinConfigPre.h"
 
 #if ENABLED(DWIN_TFT)
 
-#include "extensible_ui/ui_api.h"
-#include "extensible_ui/lib/dwin/DwinTFT.h"
-
-// To implement a new UI, complete the functions below and
-// read or update Marlin's state using the methods in the
-// ExtUI methods in "../ui_api.h"
-//
-// Although it may be possible to access other state
-// variables from Marlin, using the API here possibly
-// helps ensure future compatibility.
+#include "extui/ui_api.h"
+#include "extui/lib/dwin/DwinTFT.h"
 
 namespace ExtUI {
   void onStartup() {
@@ -114,13 +104,13 @@ namespace ExtUI {
   }
 
   #if ENABLED(POWER_LOSS_RECOVERY)
-    void OnPowerLossResume() {
+    void onPowerLossResume() {
       // Called on resume from power-loss
     }
   #endif
 
   #if HAS_PID_HEATING
-    void OnPidTuning(const result_t rst) {
+    void onPidTuning(const result_t rst) {
       DwinTFT.onPidTuning(rst);
     }
   #endif
